@@ -1,0 +1,419 @@
+/* HeroSection.module.css */
+
+.heroSection {
+  min-height: 100vh;
+  background: #ffffff;
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 500px 1fr;
+  gap: 60px;
+  align-items: center;
+  min-height: 600px;
+}
+
+/* === LEFT CONTENT === */
+.leftContent {
+  text-align: left;
+  padding-right: 40px;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: 800;
+  color: #1a1a1a;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #666666;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* === CENTER CONTENT === */
+.centerContent {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mockupContainer {
+  width: 500px;
+  height: 500px;
+  background: #f5f5f5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+}
+
+.computerMockup {
+  position: relative;
+  transform: scale(0.8);
+}
+
+.screen {
+  width: 380px;
+  height: 240px;
+  background: #1a1a1a;
+  border-radius: 12px 12px 0 0;
+  padding: 6px;
+  position: relative;
+}
+
+.browser {
+  width: 100%;
+  height: 100%;
+  background: white;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
+
+.browserHeader {
+  height: 32px;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.browserButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.browserButtons span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+
+.browserButtons span:nth-child(2) {
+  background: #ffbd2e;
+}
+
+.browserButtons span:nth-child(3) {
+  background: #28ca42;
+}
+
+.browserContent {
+  display: flex;
+  height: calc(100% - 32px);
+}
+
+.sidebar {
+  width: 140px;
+  background: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  padding: 16px 12px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+.logoIcon {
+  font-size: 16px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.navItem {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #666666;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.navItem:hover {
+  background: #f5f5f5;
+  color: #1a1a1a;
+}
+
+.navItem:nth-child(2) {
+  background: #ff6b35;
+  color: white;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 16px;
+  background: #fafafa;
+}
+
+.header h3 {
+  font-size: 16px;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.coursesGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.courseCard {
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.courseIcon {
+  font-size: 14px;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #666;
+}
+
+.checkmark {
+  color: #28ca42;
+  font-weight: bold;
+  font-size: 10px;
+}
+
+.stand {
+  width: 60px;
+  height: 40px;
+  background: linear-gradient(to bottom, #e0e0e0 0%, #c0c0c0 100%);
+  margin: 0 auto;
+  border-radius: 0 0 8px 8px;
+  position: relative;
+}
+
+.stand::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 8px;
+  background: #d0d0d0;
+  border-radius: 50px;
+}
+
+/* === NAVIGATION BUTTONS === */
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -80px;
+  width: 56px;
+  height: 56px;
+  background: #ff6b35;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+  z-index: 10;
+}
+
+.navButton:hover {
+  background: #e55a2b;
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 12px 35px rgba(255, 107, 53, 0.4);
+}
+
+.navButtonRight {
+  left: auto;
+  right: -80px;
+}
+
+/* === RIGHT CONTENT === */
+.rightContent {
+  text-align: left;
+  padding-left: 40px;
+}
+
+.rightTitle {
+  font-size: 36px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.rightText {
+  font-size: 18px;
+  color: #666666;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* === SLIDE INDICATORS === */
+.slideIndicators {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 60px;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  background: #e0e0e0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator.active {
+  background: #ff6b35;
+  transform: scale(1.2);
+}
+
+.indicator:hover {
+  background: #ff6b35;
+  opacity: 0.7;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 1200px) {
+  .content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+  
+  .leftContent,
+  .rightContent {
+    padding: 0;
+  }
+  
+  .navButton {
+    left: 20px;
+  }
+  
+  .navButtonRight {
+    right: 20px;
+  }
+  
+  .mockupContainer {
+    width: 400px;
+    height: 400px;
+  }
+  
+  .computerMockup {
+    transform: scale(0.7);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 20px;
+  }
+  
+  .heroSection {
+    padding: 40px 0;
+  }
+  
+  .title {
+    font-size: 32px;
+  }
+  
+  .rightTitle {
+    font-size: 28px;
+  }
+  
+  .subtitle,
+  .rightText {
+    font-size: 16px;
+  }
+  
+  .mockupContainer {
+    width: 320px;
+    height: 320px;
+  }
+  
+  .computerMockup {
+    transform: scale(0.6);
+  }
+  
+  .navButton {
+    width: 48px;
+    height: 48px;
+    left: 10px;
+  }
+  
+  .navButtonRight {
+    right: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 28px;
+  }
+  
+  .rightTitle {
+    font-size: 24px;
+  }
+  
+  .mockupContainer {
+    width: 280px;
+    height: 280px;
+  }
+  
+  .computerMockup {
+    transform: scale(0.5);
+  }
+}

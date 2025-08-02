@@ -1,5 +1,12 @@
-
+import ContactForm from "@/components/ContactForm"
+import HeroSection from "@/components/HeroSection"
+import Testimonials from "@/components/Testimonials"
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24"/>)
+    <div>
+      <ContactForm/>
+      <HeroSection/>
+      <Testimonials/>
+    </div>
+  )
   }
