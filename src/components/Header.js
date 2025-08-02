@@ -64,31 +64,8 @@ const Header = () => {
 					{/* Logo */}
 					<a href='/' className={styles.logo}>
 						<div className={styles.logoIcon}>
-							<svg viewBox='0 0 100 100' className={styles.logoSvg}>
-								<defs>
-									<linearGradient
-										id='logoGradient'
-										x1='0%'
-										y1='0%'
-										x2='100%'
-										y2='100%'
-									>
-										<stop offset='0%' stopColor='#2563eb' />
-										<stop offset='50%' stopColor='#8b5cf6' />
-										<stop offset='100%' stopColor='#4f46e5' />
-									</linearGradient>
-								</defs>
-								<circle cx='50' cy='50' r='45' fill='url(#logoGradient)' />
-								<path
-									d='M25 35 Q25 25 35 25 L65 25 Q75 25 75 35 L75 45 Q75 50 70 50 L60 50 L60 40 L65 40 L65 35 L35 35 L35 40 L40 40 L40 50 L30 50 Q25 50 25 45 Z'
-									fill='#fff'
-								/>
-								<path
-									d='M40 55 L60 55 L60 60 L50 60 L50 75 L40 75 Z'
-									fill='#fff'
-								/>
-								<path d='M30 60 L70 60 L70 65 L30 65 Z' fill='#fff' />
-							</svg>
+							<img src= "logo.jpg" className={styles.logoSvg}/>
+
 						</div>
 						<div className={styles.logoText}>
 							<span className={styles.logoTitle}>SmartCode</span>
