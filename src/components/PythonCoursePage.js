@@ -1,6 +1,6 @@
 // src/components/PythonCoursePage.jsx
 "use client"
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { 
   Code, 
   Rocket, 
@@ -29,6 +29,83 @@ const PythonCoursePage = () => {
   const [isLoaded, setIsLoaded] = useState(false)
   const [visibleSections, setVisibleSections] = useState([])
   const [sunPosition, setSunPosition] = useState('topRight')
+
+  // Генеруємо зірки один раз при завантаженні компонента
+  const stars = useMemo(() => {
+    const starTypes = [
+      { type: 'starPurple', count: 30 },
+      { type: 'starBlue', count: 20 },
+      { type: 'starPink', count: 15 },
+      { type: 'starGold', count: 10 },
+      { type: 'starTwinkle', count: 25 }
+    ];
+
+    const allStars = [];
+
+    starTypes.forEach(({ type, count }) => {
+      for (let i = 0; i < count; i++) {
+        allStars.push({
+          id: `${type}-${i}`,
+          type,
+          left: Math.random() * 100,
+          top: Math.random() * 100,
+          animationDelay: Math.random() * (type === 'starTwinkle' ? 4 : type === 'starGold' ? 6 : type === 'starBlue' ? 8 : type === 'starPink' ? 15 : 12),
+          animationDuration: type === 'starTwinkle' ? 2 + Math.random() * 4 : 
+                           type === 'starGold' ? 4 + Math.random() * 4 : 
+                           type === 'starBlue' ? 5 + Math.random() * 6 :
+                           type === 'starPink' ? 10 + Math.random() * 10 :
+                           8 + Math.random() * 8
+        });
+      }
+    });
+
+    return allStars;
+  }, []); // Пустий масив залежностей - генеруємо тільки один раз
+
+  // Генеруємо зірки з випадковими анімаціями один раз
+  const randomStars = useMemo(() => {
+    const animations = ['starWave', 'starDiagonal'];
+    const colors = ['starBlue', 'starPink', 'starPurple'];
+    const randomStarsArray = [];
+
+    for (let i = 0; i < 20; i++) {
+      const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      
+      randomStarsArray.push({
+        id: `star-random-${i}`,
+        color: randomColor,
+        animation: randomAnimation,
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        animationDuration: 6 + Math.random() * 6,
+        animationDelay: Math.random() * 8
+      });
+    }
+
+    return randomStarsArray;
+  }, []); // Пустий масив залежностей
+
+  // Генеруємо частинки сонця один раз
+  const sunParticles = useMemo(() => {
+    const particles = [];
+    
+    for (let i = 0; i < 12; i++) {
+      const angle = (i * 30) + Math.random() * 20;
+      const distance = 40 + Math.random() * 20;
+      const radians = (angle * Math.PI) / 180;
+      
+      particles.push({
+        id: `particle-${i}`,
+        endX: Math.cos(radians) * distance,
+        endY: Math.sin(radians) * distance,
+        animationDelay: i * 0.2 + Math.random() * 2,
+        animationDuration: 3 + Math.random() * 2
+      });
+    }
+
+    return particles;
+  }, []); // Пустий масив залежностей
 
   useEffect(() => {
     setIsLoaded(true)
@@ -200,99 +277,36 @@ const PythonCoursePage = () => {
       <div className={styles.animatedBackground}>
         <div className={styles.gradientBackground}></div>
         
-        {/* Основні зірки (фіолетові) */}
-        {[...Array(30)].map((_, i) => (
+        {/* Основні зірки - рендеримо з заздалегідь згенерованих даних */}
+        {stars.map((star) => (
           <div
-            key={`star-purple-${i}`}
-            className={`${styles.floatingParticle} ${styles.starPurple}`}
+            key={star.id}
+            className={`${styles.floatingParticle} ${styles[star.type]}`}
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 12}s`,
-              animationDuration: `${8 + Math.random() * 8}s`
+              left: `${star.left}%`,
+              top: `${star.top}%`,
+              animationDelay: `${star.animationDelay}s`,
+              animationDuration: `${star.animationDuration}s`
             }}
           />
         ))}
         
-        {/* Блакитні зірки */}
-        {[...Array(20)].map((_, i) => (
+        {/* Зірки з випадковими анімаціями - рендеримо з заздалегідь згенерованих даних */}
+        {randomStars.map((star) => (
           <div
-            key={`star-blue-${i}`}
-            className={`${styles.floatingParticle} ${styles.starBlue}`}
+            key={star.id}
+            className={`${styles.floatingParticle} ${styles[star.color]}`}
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 8}s`,
-              animationDuration: `${5 + Math.random() * 6}s`
+              left: `${star.left}%`,
+              top: `${star.top}%`,
+              animationName: star.animation,
+              animationDuration: `${star.animationDuration}s`,
+              animationDelay: `${star.animationDelay}s`,
+              animationIterationCount: 'infinite',
+              animationTimingFunction: 'ease-in-out'
             }}
           />
         ))}
-        
-        {/* Рожеві зірки */}
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={`star-pink-${i}`}
-            className={`${styles.floatingParticle} ${styles.starPink}`}
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 15}s`,
-              animationDuration: `${10 + Math.random() * 10}s`
-            }}
-          />
-        ))}
-        
-        {/* Золоті зірки */}
-        {[...Array(10)].map((_, i) => (
-          <div
-            key={`star-gold-${i}`}
-            className={`${styles.floatingParticle} ${styles.starGold}`}
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 6}s`,
-              animationDuration: `${4 + Math.random() * 4}s`
-            }}
-          />
-        ))}
-        
-        {/* Мерехтливі зірки */}
-        {[...Array(25)].map((_, i) => (
-          <div
-            key={`star-twinkle-${i}`}
-            className={`${styles.floatingParticle} ${styles.starTwinkle}`}
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 4}s`,
-              animationDuration: `${2 + Math.random() * 4}s`
-            }}
-          />
-        ))}
-        
-        {/* Зірки з випадковими анімаціями */}
-        {[...Array(20)].map((_, i) => {
-          const animations = ['starWave', 'starDiagonal'];
-          const colors = ['starBlue', 'starPink', 'starPurple'];
-          const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
-          const randomColor = colors[Math.floor(Math.random() * colors.length)];
-          
-          return (
-            <div
-              key={`star-random-${i}`}
-              className={`${styles.floatingParticle} ${styles[randomColor]}`}
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationName: randomAnimation,
-                animationDuration: `${6 + Math.random() * 6}s`,
-                animationDelay: `${Math.random() * 8}s`,
-                animationIterationCount: 'infinite',
-                animationTimingFunction: 'ease-in-out'
-              }}
-            />
-          );
-        })}
         
         {/* Анімоване сонце з пелюстками */}
         <div className={`${styles.followingSun} ${styles[sunPosition]}`}>
@@ -307,25 +321,19 @@ const PythonCoursePage = () => {
             />
           ))}
           
-          {/* Частинки, що розлітаються у всі сторони */}
-          {[...Array(12)].map((_, i) => {
-            const angle = (i * 30) + Math.random() * 20; // Розподіл по колу з варіацією
-            const distance = 40 + Math.random() * 20; // Відстань польоту
-            const radians = (angle * Math.PI) / 180;
-            
-            return (
-              <div
-                key={`particle-${i}`}
-                className={styles.sunParticle}
-                style={{
-                  '--end-x': `${Math.cos(radians) * distance}px`,
-                  '--end-y': `${Math.sin(radians) * distance}px`,
-                  animationDelay: `${i * 0.2 + Math.random() * 2}s`,
-                  animationDuration: `${3 + Math.random() * 2}s`
-                }}
-              />
-            );
-          })}
+          {/* Частинки, що розлітаються у всі сторони - рендеримо з заздалегідь згенерованих даних */}
+          {sunParticles.map((particle) => (
+            <div
+              key={particle.id}
+              className={styles.sunParticle}
+              style={{
+                '--end-x': `${particle.endX}px`,
+                '--end-y': `${particle.endY}px`,
+                animationDelay: `${particle.animationDelay}s`,
+                animationDuration: `${particle.animationDuration}s`
+              }}
+            />
+          ))}
         </div>
         
         {/* Великі орби */}
