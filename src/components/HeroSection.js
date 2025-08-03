@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
 	ChevronLeft,
 	ChevronRight,
@@ -10,16 +10,104 @@ import {
 	CheckCircle,
 	Play,
 } from 'lucide-react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import styles from './HeroSection.module.css'
+
+// Реєструємо ScrollTrigger
+gsap.registerPlugin(ScrollTrigger)
 
 const HeroSection = () => {
 	const [currentSlide, setCurrentSlide] = useState(0)
 	const [isVisible, setIsVisible] = useState(false)
+	const heroRef = useRef(null)
+	const slidesRef = useRef([])
+	const contentRef = useRef(null)
 
 	useEffect(() => {
 		const timer = setTimeout(() => setIsVisible(true), 300)
+		
+		// GSAP анімації входу
+		if (heroRef.current) {
+			gsap.fromTo(heroRef.current.querySelectorAll('.hero-title'),
+				{ y: 50, opacity: 0 },
+				{ 
+					y: 0, 
+					opacity: 1, 
+					duration: 1, 
+					ease: 'power3.out',
+					stagger: 0.2,
+					delay: 0.5
+				}
+			)
+			
+			gsap.fromTo(heroRef.current.querySelectorAll('.hero-subtitle'),
+				{ y: 30, opacity: 0 },
+				{ 
+					y: 0, 
+					opacity: 1, 
+					duration: 0.8, 
+					ease: 'power2.out',
+					delay: 0.8
+				}
+			)
+			
+			gsap.fromTo(heroRef.current.querySelectorAll('.hero-button'),
+				{ y: 20, opacity: 0, scale: 0.9 },
+				{ 
+					y: 0, 
+					opacity: 1, 
+					scale: 1,
+					duration: 0.6, 
+					ease: 'back.out(1.7)',
+					stagger: 0.1,
+					delay: 1.2
+				}
+			)
+		}
+		
 		return () => clearTimeout(timer)
 	}, [])
+
+	// Анімація зміни слайдів
+	const animateSlideChange = (direction) => {
+		if (!contentRef.current) return
+		
+		const timeline = gsap.timeline()
+		
+		// Анімація виходу поточного контенту
+		timeline.to(contentRef.current.querySelectorAll('.slide-content'), {
+			x: direction === 'next' ? -50 : 50,
+			opacity: 0,
+			duration: 0.4,
+			ease: 'power2.in',
+			stagger: 0.05
+		})
+		
+		// Зміна слайду
+		timeline.call(() => {
+			setCurrentSlide(prev => 
+				direction === 'next' 
+					? (prev + 1) % slides.length 
+					: prev === 0 ? slides.length - 1 : prev - 1
+			)
+		})
+		
+		// Анімація входу нового контенту
+		timeline.fromTo(contentRef.current.querySelectorAll('.slide-content'), 
+			{ 
+				x: direction === 'next' ? 50 : -50, 
+				opacity: 0 
+			},
+			{
+				x: 0,
+				opacity: 1,
+				duration: 0.6,
+				ease: 'power3.out',
+				stagger: 0.08
+			}
+		)
+	}
 
 	const slides = [
 		{
@@ -128,22 +216,23 @@ const HeroSection = () => {
 	]
 
 	const nextSlide = () => {
-		setCurrentSlide(prev => (prev + 1) % slides.length)
+		animateSlideChange('next')
 	}
 
 	const prevSlide = () => {
-		setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length)
+		animateSlideChange('prev')
 	}
 
 	const currentSlideData = slides[currentSlide]
 
 	return (
-		<section className={styles.heroSection}>
+		<section className={styles.heroSection} ref={heroRef}>
 			<div className={styles.container}>
 				<div
 					className={`${styles.content} ${
 						isVisible ? styles.contentVisible : ''
 					}`}
+					ref={contentRef}
 				>
 					{/* Лівий контент */}
 					<div className={styles.leftContent}>
@@ -154,8 +243,8 @@ const HeroSection = () => {
 							<div className={styles.slideCategory}>Особливості</div>
 						</div>
 
-						<h1 className={styles.title}>{currentSlideData.title}</h1>
-						<p className={styles.subtitle}>{currentSlideData.subtitle}</p>
+						<h1 className={`${styles.title} hero-title`}>{currentSlideData.title}</h1>
+						<p className={`${styles.subtitle} hero-subtitle`}>{currentSlideData.subtitle}</p>
 
 						<div className={styles.features}>
 							{currentSlideData.features.map((feature, index) => (
@@ -167,7 +256,7 @@ const HeroSection = () => {
 						</div>
 
 						<div className={styles.leftActions}>
-							<button className={styles.primaryButton}>
+							<button className={`${styles.primaryButton} hero-button`}>
 								<Play className={styles.buttonIcon} />
 								Спробувати безкоштовно
 							</button>
@@ -288,8 +377,8 @@ const HeroSection = () => {
 
 					{/* Правий контент */}
 					<div className={styles.rightContent}>
-						<h2 className={styles.rightTitle}>{currentSlideData.rightTitle}</h2>
-						<p className={styles.rightText}>{currentSlideData.rightContent}</p>
+						<h2 className={`${styles.rightTitle} slide-content`}>{currentSlideData.rightTitle}</h2>
+						<p className={`${styles.rightText} slide-content`}>{currentSlideData.rightContent}</p>
 
 						<div className={styles.rightStats}>
 							<div className={styles.stat}>
@@ -314,7 +403,11 @@ const HeroSection = () => {
 							className={`${styles.indicator} ${
 								index === currentSlide ? styles.active : ''
 							}`}
-							onClick={() => setCurrentSlide(index)}
+							onClick={() => {
+						if (index !== currentSlide) {
+							animateSlideChange(index > currentSlide ? 'next' : 'prev')
+						}
+					}}
 						/>
 					))}
 				</div>

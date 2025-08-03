@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
 	Star,
 	Quote,
@@ -10,16 +10,92 @@ import {
 	Award,
 	Heart,
 } from 'lucide-react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import styles from './Testimonials.module.css'
+
+// Реєструємо ScrollTrigger
+gsap.registerPlugin(ScrollTrigger)
 
 const Testimonials = () => {
 	const [currentTestimonial, setCurrentTestimonial] = useState(0)
 	const [isVisible, setIsVisible] = useState(false)
+	const sectionRef = useRef(null)
+	const testimonialsRef = useRef(null)
 
 	useEffect(() => {
 		const timer = setTimeout(() => setIsVisible(true), 300)
+		
+		// GSAP анімації входу при скролі
+		if (sectionRef.current) {
+			gsap.fromTo(sectionRef.current.querySelectorAll('.fade-in-up'),
+				{ y: 50, opacity: 0 },
+				{ 
+					y: 0, 
+					opacity: 1, 
+					duration: 0.8, 
+					ease: 'power3.out',
+					stagger: 0.2,
+					scrollTrigger: {
+						trigger: sectionRef.current,
+						start: 'top 80%',
+						end: 'bottom 20%',
+						toggleActions: 'play none none reverse'
+					}
+				}
+			)
+
+			gsap.fromTo(sectionRef.current.querySelectorAll('.slide-in-left'),
+				{ x: -50, opacity: 0 },
+				{ 
+					x: 0, 
+					opacity: 1, 
+					duration: 0.6, 
+					ease: 'power2.out',
+					stagger: 0.1,
+					scrollTrigger: {
+						trigger: sectionRef.current,
+						start: 'top 70%',
+						toggleActions: 'play none none reverse'
+					}
+				}
+			)
+		}
+		
 		return () => clearTimeout(timer)
 	}, [])
+
+	// Професійна анімація зміни відгуків
+	const animateTestimonialChange = (newIndex) => {
+		if (!testimonialsRef.current || newIndex === currentTestimonial) return
+		
+		const timeline = gsap.timeline()
+		
+		// Анімація виходу поточного відгуку
+		timeline.to(testimonialsRef.current.querySelectorAll('.testimonial-content'), {
+			y: -30,
+			opacity: 0,
+			duration: 0.3,
+			ease: 'power2.in'
+		})
+		
+		// Зміна відгуку
+		timeline.call(() => {
+			setCurrentTestimonial(newIndex)
+		})
+		
+		// Анімація входу нового відгуку
+		timeline.fromTo(testimonialsRef.current.querySelectorAll('.testimonial-content'), 
+			{ y: 30, opacity: 0 },
+			{
+				y: 0,
+				opacity: 1,
+				duration: 0.5,
+				ease: 'back.out(1.7)',
+				stagger: 0.05
+			}
+		)
+	}
 
 	const testimonials = [
 		{
@@ -125,7 +201,7 @@ const Testimonials = () => {
 	const currentTestimonialData = testimonials[currentTestimonial]
 
 	return (
-		<section className={styles.testimonialsSection}>
+		<section className={styles.testimonialsSection} ref={sectionRef}>
 			<div className={styles.container}>
 				{/* Header */}
 				<div
@@ -134,11 +210,11 @@ const Testimonials = () => {
 					}`}
 				>
 					<div className={styles.headerContent}>
-						<div className={styles.badge}>
+						<div className={`${styles.badge} fade-in-up`}>
 							<Quote className={styles.badgeIcon} />
 							Відгуки студентів
 						</div>
-						<h2 className={styles.title}>
+						<h2 className={`${styles.title} fade-in-up`}>
 							Історії успіху наших
 							<span className={styles.titleAccent}>випускників</span>
 						</h2>
@@ -160,25 +236,25 @@ const Testimonials = () => {
 					}`}
 				>
 					{/* Featured Testimonial */}
-					<div className={styles.featuredTestimonial}>
+					<div className={styles.featuredTestimonial} ref={testimonialsRef}>
 						<div
 							className={`${styles.testimonialCard} ${
 								styles[currentTestimonialData.gradient]
 							}`}
 						>
-							<div className={styles.testimonialHeader}>
+							<div className={`${styles.testimonialHeader} testimonial-content`}>
 								<div className={styles.authorInfo}>
 									<div className={styles.avatar}>
 										{currentTestimonialData.avatar}
 									</div>
 									<div className={styles.authorDetails}>
-										<h3 className={styles.authorName}>
+										<h3 className={`${styles.authorName} testimonial-content`}>
 											{currentTestimonialData.name}
 											<span className={styles.authorAge}>
 												({currentTestimonialData.age} років)
 											</span>
 										</h3>
-										<p className={styles.authorPosition}>
+										<p className={`${styles.authorPosition} testimonial-content`}>
 											{currentTestimonialData.position}
 										</p>
 										<p className={styles.authorCompany}>
@@ -191,14 +267,14 @@ const Testimonials = () => {
 								</div>
 							</div>
 
-							<div className={styles.testimonialContent}>
+							<div className={`${styles.testimonialContent} testimonial-content`}>
 								<Quote className={styles.quoteIcon} />
-								<p className={styles.testimonialText}>
+								<p className={`${styles.testimonialText} testimonial-content`}>
 									{currentTestimonialData.text}
 								</p>
 							</div>
 
-							<div className={styles.testimonialFooter}>
+							<div className={`${styles.testimonialFooter} testimonial-content`}>
 								<div className={styles.courseInfo}>
 									<div className={styles.courseTag}>
 										📚 {currentTestimonialData.course}
@@ -225,7 +301,7 @@ const Testimonials = () => {
 										className={`${styles.indicator} ${
 											index === currentTestimonial ? styles.active : ''
 										}`}
-										onClick={() => setCurrentTestimonial(index)}
+										onClick={() => animateTestimonialChange(index)}
 									/>
 								))}
 							</div>
@@ -264,7 +340,7 @@ const Testimonials = () => {
 								className={`${styles.miniTestimonial} ${
 									index === currentTestimonial ? styles.highlighted : ''
 								}`}
-								onClick={() => setCurrentTestimonial(index)}
+								onClick={() => animateTestimonialChange(index)}
 							>
 								<div className={styles.miniHeader}>
 									<div className={styles.miniAvatar}>{testimonial.avatar}</div>
