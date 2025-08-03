@@ -3,13 +3,14 @@ import React, { useState, useEffect } from 'react'
 import {
 	ChevronDown,
 	Phone,
-	User,
 	Menu,
 	X,
 	Code,
 	Gamepad2,
 	Monitor,
-	MapPin,
+	Sparkles,
+	Star,
+	Users,
 } from 'lucide-react'
 import styles from './Header.module.css'
 
@@ -29,24 +30,27 @@ const Header = () => {
 	const courses = [
 		{
 			icon: <Code className={styles.courseIcon} />,
-			title: 'Програмування',
-			description: 'Python, JavaScript, Java',
-			age: '8-16 років',
+			title: 'Python & JavaScript',
+			description: 'Основи програмування та алгоритми',
+			age: '10-16 років',
 			color: 'blue',
+			popular: true,
 		},
 		{
 			icon: <Gamepad2 className={styles.courseIcon} />,
 			title: 'Розробка ігор',
-			description: 'Unity, Scratch, Roblox',
-			age: '9-17 років',
+			description: 'Unity, Roblox Studio, Scratch',
+			age: '8-17 років',
 			color: 'green',
+			popular: false,
 		},
 		{
 			icon: <Monitor className={styles.courseIcon} />,
-			title: 'Веб-дизайн',
-			description: 'HTML, CSS, Figma',
-			age: '10-18 років',
+			title: 'Веб-розробка',
+			description: 'HTML, CSS, React, дизайн',
+			age: '12-18 років',
 			color: 'purple',
+			popular: false,
 		},
 	]
 
@@ -64,8 +68,11 @@ const Header = () => {
 					{/* Logo */}
 					<a href='/' className={styles.logo}>
 						<div className={styles.logoIcon}>
-							<img src= "logo.jpg" className={styles.logoSvg}/>
-
+							<img
+								src='logo.jpg'
+								alt='SmartCode Academy'
+								className={styles.logoSvg}
+							/>
 						</div>
 						<div className={styles.logoText}>
 							<span className={styles.logoTitle}>SmartCode</span>
@@ -99,6 +106,12 @@ const Header = () => {
 										}`}
 									>
 										<div className={styles.dropdownContent}>
+											<div className={styles.dropdownHeader}>
+												<h3 className={styles.dropdownTitle}>Наші курси</h3>
+												<p className={styles.dropdownSubtitle}>
+													Обери свій шлях у програмуванні
+												</p>
+											</div>
 											{courses.map((course, courseIndex) => (
 												<a
 													key={courseIndex}
@@ -113,13 +126,21 @@ const Header = () => {
 														{course.icon}
 													</div>
 													<div className={styles.dropdownInfo}>
-														<h4 className={styles.dropdownTitle}>
-															{course.title}
-														</h4>
-														<p className={styles.dropdownDescription}>
+														<div className={styles.courseHeader}>
+															<h4 className={styles.courseTitle}>
+																{course.title}
+															</h4>
+															{course.popular && (
+																<span className={styles.popularBadge}>
+																	<Star className={styles.starIcon} />
+																	Популярний
+																</span>
+															)}
+														</div>
+														<p className={styles.courseDescription}>
 															{course.description}
 														</p>
-														<span className={styles.dropdownAge}>
+														<span className={styles.courseAge}>
 															{course.age}
 														</span>
 													</div>
@@ -127,7 +148,8 @@ const Header = () => {
 											))}
 											<div className={styles.dropdownFooter}>
 												<a href='#all-courses' className={styles.dropdownLink}>
-													Переглянути всі курси →
+													<Users className={styles.linkIcon} />
+													Переглянути всі курси
 												</a>
 											</div>
 										</div>
@@ -150,7 +172,10 @@ const Header = () => {
 						</a>
 
 						{/* CTA Button */}
-						<button className={styles.ctaButton}>Безкоштовний урок</button>
+						<button className={styles.ctaButton}>
+							<Sparkles className={styles.ctaIcon} />
+							Безкоштовний урок
+						</button>
 
 						{/* Mobile menu button */}
 						<button
@@ -205,6 +230,9 @@ const Header = () => {
 									<div className={styles.mobileCourseTitle}>{course.title}</div>
 									<div className={styles.mobileCourseAge}>{course.age}</div>
 								</div>
+								{course.popular && (
+									<span className={styles.mobilePopularBadge}>Топ</span>
+								)}
 							</a>
 						))}
 					</div>
@@ -215,6 +243,7 @@ const Header = () => {
 							<span>+38 (067) 123-45-67</span>
 						</a>
 						<button className={styles.mobileCtaButton}>
+							<Sparkles className={styles.ctaIcon} />
 							Безкоштовний урок
 						</button>
 					</div>

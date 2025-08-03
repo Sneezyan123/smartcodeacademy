@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 export const metadata = {
 	title: 'SmartCode Academy - Школа програмування для дітей та підлітків',
 	description:
-		'Навчаємо дітей 8-17 років програмуванню через інтерактивні заняття. Python, JavaScript, розробка ігор, веб-дизайн. Перший урок безкоштовно! Онлайн та офлайн формати навчання.',
+		'Навчаємо дітей 8-17 років програмуванню через інтерактивні заняття. Python, JavaScript, розробка ігор, веб-дизайн. Перший урок безкоштовно! Онлайн та офлайн формати навчання в Україні.',
 	keywords: [
 		'програмування для дітей',
 		'школа програмування',
@@ -34,6 +34,10 @@ export const metadata = {
 		'курси програмування',
 		'SmartCode Academy',
 		'кодинг для дітей',
+		'програмування Україна',
+		'дитячі ІТ курси',
+		'навчання програмування онлайн',
+		'розробка ігор для дітей',
 	].join(', '),
 	authors: [{ name: 'SmartCode Academy' }],
 	creator: 'SmartCode Academy',
@@ -109,9 +113,9 @@ export default function RootLayout({ children }) {
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 				suppressHydrationWarning
 			>
-				<div className='min-h-screen flex flex-col'>
+				<div className='min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
 					<Header />
-					<main className='flex-1 pt-16'>{children}</main>
+					<main className='flex-1 pt-16 relative'>{children}</main>
 					<Footer />
 				</div>
 
@@ -145,6 +149,30 @@ export default function RootLayout({ children }) {
 								description: 'Перший урок програмування безкоштовно',
 								price: '0',
 								priceCurrency: 'UAH',
+							},
+							hasOfferCatalog: {
+								'@type': 'OfferCatalog',
+								name: 'Курси програмування',
+								itemListElement: [
+									{
+										'@type': 'Offer',
+										name: 'Python для дітей',
+										description: 'Основи програмування на Python',
+										category: 'Programming Course',
+									},
+									{
+										'@type': 'Offer',
+										name: 'JavaScript та веб-розробка',
+										description: 'Створення веб-сайтів і додатків',
+										category: 'Web Development Course',
+									},
+									{
+										'@type': 'Offer',
+										name: 'Розробка ігор',
+										description: 'Unity, Roblox Studio, Scratch',
+										category: 'Game Development Course',
+									},
+								],
 							},
 						}),
 					}}

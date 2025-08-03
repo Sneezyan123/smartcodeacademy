@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import React, { useState, useEffect } from 'react'
 import {
 	Users,
@@ -10,71 +10,94 @@ import {
 	Cpu,
 	Zap,
 	Rocket,
+	Play,
+	Star,
+	Award,
+	Clock,
 } from 'lucide-react'
 import styles from './Visit.module.css'
 
 const Visit = () => {
 	const [isVisible, setIsVisible] = useState(false)
 	const [hoveredCard, setHoveredCard] = useState(null)
-	const [hoveredAgeGroup, setHoveredAgeGroup] = useState(null)
-	const [hoveredButton, setHoveredButton] = useState(false)
+	const [currentStat, setCurrentStat] = useState(0)
 
 	useEffect(() => {
 		setIsVisible(true)
+
+		// Анімація статистики
+		const interval = setInterval(() => {
+			setCurrentStat(prev => (prev + 1) % 4)
+		}, 3000)
+
+		return () => clearInterval(interval)
 	}, [])
 
-	const devices = [
+	const stats = [
+		{ number: '500+', label: 'Випускників', icon: <Users /> },
+		{ number: '95%', label: 'Працевлаштування', icon: <Award /> },
+		{ number: '2+', label: 'Роки досвіду', icon: <Clock /> },
+		{ number: '4.9', label: 'Рейтинг', icon: <Star /> },
+	]
+
+	const courses = [
 		{
 			id: 'programming',
 			title: 'ПРОГРАМУЄМО',
-			icon: <Code className={styles.deviceIcon} />,
-			description: 'Вивчаємо мови програмування',
+			subtitle: 'Основи кодингу',
+			icon: <Code className={styles.courseIcon} />,
+			description: 'Python, JavaScript, алгоритми',
 			gradient: 'programming',
+			features: ['Змінні та функції', 'Умови та цикли', 'Проекти'],
+			duration: '6 місяців',
+			age: '10-16 років',
 			elements: [
 				{
 					type: 'code',
-					content: 'function hello() {',
-					x: '10%',
-					y: '20%',
+					content: 'def hello():',
+					x: '15%',
+					y: '25%',
 					delay: '0s',
 				},
 				{
 					type: 'code',
-					content: '  console.log("Hi!");',
-					x: '15%',
-					y: '30%',
+					content: '  print("Привіт!")',
+					x: '20%',
+					y: '35%',
 					delay: '0.5s',
 				},
-				{ type: 'code', content: '}', x: '10%', y: '40%', delay: '1s' },
+				{ type: 'code', content: 'hello()', x: '15%', y: '45%', delay: '1s' },
 				{
 					type: 'icon',
-					content: <Code className={styles.elementIcon} />,
+					content: <Cpu className={styles.elementIcon} />,
 					x: '70%',
-					y: '25%',
+					y: '30%',
 					delay: '1.5s',
 				},
 				{
-					type: 'icon',
-					content: <Cpu className={styles.elementIconSmall} />,
-					x: '75%',
+					type: 'bracket',
+					content: '{ }',
+					x: '65%',
 					y: '60%',
 					delay: '2s',
 				},
-				{ type: 'bracket', content: '</', x: '60%', y: '75%', delay: '2.5s' },
-				{ type: 'bracket', content: '{...}', x: '20%', y: '70%', delay: '3s' },
 			],
 		},
 		{
 			id: 'games',
 			title: 'СТВОРЮЄМО ІГРИ',
-			icon: <Gamepad2 className={styles.deviceIcon} />,
-			description: 'Розробляємо власні ігри',
+			subtitle: 'Геймдев для дітей',
+			icon: <Gamepad2 className={styles.courseIcon} />,
+			description: 'Unity, Scratch, Roblox Studio',
 			gradient: 'games',
+			features: ['Створення персонажів', 'Логіка гри', 'Публікація'],
+			duration: '8 місяців',
+			age: '8-17 років',
 			elements: [
 				{
 					type: 'game-element',
 					content: '🎯',
-					x: '20%',
+					x: '25%',
 					y: '25%',
 					delay: '0s',
 				},
@@ -89,230 +112,243 @@ const Visit = () => {
 					type: 'game-element',
 					content: '🚀',
 					x: '60%',
-					y: '70%',
+					y: '65%',
 					delay: '1s',
 				},
 				{
 					type: 'game-element',
 					content: '💎',
-					x: '25%',
-					y: '65%',
+					x: '20%',
+					y: '60%',
 					delay: '1.5s',
 				},
 				{
-					type: 'icon',
-					content: <Gamepad2 className={styles.elementIcon} />,
-					x: '75%',
-					y: '45%',
-					delay: '2s',
-				},
-				{
 					type: 'score',
-					content: 'Score: 1250',
+					content: 'Рівень: 5',
 					x: '15%',
 					y: '80%',
-					delay: '2.5s',
+					delay: '2s',
 				},
-				{ type: 'level', content: 'Level 3', x: '65%', y: '85%', delay: '3s' },
 			],
 		},
 		{
-			id: 'robots',
-			title: 'ЗБИРАЄМО РОБОТІВ',
-			icon: <Monitor className={styles.deviceIcon} />,
-			description: 'Конструюємо та програмуємо',
-			gradient: 'robots',
+			id: 'web',
+			title: 'ВЕБ-РОЗРОБКА',
+			subtitle: 'Сайти та додатки',
+			icon: <Monitor className={styles.courseIcon} />,
+			description: 'HTML, CSS, React, дизайн',
+			gradient: 'web',
+			features: ['Верстка сторінок', 'Стилізація', 'Інтерактивність'],
+			duration: '7 місяців',
+			age: '12-18 років',
 			elements: [
-				{ type: 'robot-part', content: '⚙️', x: '25%', y: '25%', delay: '0s' },
 				{
-					type: 'robot-part',
-					content: '🔧',
+					type: 'web-element',
+					content: '<div>',
+					x: '20%',
+					y: '25%',
+					delay: '0s',
+				},
+				{
+					type: 'web-element',
+					content: '</div>',
 					x: '70%',
 					y: '30%',
 					delay: '0.5s',
 				},
-				{ type: 'robot-part', content: '⚡', x: '60%', y: '60%', delay: '1s' },
 				{
-					type: 'robot-part',
-					content: '📡',
-					x: '20%',
-					y: '70%',
+					type: 'web-element',
+					content: 'CSS',
+					x: '60%',
+					y: '60%',
+					delay: '1s',
+				},
+				{
+					type: 'icon',
+					content: <Palette className={styles.elementIcon} />,
+					x: '25%',
+					y: '65%',
 					delay: '1.5s',
 				},
-				{
-					type: 'icon',
-					content: <Zap className={styles.elementIcon} />,
-					x: '75%',
-					y: '20%',
-					delay: '2s',
-				},
-				{
-					type: 'icon',
-					content: <Rocket className={styles.elementIconSmall} />,
-					x: '15%',
-					y: '50%',
-					delay: '2.5s',
-				},
-				{ type: 'circuit', content: '●─●─●', x: '40%', y: '80%', delay: '3s' },
 			],
 		},
 	]
 
 	return (
 		<div className={styles.container}>
-			{/* Background Pattern */}
-			<div className={styles.backgroundPattern}>
-				<div className={`${styles.patternDot} ${styles.dot1}`}></div>
-				<div className={`${styles.patternDot} ${styles.dot2}`}></div>
-				<div className={`${styles.patternDot} ${styles.dot3}`}></div>
-				<div className={`${styles.patternDot} ${styles.dot4}`}></div>
+			{/* Floating background elements */}
+			<div className={styles.backgroundElements}>
+				<div className={`${styles.floatingElement} ${styles.element1}`}></div>
+				<div className={`${styles.floatingElement} ${styles.element2}`}></div>
+				<div className={`${styles.floatingElement} ${styles.element3}`}></div>
+				<div className={`${styles.floatingElement} ${styles.element4}`}></div>
 			</div>
 
 			<div className={styles.mainContainer}>
-				{/* Header */}
+				{/* Hero Header */}
 				<div
-					className={`${styles.header} ${
-						isVisible ? styles.headerVisible : ''
-					}`}
+					className={`${styles.hero} ${isVisible ? styles.heroVisible : ''}`}
 				>
-					<h1 className={styles.title}>
-						SmartCode
-						<span className={styles.titleGradient}>Academy</span>
-					</h1>
-					<p className={styles.subtitle}>
-						Створена, щоб підготувати дітей до майбутнього вже зараз
-					</p>
-				</div>
+					<div className={styles.heroContent}>
+						<h1 className={styles.title}>
+							<span className={styles.titleMain}>SmartCode</span>
+							<span className={styles.titleAccent}>Academy</span>
+						</h1>
 
-				{/* Age Groups */}
-				<div
-					className={`${styles.ageGroups} ${
-						isVisible ? styles.ageGroupsVisible : ''
-					}`}
-				>
-					<div
-						className={`${styles.ageGroup} ${
-							hoveredAgeGroup === 0 ? styles.ageGroupHover : ''
-						}`}
-						onMouseEnter={() => setHoveredAgeGroup(0)}
-						onMouseLeave={() => setHoveredAgeGroup(null)}
-					>
-						<Users className={`${styles.ageGroupIcon} ${styles.iconBlue}`} />
-						<span className={styles.ageGroupText}>8-14 років</span>
-					</div>
-					<div
-						className={`${styles.ageGroup} ${
-							hoveredAgeGroup === 1 ? styles.ageGroupHover : ''
-						}`}
-						onMouseEnter={() => setHoveredAgeGroup(1)}
-						onMouseLeave={() => setHoveredAgeGroup(null)}
-					>
-						<Monitor
-							className={`${styles.ageGroupIcon} ${styles.iconPurple}`}
-						/>
-						<span className={styles.ageGroupText}>Офлайн / Онлайн</span>
-					</div>
-				</div>
+						<p className={styles.subtitle}>
+							Школа програмування, де діти стають творцями майбутнього
+						</p>
 
-				{/* CTA Button */}
-				<div
-					className={`${styles.ctaContainer} ${
-						isVisible ? styles.ctaContainerVisible : ''
-					}`}
-				>
-					<button
-						className={`${styles.ctaButton} ${
-							hoveredButton ? styles.ctaButtonHover : ''
-						}`}
-						onMouseEnter={() => setHoveredButton(true)}
-						onMouseLeave={() => setHoveredButton(false)}
-					>
-						Почати навчання
-					</button>
-				</div>
-
-				{/* Devices Showcase */}
-				<div className={styles.devicesGrid}>
-					{devices.map((device, index) => (
-						<div
-							key={device.id}
-							className={`${styles.deviceCard} ${
-								isVisible ? styles.deviceCardVisible : ''
-							}`}
-							style={{ animationDelay: `${0.7 + index * 0.2}s` }}
-						>
-							<div className={styles.deviceFrame}>
-								<div
-									className={`${styles.deviceContainer} ${
-										hoveredCard === index ? styles.deviceContainerHover : ''
-									}`}
-									onMouseEnter={() => setHoveredCard(index)}
-									onMouseLeave={() => setHoveredCard(null)}
-								>
-									{/* Screen */}
-									<div
-										className={`${styles.deviceScreen} ${
-											styles[device.gradient]
-										}`}
-									>
-										{/* Screen Content */}
-										<div className={styles.screenContent}>
-											<div className={styles.screenIcon}>{device.icon}</div>
-											<p className={styles.screenDescription}>
-												{device.description}
-											</p>
-										</div>
-
-										{/* Animated Background Elements */}
-										<div className={styles.animatedElements}>
-											{device.elements.map((element, elementIndex) => (
-												<div
-													key={elementIndex}
-													className={`${styles.animatedElement} ${
-														styles[element.type]
-													}`}
-													style={{
-														left: element.x,
-														top: element.y,
-														animationDelay: element.delay,
-													}}
-												>
-													{element.content}
-												</div>
-											))}
-										</div>
-									</div>
-
-									{/* Device Label */}
-									<div className={styles.deviceLabel}>
-										<h3 className={styles.deviceTitle}>{device.title}</h3>
-										<div
-											className={`${styles.deviceIndicator} ${
-												styles[device.gradient]
-											}`}
-										></div>
-									</div>
+						<div className={styles.heroFeatures}>
+							<div className={styles.feature}>
+								<div className={styles.featureIcon}>
+									<Users className={styles.icon} />
 								</div>
+								<span>8-17 років</span>
+							</div>
+							<div className={styles.feature}>
+								<div className={styles.featureIcon}>
+									<Monitor className={styles.icon} />
+								</div>
+								<span>Онлайн/Офлайн</span>
+							</div>
+							<div className={styles.feature}>
+								<div className={styles.featureIcon}>
+									<Award className={styles.icon} />
+								</div>
+								<span>Сертифікат</span>
 							</div>
 						</div>
-					))}
+
+						<div className={styles.ctaButtons}>
+							<button className={styles.primaryButton}>
+								<Play className={styles.buttonIcon} />
+								Почати навчання
+							</button>
+							<button className={styles.secondaryButton}>
+								Безкоштовний урок
+							</button>
+						</div>
+					</div>
+
+					{/* Statistics */}
+					<div className={styles.statsContainer}>
+						{stats.map((stat, index) => (
+							<div
+								key={index}
+								className={`${styles.statCard} ${
+									currentStat === index ? styles.statCardActive : ''
+								}`}
+							>
+								<div className={styles.statIcon}>{stat.icon}</div>
+								<div className={styles.statContent}>
+									<div className={styles.statNumber}>{stat.number}</div>
+									<div className={styles.statLabel}>{stat.label}</div>
+								</div>
+							</div>
+						))}
+					</div>
 				</div>
 
-				{/* Floating Elements */}
-				<div className={`${styles.floatingElement} ${styles.floatingIcon1}`}>
-					<Palette className={styles.floatingIconContent} />
-				</div>
+				{/* Courses Showcase */}
+				<div className={styles.coursesSection}>
+					<div className={styles.sectionHeader}>
+						<h2 className={styles.sectionTitle}>Наші напрямки</h2>
+						<p className={styles.sectionSubtitle}>
+							Обери свій шлях у світі технологій
+						</p>
+					</div>
 
-				<div className={`${styles.floatingElement} ${styles.floatingIcon2}`}>
-					<Code className={styles.floatingIconContentSmall} />
-				</div>
+					<div className={styles.coursesGrid}>
+						{courses.map((course, index) => (
+							<div
+								key={course.id}
+								className={`${styles.courseCard} ${
+									isVisible ? styles.courseCardVisible : ''
+								}`}
+								style={{ animationDelay: `${0.5 + index * 0.2}s` }}
+								onMouseEnter={() => setHoveredCard(index)}
+								onMouseLeave={() => setHoveredCard(null)}
+							>
+								<div className={styles.courseHeader}>
+									<div className={styles.courseInfo}>
+										<h3 className={styles.courseTitle}>{course.title}</h3>
+										<p className={styles.courseSubtitle}>{course.subtitle}</p>
+									</div>
+									<div
+										className={`${styles.courseIconContainer} ${
+											styles[course.gradient]
+										}`}
+									>
+										{course.icon}
+									</div>
+								</div>
 
-				<div className={`${styles.floatingElement} ${styles.floatingIcon3}`}>
-					<Gamepad2 className={styles.floatingIconContentMedium} />
+								{/* Interactive Screen */}
+								<div
+									className={`${styles.courseScreen} ${
+										styles[course.gradient]
+									}`}
+								>
+									<div className={styles.screenContent}>
+										<p className={styles.courseDescription}>
+											{course.description}
+										</p>
+									</div>
+
+									{/* Animated Elements */}
+									<div className={styles.animatedElements}>
+										{course.elements.map((element, elementIndex) => (
+											<div
+												key={elementIndex}
+												className={`${styles.animatedElement} ${
+													styles[element.type]
+												} ${hoveredCard === index ? styles.elementActive : ''}`}
+												style={{
+													left: element.x,
+													top: element.y,
+													animationDelay: element.delay,
+												}}
+											>
+												{element.content}
+											</div>
+										))}
+									</div>
+								</div>
+
+								{/* Course Details */}
+								<div className={styles.courseDetails}>
+									<div className={styles.courseFeatures}>
+										{course.features.map((feature, featureIndex) => (
+											<span key={featureIndex} className={styles.featureTag}>
+												{feature}
+											</span>
+										))}
+									</div>
+
+									<div className={styles.courseMeta}>
+										<div className={styles.metaItem}>
+											<Clock className={styles.metaIcon} />
+											<span>{course.duration}</span>
+										</div>
+										<div className={styles.metaItem}>
+											<Users className={styles.metaIcon} />
+											<span>{course.age}</span>
+										</div>
+									</div>
+
+									<button className={styles.courseButton}>
+										Дізнатися більше
+									</button>
+								</div>
+							</div>
+						))}
+					</div>
 				</div>
 
 				{/* Scroll Indicator */}
 				<div className={styles.scrollIndicator}>
+					<div className={styles.scrollText}>Прокрути вниз</div>
 					<ChevronDown className={styles.scrollIcon} />
 				</div>
 			</div>

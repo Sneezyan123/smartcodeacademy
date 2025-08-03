@@ -12,208 +12,287 @@ import {
 	FaMapMarkerAlt,
 	FaClock,
 	FaUsers,
+	FaGraduationCap,
+	FaCode,
+	FaGamepad,
+	FaPalette,
+	FaRocket,
+	FaAward,
+	FaStar,
 } from 'react-icons/fa'
 
 const Footer = () => {
 	const currentYear = new Date().getFullYear()
 
+	const courses = [
+		{ name: 'Python програмування', icon: FaCode, href: '/courses/python' },
+		{
+			name: 'JavaScript та веб-розробка',
+			icon: FaCode,
+			href: '/courses/javascript',
+		},
+		{ name: 'Розробка ігор', icon: FaGamepad, href: '/courses/games' },
+		{ name: 'Frontend розробка', icon: FaPalette, href: '/courses/frontend' },
+		{ name: 'Мобільна розробка', icon: FaRocket, href: '/courses/mobile' },
+		{ name: 'Unity та C#', icon: FaGamepad, href: '/courses/unity' },
+	]
+
+	const quickLinks = [
+		{ name: 'Про нас', href: '/about' },
+		{ name: 'Наші ментори', href: '/mentors' },
+		{ name: 'Портфоліо студентів', href: '/portfolio' },
+		{ name: 'Відгуки батьків', href: '/testimonials' },
+		{ name: 'Блог', href: '/blog' },
+		{ name: 'Новини', href: '/news' },
+		{ name: "Кар'єра", href: '/careers' },
+	]
+
+	const supportLinks = [
+		{ name: 'Часті питання', href: '/faq' },
+		{ name: 'Технічна підтримка', href: '/support' },
+		{ name: 'Як записатися', href: '/how-to-enroll' },
+		{ name: 'Оплата та знижки', href: '/pricing' },
+		{ name: 'Графік занять', href: '/schedule' },
+		{ name: 'Контакти', href: '/contact' },
+		{ name: 'Партнери', href: '/partners' },
+	]
+
+	const achievements = [
+		{ number: '500+', label: 'Випускників', icon: FaGraduationCap },
+		{ number: '95%', label: 'Працевлаштування', icon: FaAward },
+		{ number: '4.9', label: 'Рейтинг', icon: FaStar },
+		{ number: '50+', label: 'Нагород', icon: FaRocket },
+	]
+
 	return (
 		<footer className={styles.footer}>
 			<div className={styles.container}>
-				<div className={styles.grid}>
-					{/* Логотип та інформація про школу */}
+				{/* Main Footer Content */}
+				<div className={styles.mainContent}>
+					{/* Logo and School Info */}
 					<div className={styles.schoolInfo}>
 						<div className={styles.logoSection}>
 							<div className={styles.logo}>
 								<span className={styles.logoText}>SCA</span>
 							</div>
-							<div>
-								<h3 className={styles.schoolName}>SMART CODE</h3>
+							<div className={styles.logoContent}>
+								<h3 className={styles.schoolName}>SMARTCODE</h3>
 								<p className={styles.schoolSubtitle}>ACADEMY</p>
 							</div>
 						</div>
+
 						<p className={styles.description}>
-							Школа програмування для дітей 6-17 років. Перетворюємо кожен крок
-							до програмування на захопливу пригоду!
+							Провідна школа програмування для дітей 8-17 років. Навчаємо через
+							практику, створюємо майбутнє разом з вашими дітьми!
 						</p>
+
+						{/* Achievements */}
+						<div className={styles.achievements}>
+							{achievements.map((achievement, index) => (
+								<div key={index} className={styles.achievement}>
+									<div className={styles.achievementIcon}>
+										<achievement.icon />
+									</div>
+									<div className={styles.achievementContent}>
+										<div className={styles.achievementNumber}>
+											{achievement.number}
+										</div>
+										<div className={styles.achievementLabel}>
+											{achievement.label}
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
+
+						{/* Contact Info */}
 						<div className={styles.contactInfo}>
 							<div className={styles.contactItem}>
-								<FaPhone className={styles.icon} />
-								<span>+38**************48</span>
+								<FaPhone className={styles.contactIcon} />
+								<div className={styles.contactDetails}>
+									<div className={styles.contactLabel}>Телефон</div>
+									<div className={styles.contactValue}>+38 (067) 123-45-67</div>
+								</div>
 							</div>
 							<div className={styles.contactItem}>
-								<FaEnvelope className={styles.icon} />
-								<span>info@smartcodeacademy.com</span>
+								<FaEnvelope className={styles.contactIcon} />
+								<div className={styles.contactDetails}>
+									<div className={styles.contactLabel}>Email</div>
+									<div className={styles.contactValue}>
+										info@smartcode-academy.com
+									</div>
+								</div>
 							</div>
 							<div className={styles.contactItem}>
-								<FaMapMarkerAlt className={styles.icon} />
-								<span>Ukraine, Online навчання</span>
+								<FaMapMarkerAlt className={styles.contactIcon} />
+								<div className={styles.contactDetails}>
+									<div className={styles.contactLabel}>Локація</div>
+									<div className={styles.contactValue}>
+										Україна, онлайн навчання
+									</div>
+								</div>
 							</div>
 							<div className={styles.contactItem}>
-								<FaClock className={styles.icon} />
-								<span>Гнучкий графік: будні та вихідні</span>
+								<FaClock className={styles.contactIcon} />
+								<div className={styles.contactDetails}>
+									<div className={styles.contactLabel}>Графік</div>
+									<div className={styles.contactValue}>Пн-Нд: 9:00-21:00</div>
+								</div>
 							</div>
 						</div>
 					</div>
 
-					{/* Курси */}
+					{/* Courses */}
 					<div className={styles.section}>
-						<h4 className={styles.sectionTitle}>Наші курси</h4>
+						<h4 className={styles.sectionTitle}>
+							<FaCode className={styles.sectionIcon} />
+							Наші курси
+						</h4>
 						<ul className={styles.linksList}>
-							<li>
-								<Link href='/courses/roblox' className={styles.link}>
-									Roblox Studio + Lua
-								</Link>
-							</li>
-							<li>
-								<Link href='/courses/python' className={styles.link}>
-									Python програмування
-								</Link>
-							</li>
-							<li>
-								<Link href='/courses/web' className={styles.link}>
-									Веб-розробка (HTML/CSS/JS)
-								</Link>
-							</li>
-							<li>
-								<Link href='/courses/react' className={styles.link}>
-									React розробка
-								</Link>
-							</li>
-							<li>
-								<Link href='/courses/csharp' className={styles.link}>
-									C# та Unity
-								</Link>
-							</li>
-							<li>
-								<Link href='/courses/gamedev' className={styles.link}>
-									2D/3D розробка ігор
-								</Link>
-							</li>
+							{courses.map((course, index) => (
+								<li key={index}>
+									<Link href={course.href} className={styles.courseLink}>
+										<course.icon className={styles.courseLinkIcon} />
+										{course.name}
+									</Link>
+								</li>
+							))}
 						</ul>
 					</div>
 
-					{/* Для батьків та учнів */}
+					{/* Quick Links */}
 					<div className={styles.section}>
-						<h4 className={styles.sectionTitle}>Інформація</h4>
+						<h4 className={styles.sectionTitle}>
+							<FaUsers className={styles.sectionIcon} />
+							Швидкі посилання
+						</h4>
 						<ul className={styles.linksList}>
-							<li>
-								<Link href='/about' className={styles.link}>
-									Про нас
-								</Link>
-							</li>
-							<li>
-								<Link href='/mentors' className={styles.link}>
-									Наші ментори
-								</Link>
-							</li>
-							<li>
-								<Link href='/projects' className={styles.link}>
-									Портфоліо учнів
-								</Link>
-							</li>
-							<li>
-								<Link href='/demo-days' className={styles.link}>
-									Демо-дні
-								</Link>
-							</li>
-							<li>
-								<Link href='/schedule' className={styles.link}>
-									Розклад занять
-								</Link>
-							</li>
-							<li>
-								<Link href='/reviews' className={styles.link}>
-									Відгуки батьків
-								</Link>
-							</li>
-							<li>
-								<Link href='/blog' className={styles.link}>
-									Блог
-								</Link>
-							</li>
+							{quickLinks.map((link, index) => (
+								<li key={index}>
+									<Link href={link.href} className={styles.link}>
+										{link.name}
+									</Link>
+								</li>
+							))}
 						</ul>
 					</div>
 
-					{/* Підтримка та реєстрація */}
+					{/* Support */}
 					<div className={styles.section}>
-						<h4 className={styles.sectionTitle}>Підтримка</h4>
+						<h4 className={styles.sectionTitle}>
+							<FaAward className={styles.sectionIcon} />
+							Підтримка
+						</h4>
 						<ul className={styles.linksList}>
-							<li>
-								<Link href='/contact' className={styles.link}>
-									Контакти
-								</Link>
-							</li>
-							<li>
-								<Link href='/faq' className={styles.link}>
-									Часті питання
-								</Link>
-							</li>
-							<li>
-								<Link href='/support' className={styles.link}>
-									Технічна підтримка
-								</Link>
-							</li>
-							<li>
-								<Link href='/parent-meetings' className={styles.link}>
-									Зустрічі з батьками
-								</Link>
-							</li>
+							{supportLinks.map((link, index) => (
+								<li key={index}>
+									<Link href={link.href} className={styles.link}>
+										{link.name}
+									</Link>
+								</li>
+							))}
 						</ul>
 
-						{/* Кнопка реєстрації */}
+						{/* CTA Button */}
 						<div className={styles.ctaSection}>
 							<Link href='/free-trial' className={styles.ctaButton}>
-								<FaUsers className={styles.ctaIcon} />
-								Безкоштовна ознайомча зустріч
+								<FaRocket className={styles.ctaIcon} />
+								<div className={styles.ctaContent}>
+									<div className={styles.ctaTitle}>Безкоштовний урок</div>
+									<div className={styles.ctaSubtitle}>Спробуй прямо зараз!</div>
+								</div>
 							</Link>
-							<p className={styles.ctaText}>
-								Перший крок до ІТ-кар'єри вашої дитини!
-							</p>
 						</div>
 					</div>
 				</div>
 
-				{/* Розділювач */}
-				<div className={styles.divider}>
-					<div className={styles.bottomSection}>
-						{/* Соціальні мережі */}
-						<div className={styles.socialSection}>
-							<p className={styles.socialTitle}>Слідкуйте за нами:</p>
-							<div className={styles.socialLinks}>
-								<Link href='#' className={styles.socialLink}>
-									<FaTelegram />
-								</Link>
-								<Link href='#' className={styles.socialLink}>
-									<FaInstagram />
-								</Link>
-								<Link href='#' className={styles.socialLink}>
-									<FaYoutube />
-								</Link>
-								<Link href='#' className={styles.socialLink}>
-									<FaFacebook />
-								</Link>
-								<Link href='#' className={styles.socialLink}>
-									<FaTiktok />
-								</Link>
-								<Link href='#' className={styles.socialLink}>
-									<FaLinkedin />
-								</Link>
-							</div>
-						</div>
+				{/* Divider */}
+				<div className={styles.divider}></div>
 
-						{/* Копірайт */}
+				{/* Bottom Section */}
+				<div className={styles.bottomSection}>
+					{/* Social Links */}
+					<div className={styles.socialSection}>
+						<h4 className={styles.socialTitle}>Приєднуйтесь до нас:</h4>
+						<div className={styles.socialLinks}>
+							<Link
+								href='https://t.me/smartcodeacademy'
+								className={styles.socialLink}
+								title='Telegram'
+							>
+								<FaTelegram />
+							</Link>
+							<Link
+								href='https://instagram.com/smartcodeacademy'
+								className={styles.socialLink}
+								title='Instagram'
+							>
+								<FaInstagram />
+							</Link>
+							<Link
+								href='https://youtube.com/smartcodeacademy'
+								className={styles.socialLink}
+								title='YouTube'
+							>
+								<FaYoutube />
+							</Link>
+							<Link
+								href='https://facebook.com/smartcodeacademy'
+								className={styles.socialLink}
+								title='Facebook'
+							>
+								<FaFacebook />
+							</Link>
+							<Link
+								href='https://tiktok.com/@smartcodeacademy'
+								className={styles.socialLink}
+								title='TikTok'
+							>
+								<FaTiktok />
+							</Link>
+							<Link
+								href='https://linkedin.com/company/smartcodeacademy'
+								className={styles.socialLink}
+								title='LinkedIn'
+							>
+								<FaLinkedin />
+							</Link>
+						</div>
+					</div>
+
+					{/* Newsletter */}
+					<div className={styles.newsletter}>
+						<h4 className={styles.newsletterTitle}>Будьте в курсі новин</h4>
+						<p className={styles.newsletterText}>
+							Отримуйте корисні матеріали та новини про ІТ-освіту
+						</p>
+						<form className={styles.newsletterForm}>
+							<input
+								type='email'
+								placeholder='Ваш email'
+								className={styles.newsletterInput}
+							/>
+							<button type='submit' className={styles.newsletterButton}>
+								<FaRocket />
+							</button>
+						</form>
+					</div>
+
+					{/* Copyright and Legal */}
+					<div className={styles.legal}>
 						<div className={styles.copyright}>
-							<p>© {currentYear} SMART CODE ACADEMY. Всі права захищені.</p>
+							<p>© {currentYear} SmartCode Academy. Усі права захищені.</p>
+							<p className={styles.subtitle}>Створюємо майбутнє через освіту</p>
 						</div>
-
-						{/* Юридична інформація */}
 						<div className={styles.legalLinks}>
 							<Link href='/privacy' className={styles.legalLink}>
 								Політика конфіденційності
 							</Link>
 							<Link href='/terms' className={styles.legalLink}>
 								Умови використання
+							</Link>
+							<Link href='/cookies' className={styles.legalLink}>
+								Політика cookie
 							</Link>
 						</div>
 					</div>

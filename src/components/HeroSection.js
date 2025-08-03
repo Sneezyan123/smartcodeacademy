@@ -1,47 +1,127 @@
-"use client"
-import React, { useState } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+'use client'
+import React, { useState, useEffect } from 'react'
+import {
+	ChevronLeft,
+	ChevronRight,
+	Code,
+	Users,
+	Award,
+	Clock,
+	CheckCircle,
+	Play,
+} from 'lucide-react'
 import styles from './HeroSection.module.css'
 
 const HeroSection = () => {
 	const [currentSlide, setCurrentSlide] = useState(0)
+	const [isVisible, setIsVisible] = useState(false)
+
+	useEffect(() => {
+		const timer = setTimeout(() => setIsVisible(true), 300)
+		return () => clearTimeout(timer)
+	}, [])
 
 	const slides = [
 		{
-			title: 'Онлайн-школа програмування CodeMaster',
+			id: 'platform',
+			title: 'Сучасна навчальна платформа',
 			subtitle:
-				'Це місце, де на вас чекають найкращі викладачі, передові навчальні методики та інтерактивні заняття програмуванням онлайн. А ще:',
-			rightTitle: 'Усе корисне в одному місці',
+				'Все необхідне для ефективного навчання програмування зібрано в одному місці',
+			rightTitle: 'Інтерактивне навчання',
 			rightContent:
-				'Усі наші матеріали та курси для вивчення програмування зібрані на одній зручній платформі: від цікавого контенту до тренувальних і домашніх завдань',
+				'Навчальна платформа з відеоуроками, практичними завданнями, тестами та проектами. Прогрес відстежується автоматично.',
+			features: [
+				'Відеоуроки від експертів',
+				'Практичні завдання',
+				'Автоматична перевірка коду',
+				'Персональний прогрес',
+			],
 			mockupContent: {
-				title: 'CodeMaster',
-				subtitle: 'Programming Courses',
-				courses: ['JavaScript', 'Python', 'React', 'Node.js'],
+				title: 'SmartCode Platform',
+				subtitle: 'Твій шлях у програмування',
+				courses: [
+					'Python Basics',
+					'Web Development',
+					'Game Creation',
+					'Mobile Apps',
+				],
+				stats: {
+					completed: 85,
+					total: 120,
+					level: 'Intermediate',
+				},
 				features: [
-					'Interactive Coding',
-					'Live Sessions',
-					'Code Reviews',
-					'Projects',
+					'Інтерактивний редактор коду',
+					'Миттєвий фідбек',
+					'Спільнота студентів',
+					'Сертифікати досягнень',
 				],
 			},
 		},
 		{
-			title: 'Інтерактивне навчання програмування',
+			id: 'mentorship',
+			title: 'Персональне наставництво',
 			subtitle:
-				'Вивчайте код через практику з реальними проектами, ментором та командою однодумців. Отримайте:',
-			rightTitle: 'Практичний досвід',
+				'Досвідчені ментори супроводжують кожного студента на шляху до успіху в ІТ',
+			rightTitle: 'Підтримка 24/7',
 			rightContent:
-				"Працюйте над реальними проектами, отримуйте зворотний зв'язок від менторів та будуйте портфоліо, яке допоможе знайти роботу мрії",
+				'Наші ментори - практикуючі розробники з топових ІТ компаній. Вони допомагають з проектами та відповідають на питання.',
+			features: [
+				'Персональний ментор',
+				'Щотижневі 1-на-1 сесії',
+				'Ревʼю коду та проектів',
+				"Допомога з кар'єрою",
+			],
 			mockupContent: {
-				title: 'Live Coding',
-				subtitle: 'Real-time Practice',
-				courses: ['Full-Stack', 'Frontend', 'Backend', 'DevOps'],
+				title: 'Mentor Dashboard',
+				subtitle: 'Твій особистий гід',
+				courses: ['Code Review', 'Career Advice', 'Project Help', 'Live Q&A'],
+				stats: {
+					completed: 92,
+					total: 100,
+					level: 'Advanced',
+				},
 				features: [
-					'Git Workflow',
-					'Code Reviews',
+					'Відеодзвінки з ментором',
+					'Персональний план навчання',
+					'Ревʼю домашніх завдань',
+					'Підготовка до співбесід',
+				],
+			},
+		},
+		{
+			id: 'community',
+			title: 'Активна спільнота розробників',
+			subtitle:
+				'Навчайся разом з однолітками, створюй команди та працюй над цікавими проектами',
+			rightTitle: 'Командна робота',
+			rightContent:
+				'Студенти працюють в командах над реальними проектами, отримують досвід роботи з Git, Agile та іншими інструментами.',
+			features: [
+				'Командні проекти',
+				'Хакатони та змагання',
+				'Нетворкінг події',
+				'Спільний чат 24/7',
+			],
+			mockupContent: {
+				title: 'Community Hub',
+				subtitle: 'Разом до успіху',
+				courses: [
 					'Team Projects',
-					'Mentorship',
+					'Hackathons',
+					'Code Challenges',
+					'Study Groups',
+				],
+				stats: {
+					completed: 78,
+					total: 95,
+					level: 'Team Leader',
+				},
+				features: [
+					'Командна розробка',
+					'Peer code review',
+					'Спільні проекти',
+					'Менторство один одного',
 				],
 			},
 		},
@@ -60,58 +140,128 @@ const HeroSection = () => {
 	return (
 		<section className={styles.heroSection}>
 			<div className={styles.container}>
-				<div className={styles.content}>
-					{/* Левая часть */}
+				<div
+					className={`${styles.content} ${
+						isVisible ? styles.contentVisible : ''
+					}`}
+				>
+					{/* Лівий контент */}
 					<div className={styles.leftContent}>
+						<div className={styles.slideInfo}>
+							<div className={styles.slideNumber}>
+								0{currentSlide + 1} / 0{slides.length}
+							</div>
+							<div className={styles.slideCategory}>Особливості</div>
+						</div>
+
 						<h1 className={styles.title}>{currentSlideData.title}</h1>
 						<p className={styles.subtitle}>{currentSlideData.subtitle}</p>
+
+						<div className={styles.features}>
+							{currentSlideData.features.map((feature, index) => (
+								<div key={index} className={styles.feature}>
+									<CheckCircle className={styles.featureIcon} />
+									<span>{feature}</span>
+								</div>
+							))}
+						</div>
+
+						<div className={styles.leftActions}>
+							<button className={styles.primaryButton}>
+								<Play className={styles.buttonIcon} />
+								Спробувати безкоштовно
+							</button>
+						</div>
 					</div>
 
-					{/* Центральная часть с мокапом */}
+					{/* Центральний мокап */}
 					<div className={styles.centerContent}>
 						<div className={styles.mockupContainer}>
-							<div className={styles.computerMockup}>
+							<div className={styles.deviceFrame}>
 								<div className={styles.screen}>
 									<div className={styles.browser}>
 										<div className={styles.browserHeader}>
 											<div className={styles.browserButtons}>
-												<span></span>
-												<span></span>
-												<span></span>
+												<span className={styles.btnClose}></span>
+												<span className={styles.btnMinimize}></span>
+												<span className={styles.btnMaximize}></span>
 											</div>
+											<div className={styles.urlBar}>smartcode-academy.com</div>
 										</div>
+
 										<div className={styles.browserContent}>
 											<div className={styles.sidebar}>
 												<div className={styles.logo}>
 													<div className={styles.logoIcon}>💻</div>
 													<span>{currentSlideData.mockupContent.title}</span>
 												</div>
+
 												<nav className={styles.nav}>
-													<div className={styles.navItem}>📚 Курси</div>
-													<div className={styles.navItem}>🎯 Практика</div>
-													<div className={styles.navItem}>👥 Спільнота</div>
-													<div className={styles.navItem}>📊 Прогрес</div>
+													<div className={styles.navItem}>
+														<Code className={styles.navIcon} />
+														Курси
+													</div>
+													<div className={styles.navItem}>
+														<Users className={styles.navIcon} />
+														Спільнота
+													</div>
+													<div className={styles.navItem}>
+														<Award className={styles.navIcon} />
+														Досягнення
+													</div>
+													<div className={styles.navItem}>
+														<Clock className={styles.navIcon} />
+														Прогрес
+													</div>
 												</nav>
 											</div>
+
 											<div className={styles.mainContent}>
 												<div className={styles.header}>
 													<h3>{currentSlideData.mockupContent.subtitle}</h3>
+													<div className={styles.userProgress}>
+														<div className={styles.progressBar}>
+															<div
+																className={styles.progressFill}
+																style={{
+																	width: `${
+																		(currentSlideData.mockupContent.stats
+																			.completed /
+																			currentSlideData.mockupContent.stats
+																				.total) *
+																		100
+																	}%`,
+																}}
+															></div>
+														</div>
+														<span className={styles.progressText}>
+															{currentSlideData.mockupContent.stats.completed}/
+															{currentSlideData.mockupContent.stats.total}
+														</span>
+													</div>
 												</div>
+
 												<div className={styles.coursesGrid}>
 													{currentSlideData.mockupContent.courses.map(
 														(course, index) => (
 															<div key={index} className={styles.courseCard}>
-																<div className={styles.courseIcon}>🚀</div>
-																<span>{course}</span>
+																<div className={styles.courseStatus}></div>
+																<div className={styles.courseContent}>
+																	<div className={styles.courseIcon}>🚀</div>
+																	<span className={styles.courseName}>
+																		{course}
+																	</span>
+																</div>
 															</div>
 														)
 													)}
 												</div>
-												<div className={styles.features}>
+
+												<div className={styles.featuresList}>
 													{currentSlideData.mockupContent.features.map(
 														(feature, index) => (
-															<div key={index} className={styles.feature}>
-																<span className={styles.checkmark}>✓</span>
+															<div key={index} className={styles.featureItem}>
+																<CheckCircle className={styles.checkIcon} />
 																{feature}
 															</div>
 														)
@@ -121,30 +271,42 @@ const HeroSection = () => {
 										</div>
 									</div>
 								</div>
-								<div className={styles.stand}></div>
 							</div>
 						</div>
 
-						{/* Навигационные стрелки */}
+						{/* Навігаційні кнопки */}
 						<button className={styles.navButton} onClick={prevSlide}>
-							<ChevronLeft size={24} />
+							<ChevronLeft className={styles.navIcon} />
 						</button>
 						<button
 							className={`${styles.navButton} ${styles.navButtonRight}`}
 							onClick={nextSlide}
 						>
-							<ChevronRight size={24} />
+							<ChevronRight className={styles.navIcon} />
 						</button>
 					</div>
 
-					{/* Правая часть */}
+					{/* Правий контент */}
 					<div className={styles.rightContent}>
 						<h2 className={styles.rightTitle}>{currentSlideData.rightTitle}</h2>
 						<p className={styles.rightText}>{currentSlideData.rightContent}</p>
+
+						<div className={styles.rightStats}>
+							<div className={styles.stat}>
+								<div className={styles.statNumber}>500+</div>
+								<div className={styles.statLabel}>Студентів</div>
+							</div>
+							<div className={styles.stat}>
+								<div className={styles.statNumber}>95%</div>
+								<div className={styles.statLabel}>Задоволених</div>
+							</div>
+						</div>
+
+						<button className={styles.secondaryButton}>Дізнатися більше</button>
 					</div>
 				</div>
 
-				{/* Индикаторы слайдов */}
+				{/* Індикатори слайдів */}
 				<div className={styles.slideIndicators}>
 					{slides.map((_, index) => (
 						<button

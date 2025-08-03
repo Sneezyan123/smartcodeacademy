@@ -1,64 +1,115 @@
 'use client'
 
-import React, { useState } from 'react'
-import { Star } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import {
+	Star,
+	Quote,
+	ChevronLeft,
+	ChevronRight,
+	Users,
+	Award,
+	Heart,
+} from 'lucide-react'
 import styles from './Testimonials.module.css'
 
 const Testimonials = () => {
-	const [activeTestimonial, setActiveTestimonial] = useState(null)
+	const [currentTestimonial, setCurrentTestimonial] = useState(0)
+	const [isVisible, setIsVisible] = useState(false)
+
+	useEffect(() => {
+		const timer = setTimeout(() => setIsVisible(true), 300)
+		return () => clearTimeout(timer)
+	}, [])
 
 	const testimonials = [
 		{
 			id: 1,
-			name: 'Kostya Horilov',
-			position: 'Випускник CodeMaster',
-			company: 'Google',
+			name: 'Костя Горілов',
+			age: 16,
+			position: 'Випускник SmartCode Academy',
+			company: 'Junior Developer в стартапі',
 			rating: 5,
-			text: "CodeMaster - класна команда професіоналів різних IT-напрямків і спеціальностей. Рекомендую їх курси всім хто готовий і хоче вивчити багато нового, постійно практикуватись і вірити що це обов'язково принесе результат. Завдяки курсам і підтримці CodeMaster я отримав свій перший офер в IT в продуктовій IT-компанії.",
+			text: 'SmartCode Academy - це найкраща школа програмування! Завдяки якісному навчанню та підтримці менторів я зміг освоїти Python та створити свій перший додаток. Тепер я навіть підробляю як джуніор розробник!',
 			avatar: '👨‍💻',
-			companyLogo: '🔍',
+			course: 'Python & Web Development',
+			duration: '8 місяців',
+			achievement: 'Створив власний додаток',
+			gradient: 'blue',
 		},
 		{
 			id: 2,
-			name: 'Anastasia Sukhanova',
-			position: 'Випускниця CodeMaster',
-			company: 'Google',
+			name: 'Анастасія Суханова',
+			age: 15,
+			position: 'Випускниця SmartCode Academy',
+			company: 'Фрілансер веб-дизайнер',
 			rating: 5,
-			text: 'Проходила курс в CodeMaster. Сподобалося, що все дуже добре організовано. Навчальна платформа просто чудова — відео, багато практичних завдань, корисні чати, розділ із вакансіями, техчеки та мотиваційні змагання. Була дуже хороша підготовка до працевлаштування. А особливо сподобалася підтримка команди і дружна атмосфера)',
+			text: 'Навчання в SmartCode Academy змінило моє життя! Тут я не тільки вивчила HTML, CSS та JavaScript, але й навчилася працювати в команді. Тепер я створюю сайти для малого бізнесу та заробляю власні гроші.',
 			avatar: '👩‍💻',
-			companyLogo: '🔍',
+			course: 'Frontend Development',
+			duration: '6 місяців',
+			achievement: 'Запустила власне агентство',
+			gradient: 'purple',
 		},
 		{
 			id: 3,
-			name: 'Bohdan Yaremchuk',
-			position: 'Випускник CodeMaster',
-			company: 'DOU',
+			name: 'Богдан Яремчук',
+			age: 14,
+			position: 'Студент SmartCode Academy',
+			company: 'Переможець хакатону',
 			rating: 5,
-			text: 'Однозначно найкращі курси, після закінчення яких ти 99.9% знайдеш роботу в IT. Від тебе — бажання, наполегливість і важка праця, а все інше тебе навчать в CodeMaster! Перевірив на собі)',
+			text: 'В SmartCode Academy я знайшов друзів-однодумців та створив свою першу гру в Unity! Викладачі завжди готові допомогти, а навчальна платформа дуже зручна. Рекомендую всім, хто хоче стати програмістом!',
 			avatar: '👨‍🎓',
-			companyLogo: '💼',
+			course: 'Game Development',
+			duration: '10 місяців',
+			achievement: '1-е місце на хакатоні',
+			gradient: 'green',
 		},
 		{
 			id: 4,
-			name: 'Vlad Shulzhenko',
-			position: 'Випускник CodeMaster',
-			company: 'DOU',
+			name: 'Влад Шульженко',
+			age: 17,
+			position: 'Випускник SmartCode Academy',
+			company: 'Студент технічного ВНЗ',
 			rating: 5,
-			text: "Найкращі курси, які можна порадити. Не варто сумніватися, чи йти в CodeMaster чи ні - якщо ти готовий змінити своє життя на краще, тобі обов'язково сюди. Усі люди, які тут працюють, у будь-який спосіб обов'язково тобі допоможуть. Навчання проходить у цікавому форматі (80% практики), на яке треба відводити достатньо часу. Але можу точно сказати - це того варте!",
+			text: 'Завдяки SmartCode Academy я вступив до технічного університету з відмінною підготовкою! Знання програмування, які я отримав тут, допомагають мені бути кращим за однокурсників. Дуже вдячний за якісну освіту!',
 			avatar: '🧑‍💻',
-			companyLogo: '💼',
+			course: 'Full-Stack Development',
+			duration: '12 місяців',
+			achievement: 'Вступ до ТОП ВНЗ',
+			gradient: 'orange',
 		},
 		{
 			id: 5,
-			name: 'Halyna Petrova',
-			position: 'Випускниця CodeMaster',
-			company: 'DOU',
+			name: 'Галина Петрова',
+			age: 13,
+			position: 'Студентка SmartCode Academy',
+			company: 'Молодший розробник',
 			rating: 5,
-			text: 'Я б навіть сказала єдині, які варто закінчити. Я перед ними закінчила декілька інших, вони дали 2% знань від усього, що вивчила в мейт. Сьогодні я отримала свій перший IT-офер, без менту цього б не було. Якщо сумніваєтесь, просто пройдіть безкоштовний перший рівень, ви самі зрозумієте якість та зручність подачі інформації.',
+			text: 'Мені тільки 13, але завдяки SmartCode Academy я вже створюю власні проекти! Особливо подобається робота з ментором - він завжди пояснить складні моменти простими словами. Мрію стати професійним програмістом!',
 			avatar: '👩‍🎓',
-			companyLogo: '💼',
+			course: 'Python for Kids',
+			duration: '4 місяці',
+			achievement: 'Наймолодший випускник',
+			gradient: 'pink',
 		},
 	]
+
+	const stats = [
+		{ number: '500+', label: 'Випускників', icon: <Users /> },
+		{ number: '4.9', label: 'Рейтинг', icon: <Star /> },
+		{ number: '95%', label: 'Задоволених', icon: <Heart /> },
+		{ number: '50+', label: 'Нагород', icon: <Award /> },
+	]
+
+	const nextTestimonial = () => {
+		setCurrentTestimonial(prev => (prev + 1) % testimonials.length)
+	}
+
+	const prevTestimonial = () => {
+		setCurrentTestimonial(
+			prev => (prev - 1 + testimonials.length) % testimonials.length
+		)
+	}
 
 	const renderStars = rating => {
 		return Array.from({ length: 5 }, (_, index) => (
@@ -71,63 +122,165 @@ const Testimonials = () => {
 		))
 	}
 
+	const currentTestimonialData = testimonials[currentTestimonial]
+
 	return (
 		<section className={styles.testimonialsSection}>
 			<div className={styles.container}>
 				{/* Header */}
-				<div className={styles.header}>
+				<div
+					className={`${styles.header} ${
+						isVisible ? styles.headerVisible : ''
+					}`}
+				>
 					<div className={styles.headerContent}>
-						<p className={styles.subtitle}>ШО ПРО НАС КАЖУТЬ?</p>
+						<div className={styles.badge}>
+							<Quote className={styles.badgeIcon} />
+							Відгуки студентів
+						</div>
 						<h2 className={styles.title}>
-							CodeMaster люблять
-							<br />
-							тисячі студентів
+							Історії успіху наших
+							<span className={styles.titleAccent}>випускників</span>
 						</h2>
+						<p className={styles.subtitle}>
+							Дізнайтеся, як SmartCode Academy змінила життя сотень дітей та
+							підлітків
+						</p>
 					</div>
-					<button className={styles.ctaButton}>Підібрати навчання</button>
+					<button className={styles.ctaButton}>
+						<Users className={styles.ctaIcon} />
+						Приєднатися до спільноти
+					</button>
 				</div>
 
 				{/* Main Content */}
-				<div className={styles.content}>
-					{/* Stats Card */}
-					<div className={styles.statsCard}>
-						<div className={styles.statsContent}>
-							<div className={styles.statsNumber}>2000+</div>
-							<div className={styles.statsText}>випускників на DOU</div>
+				<div
+					className={`${styles.content} ${
+						isVisible ? styles.contentVisible : ''
+					}`}
+				>
+					{/* Featured Testimonial */}
+					<div className={styles.featuredTestimonial}>
+						<div
+							className={`${styles.testimonialCard} ${
+								styles[currentTestimonialData.gradient]
+							}`}
+						>
+							<div className={styles.testimonialHeader}>
+								<div className={styles.authorInfo}>
+									<div className={styles.avatar}>
+										{currentTestimonialData.avatar}
+									</div>
+									<div className={styles.authorDetails}>
+										<h3 className={styles.authorName}>
+											{currentTestimonialData.name}
+											<span className={styles.authorAge}>
+												({currentTestimonialData.age} років)
+											</span>
+										</h3>
+										<p className={styles.authorPosition}>
+											{currentTestimonialData.position}
+										</p>
+										<p className={styles.authorCompany}>
+											{currentTestimonialData.company}
+										</p>
+									</div>
+								</div>
+								<div className={styles.rating}>
+									{renderStars(currentTestimonialData.rating)}
+								</div>
+							</div>
+
+							<div className={styles.testimonialContent}>
+								<Quote className={styles.quoteIcon} />
+								<p className={styles.testimonialText}>
+									{currentTestimonialData.text}
+								</p>
+							</div>
+
+							<div className={styles.testimonialFooter}>
+								<div className={styles.courseInfo}>
+									<div className={styles.courseTag}>
+										📚 {currentTestimonialData.course}
+									</div>
+									<div className={styles.duration}>
+										⏱️ {currentTestimonialData.duration}
+									</div>
+								</div>
+								<div className={styles.achievement}>
+									🏆 {currentTestimonialData.achievement}
+								</div>
+							</div>
+						</div>
+
+						{/* Navigation */}
+						<div className={styles.testimonialNavigation}>
+							<button className={styles.navBtn} onClick={prevTestimonial}>
+								<ChevronLeft className={styles.navIcon} />
+							</button>
+							<div className={styles.testimonialIndicators}>
+								{testimonials.map((_, index) => (
+									<button
+										key={index}
+										className={`${styles.indicator} ${
+											index === currentTestimonial ? styles.active : ''
+										}`}
+										onClick={() => setCurrentTestimonial(index)}
+									/>
+								))}
+							</div>
+							<button className={styles.navBtn} onClick={nextTestimonial}>
+								<ChevronRight className={styles.navIcon} />
+							</button>
 						</div>
 					</div>
 
-					{/* Testimonials Grid */}
+					{/* Statistics */}
+					<div className={styles.statsSection}>
+						<h3 className={styles.statsTitle}>Наші досягнення</h3>
+						<div className={styles.statsGrid}>
+							{stats.map((stat, index) => (
+								<div
+									key={index}
+									className={styles.statCard}
+									style={{ animationDelay: `${index * 0.1}s` }}
+								>
+									<div className={styles.statIcon}>{stat.icon}</div>
+									<div className={styles.statNumber}>{stat.number}</div>
+									<div className={styles.statLabel}>{stat.label}</div>
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+
+				{/* Additional Testimonials Grid */}
+				<div className={styles.additionalTestimonials}>
+					<h3 className={styles.gridTitle}>Більше відгуків</h3>
 					<div className={styles.testimonialsGrid}>
-						{testimonials.map(testimonial => (
+						{testimonials.slice(0, 4).map((testimonial, index) => (
 							<div
 								key={testimonial.id}
-								className={styles.testimonialCard}
-								onMouseEnter={() => setActiveTestimonial(testimonial.id)}
-								onMouseLeave={() => setActiveTestimonial(null)}
+								className={`${styles.miniTestimonial} ${
+									index === currentTestimonial ? styles.highlighted : ''
+								}`}
+								onClick={() => setCurrentTestimonial(index)}
 							>
-								<div className={styles.rating}>
-									{renderStars(testimonial.rating)}
-								</div>
-
-								<p className={styles.testimonialText}>{testimonial.text}</p>
-
-								<div className={styles.testimonialFooter}>
-									<div className={styles.authorInfo}>
-										<div className={styles.avatar}>{testimonial.avatar}</div>
-										<div className={styles.authorDetails}>
-											<div className={styles.authorName}>
-												{testimonial.name}
-											</div>
-											<div className={styles.authorPosition}>
-												{testimonial.position}
-											</div>
+								<div className={styles.miniHeader}>
+									<div className={styles.miniAvatar}>{testimonial.avatar}</div>
+									<div className={styles.miniInfo}>
+										<div className={styles.miniName}>{testimonial.name}</div>
+										<div className={styles.miniCourse}>
+											{testimonial.course}
 										</div>
 									</div>
-									<div className={styles.companyLogo}>
-										{testimonial.companyLogo}
+									<div className={styles.miniRating}>
+										{renderStars(testimonial.rating)}
 									</div>
 								</div>
+								<p className={styles.miniText}>
+									{testimonial.text.substring(0, 120)}...
+								</p>
 							</div>
 						))}
 					</div>
