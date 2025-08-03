@@ -31,6 +31,10 @@ const Header = () => {
 	const underlineRefs = useRef([])
 	const shineRef = useRef(null)
 
+	// Покращена логіка таймерів для dropdown
+	const dropdownTimerRef = useRef(null)
+	const dropdownAnimationRef = useRef(null)
+
 	// Використовуємо Intersection Observer замість scroll event для кращої продуктивності
 	useEffect(() => {
 		const header = headerRef.current
@@ -40,7 +44,7 @@ const Header = () => {
 			([entry]) => {
 				setIsScrolled(!entry.isIntersecting)
 			},
-			{ threshold: 0, rootMargin: '-72px 0px 0px 0px' }
+			{ threshold: 0, rootMargin: '-88px 0px 0px 0px' }
 		)
 
 		observer.observe(header)
@@ -111,76 +115,89 @@ const Header = () => {
 		}
 	}, [isMobileMenuOpen])
 
-	// Анімації для dropdown
+	// Покращені анімації для dropdown
 	useEffect(() => {
 		if (!coursesRef.current) return
 
+		// Очищуємо попередні анімації
+		if (dropdownAnimationRef.current) {
+			dropdownAnimationRef.current.kill()
+		}
+
 		if (isCoursesOpen) {
-			// Встановлюємо visibility для показу
-			gsap.set(coursesRef.current, { visibility: 'visible' })
+			// Спочатку робимо елемент видимим
+			gsap.set(coursesRef.current, {
+				visibility: 'visible',
+				display: 'block',
+			})
 
-			// Анімація відкриття
-			gsap.fromTo(
-				coursesRef.current,
-				{
-					y: 10,
-					opacity: 0,
-					scaleY: 0.95,
-				},
-				{
-					y: 0,
-					opacity: 1,
-					scaleY: 1,
-					duration: 0.4,
-					ease: 'back.out(1.7)',
-					force3D: true,
-				}
-			)
+			// Створюємо timeline для плавної анімації
+			dropdownAnimationRef.current = gsap.timeline()
 
-			// Анімація елементів dropdown з затримкою
-			const items = coursesRef.current.querySelectorAll(
-				`.${styles.dropdownItem}`
-			)
-			gsap.fromTo(
-				items,
-				{ x: -20, opacity: 0 },
-				{
-					x: 0,
-					opacity: 1,
-					duration: 0.3,
-					stagger: 0.05,
-					ease: 'power2.out',
-				}
-			)
+			dropdownAnimationRef.current
+				.fromTo(
+					coursesRef.current,
+					{
+						y: -10,
+						opacity: 0,
+						scaleY: 0.95,
+					},
+					{
+						y: 0,
+						opacity: 1,
+						scaleY: 1,
+						duration: 0.3,
+						ease: 'power2.out',
+					}
+				)
+				.fromTo(
+					coursesRef.current.querySelectorAll(`.${styles.dropdownItem}`),
+					{ x: -15, opacity: 0 },
+					{
+						x: 0,
+						opacity: 1,
+						duration: 0.2,
+						stagger: 0.03,
+						ease: 'power2.out',
+					},
+					0.1
+				)
 		} else {
 			// Анімація закриття
-			const items = coursesRef.current.querySelectorAll(
-				`.${styles.dropdownItem}`
-			)
+			dropdownAnimationRef.current = gsap.timeline()
 
-			// Спочатку анімуємо елементи
-			gsap.to(items, {
-				x: -10,
-				opacity: 0,
-				duration: 0.2,
-				stagger: 0.02,
-				ease: 'power2.in',
-			})
+			dropdownAnimationRef.current
+				.to(coursesRef.current.querySelectorAll(`.${styles.dropdownItem}`), {
+					x: -10,
+					opacity: 0,
+					duration: 0.15,
+					stagger: 0.02,
+					ease: 'power2.in',
+				})
+				.to(
+					coursesRef.current,
+					{
+						y: -5,
+						opacity: 0,
+						scaleY: 0.95,
+						duration: 0.2,
+						ease: 'power2.in',
+						onComplete: () => {
+							gsap.set(coursesRef.current, {
+								visibility: 'hidden',
+								display: 'none',
+							})
+						},
+					},
+					0.05
+				)
+		}
 
-			// Потім анімуємо весь контейнер
-			gsap.to(coursesRef.current, {
-				y: -5,
-				opacity: 0,
-				scaleY: 0.95,
-				duration: 0.25,
-				ease: 'power2.in',
-				delay: 0.1,
-				force3D: true,
-				onComplete: () => {
-					// Приховуємо елемент після завершення анімації
-					gsap.set(coursesRef.current, { visibility: 'hidden' })
-				},
-			})
+		// Очищення при розмонтуванні
+		return () => {
+			if (dropdownAnimationRef.current) {
+				dropdownAnimationRef.current.kill()
+			}
 		}
 	}, [isCoursesOpen])
 
@@ -267,19 +284,38 @@ const Header = () => {
 		return () => document.removeEventListener('mousedown', handleClickOutside)
 	}, [isCoursesOpen, isMobileMenuOpen])
 
-	// Додаємо затримку перед закриттям dropdown для кращого UX
-	const dropdownTimerRef = useRef(null)
-
-	const handleDropdownMouseLeave = () => {
-		dropdownTimerRef.current = setTimeout(() => setIsCoursesOpen(false), 100)
-	}
-
+	// Покращені обробники для dropdown з правильною логікою таймерів
 	const handleDropdownMouseEnter = () => {
+		// Очищуємо таймер закриття якщо він існує
 		if (dropdownTimerRef.current) {
 			clearTimeout(dropdownTimerRef.current)
 			dropdownTimerRef.current = null
 		}
+		// Відкриваємо dropdown одразу
 		setIsCoursesOpen(true)
+	}
+
+	const handleDropdownMouseLeave = () => {
+		// Додаємо невелику затримку перед закриттям для кращого UX
+		dropdownTimerRef.current = setTimeout(() => {
+			setIsCoursesOpen(false)
+		}, 150)
+	}
+
+	// Обробники для самого dropdown контенту
+	const handleDropdownContentMouseEnter = () => {
+		// Очищуємо таймер якщо курсор увійшов в dropdown
+		if (dropdownTimerRef.current) {
+			clearTimeout(dropdownTimerRef.current)
+			dropdownTimerRef.current = null
+		}
+	}
+
+	const handleDropdownContentMouseLeave = () => {
+		// Закриваємо dropdown коли курсор виходить з нього
+		dropdownTimerRef.current = setTimeout(() => {
+			setIsCoursesOpen(false)
+		}, 100)
 	}
 
 	// Очищуємо таймер при розмонтуванні компонента
@@ -287,6 +323,9 @@ const Header = () => {
 		return () => {
 			if (dropdownTimerRef.current) {
 				clearTimeout(dropdownTimerRef.current)
+			}
+			if (dropdownAnimationRef.current) {
+				dropdownAnimationRef.current.kill()
 			}
 		}
 	}, [])
@@ -511,6 +550,8 @@ const Header = () => {
 										}`}
 										role='menu'
 										aria-label='Меню курсів'
+										onMouseEnter={handleDropdownContentMouseEnter}
+										onMouseLeave={handleDropdownContentMouseLeave}
 									>
 										<div className={styles.dropdownContent}>
 											<div className={styles.dropdownHeader}>
