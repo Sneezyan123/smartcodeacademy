@@ -179,31 +179,33 @@
 	color: var(--primary-blue);
 }
 
-/* Dropdown */
+/* Dropdown - Покращено для кращої роботи */
 .dropdown {
 	position: absolute;
 	top: 100%;
 	left: -2rem;
 	margin-top: 0.5rem;
-	opacity: 0;
-	visibility: hidden;
-	transform: translateY(-10px);
-	z-index: 50;
+	z-index: 1001;
+	/* Видаляємо CSS властивості які конфліктують з GSAP */
+	/* opacity та visibility контролюються через GSAP */
+	display: none; /* За замовчуванням приховано */
 }
 
-/* Додаємо невидиму область для плавного переходу курсора */
+/* Розширена невидима область для плавного переходу курсора */
 .dropdown::before {
 	content: '';
 	position: absolute;
-	top: -0.5rem;
-	left: 0;
-	right: 0;
-	height: 0.5rem;
+	top: -0.75rem;
+	left: -1rem;
+	right: -1rem;
+	height: 0.75rem;
 	background: transparent;
+	z-index: -1;
 }
 
 .dropdownOpen {
-	visibility: visible;
+	/* Цей клас буде використовуватися лише для логіки, 
+	   фактичне відображення контролює GSAP */
 }
 
 .dropdownContent {
@@ -214,6 +216,8 @@
 	overflow: hidden;
 	min-width: 420px;
 	backdrop-filter: blur(20px);
+	position: relative;
+	z-index: 1002;
 }
 
 .dropdownHeader {
