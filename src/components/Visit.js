@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
 	Users,
 	Monitor,
@@ -18,15 +18,77 @@ import {
 	Trophy,
 	TrendingUp,
 } from 'lucide-react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import styles from './Visit.module.css'
+
+// Реєструємо ScrollTrigger
+gsap.registerPlugin(ScrollTrigger)
 
 const Visit = () => {
 	const [isVisible, setIsVisible] = useState(false)
 	const [hoveredCard, setHoveredCard] = useState(null)
 	const [currentStat, setCurrentStat] = useState(0)
+	const sectionRef = useRef(null)
+	const cardsRef = useRef(null)
 
 	useEffect(() => {
 		setIsVisible(true)
+
+		// GSAP анімації появи при скролі
+		if (sectionRef.current) {
+			gsap.fromTo(
+				sectionRef.current.querySelectorAll('.animate-up'),
+				{ y: 60, opacity: 0 },
+				{
+					y: 0,
+					opacity: 1,
+					duration: 0.8,
+					ease: 'power3.out',
+					stagger: 0.15,
+					scrollTrigger: {
+						trigger: sectionRef.current,
+						start: 'top 85%',
+						end: 'bottom 15%',
+						toggleActions: 'play none none reverse',
+					},
+				}
+			)
+
+			gsap.fromTo(
+				sectionRef.current.querySelectorAll('.animate-slide'),
+				{ x: -60, opacity: 0 },
+				{
+					x: 0,
+					opacity: 1,
+					duration: 0.7,
+					ease: 'power2.out',
+					stagger: 0.1,
+					scrollTrigger: {
+						trigger: sectionRef.current,
+						start: 'top 75%',
+						toggleActions: 'play none none reverse',
+					},
+				}
+			)
+
+			gsap.fromTo(
+				sectionRef.current.querySelectorAll('.animate-scale'),
+				{ scale: 0.8, opacity: 0 },
+				{
+					scale: 1,
+					opacity: 1,
+					duration: 0.6,
+					ease: 'back.out(1.7)',
+					stagger: 0.05,
+					scrollTrigger: {
+						trigger: sectionRef.current,
+						start: 'top 80%',
+						toggleActions: 'play none none reverse',
+					},
+				}
+			)
+		}
 
 		// Анімація статистики
 		const interval = setInterval(() => {
