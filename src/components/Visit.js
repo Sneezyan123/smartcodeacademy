@@ -38,6 +38,8 @@ const Visit = () => {
 		{ number: '95%', label: 'Працевлаштування', icon: <Award /> },
 		{ number: '2+', label: 'Роки досвіду', icon: <Clock /> },
 		{ number: '4.9', label: 'Рейтинг', icon: <Star /> },
+		{ number: '4.9', label: 'Рейтинг', icon: <Star /> },
+		{ number: '4.9', label: 'Рейтинг', icon: <Star /> },
 	]
 
 	const courses = [
