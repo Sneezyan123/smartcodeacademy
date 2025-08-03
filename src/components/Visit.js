@@ -92,7 +92,7 @@ const Visit = () => {
 
 		// Анімація статистики
 		const interval = setInterval(() => {
-			setCurrentStat(prev => (prev + 1) % 6)
+			setCurrentStat(prev => (prev + 1) % 8)
 		}, 3000)
 
 		return () => clearInterval(interval)
@@ -103,7 +103,9 @@ const Visit = () => {
 		{ number: '95%', label: 'Працевлаштування', icon: <Award /> },
 		{ number: '3+', label: 'Роки досвіду', icon: <Clock /> },
 		{ number: '4.9', label: 'Рейтинг', icon: <Star /> },
-		{ number: '20+', label: 'Проектів', icon: <BookOpen /> },
+		{ number: '8+', label: 'Курсів', icon: <BookOpen /> },
+		{ number: '15+', label: 'Викладачів', icon: <Monitor /> },
+		{ number: '20+', label: 'Проектів', icon: <Rocket /> },
 		{ number: '98%', label: 'Задоволених учнів', icon: <Trophy /> },
 	]
 
@@ -250,7 +252,7 @@ const Visit = () => {
 	]
 
 	return (
-		<div className={styles.container}>
+		<div className={styles.container} ref={sectionRef}>
 			{/* Floating background elements */}
 			<div className={styles.backgroundElements}>
 				<div className={`${styles.floatingElement} ${styles.element1}`}></div>
@@ -265,17 +267,17 @@ const Visit = () => {
 					className={`${styles.hero} ${isVisible ? styles.heroVisible : ''}`}
 				>
 					<div className={styles.heroContent}>
-						<h1 className={styles.title}>
+						<h1 className={`${styles.title} animate-up`}>
 							<span className={styles.titleMain}>SmartCode</span>
 							<span className={styles.titleAccent}>Academy</span>
 						</h1>
 
-						<p className={styles.subtitle}>
+						<p className={`${styles.subtitle} animate-up`}>
 							Школа програмування нового покоління, де діти створюють технології
 							майбутнього
 						</p>
 
-						<div className={styles.heroFeatures}>
+						<div className={`${styles.heroFeatures} animate-slide`}>
 							<div className={styles.feature}>
 								<div className={styles.featureIcon}>
 									<Users className={styles.icon} />
@@ -308,13 +310,14 @@ const Visit = () => {
 					</div>
 
 					{/* Statistics */}
-					<div className={styles.statsContainer}>
+					<div className={`${styles.statsContainer} animate-up`}>
 						{stats.map((stat, index) => (
 							<div
 								key={index}
 								className={`${styles.statCard} ${
 									currentStat === index ? styles.statCardActive : ''
-								}`}
+								} animate-scale`}
+								style={{ animationDelay: `${index * 0.1}s` }}
 							>
 								<div className={styles.statIcon}>{stat.icon}</div>
 								<div className={styles.statContent}>
