@@ -1,5 +1,4 @@
-import Header from '@/components/Header'
-import Footer from '@/components/footer'
+import Footer from '@/components/Footer/footer'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 
@@ -91,6 +90,10 @@ export const viewport = {
 }
 
 export default function RootLayout({ children }) {
+
+
+
+
 	return (
 		<html lang='uk' suppressHydrationWarning>
 			<head>
@@ -114,7 +117,7 @@ export default function RootLayout({ children }) {
 				suppressHydrationWarning
 			>
 				<div className='min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
-					<Header />
+					
 					<main className='flex-1 pt-16 relative'>{children}</main>
 					<Footer />
 				</div>

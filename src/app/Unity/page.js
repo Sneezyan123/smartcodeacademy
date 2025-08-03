@@ -1,4 +1,4 @@
-import UnityCoursePage from "@/components/UnityCoursePage"
+import UnityCoursePage from "@/components/UnityCourse/UnityCoursePage"
 export default function page(){
     return (
         <UnityCoursePage/>

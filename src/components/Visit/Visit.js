@@ -99,7 +99,7 @@ const Visit = () => {
 	}, [])
 
 	const stats = [
-		{ number: '500+', label: 'вВипускникі', icon: <Users /> },
+		{ number: '500+', label: 'Випускників', icon: <Users /> },
 		{ number: '95%', label: 'Працевлаштування', icon: <Award /> },
 		{ number: '3+', label: 'Роки досвіду', icon: <Clock /> },
 		{ number: '4.9', label: 'Рейтинг', icon: <Star /> },
@@ -426,13 +426,7 @@ const Visit = () => {
 					</div>
 				</div>
 
-				{/* Scroll Indicator */}
-				<div className={styles.scrollIndicator}>
-					<div className={styles.scrollText}>
-						Прокрути для більш детальної інформації
-					</div>
-					<ChevronDown className={styles.scrollIcon} />
-				</div>
+
 			</div>
 		</div>
 	)
