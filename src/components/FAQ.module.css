@@ -92,7 +92,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .category:hover {
@@ -152,12 +152,13 @@
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .actionBtn:hover {
   background: rgba(37, 99, 235, 0.2);
-  transform: translateY(-1px);
+  transform: scale(1.05);
+  filter: brightness(1.1);
 }
 
 /* Questions */
@@ -167,7 +168,7 @@
 
 .questionItem {
   border-bottom: 1px solid rgba(37, 99, 235, 0.08);
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .questionItem:last-child {
@@ -189,7 +190,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .questionButton:hover {
@@ -212,7 +213,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
 }
 
@@ -226,7 +227,7 @@
   width: 1rem;
   height: 1rem;
   color: var(--primary-blue);
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .questionItemOpen .chevron {
@@ -237,7 +238,7 @@
 .answerContainer {
   max-height: 0;
   overflow: hidden;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .answerContainerOpen {
@@ -318,7 +319,7 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -327,8 +328,9 @@
 
 .primaryCtaBtn:hover {
   background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
+  transform: scale(1.05);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  filter: brightness(1.1) saturate(1.2);
 }
 
 .secondaryCtaBtn {
@@ -340,13 +342,14 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .secondaryCtaBtn:hover {
   background: rgba(255, 255, 255, 0.9);
-  transform: translateY(-2px);
+  transform: scale(1.05);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  filter: brightness(1.05);
 }
 
 .ctaIcon {

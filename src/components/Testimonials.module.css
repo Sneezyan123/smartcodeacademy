@@ -102,7 +102,7 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -124,8 +124,10 @@
 }
 
 .ctaButton:hover {
-  transform: translateY(-3px);
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #ff8844 0%, #ff6b35 100%);
   box-shadow: 0 15px 40px rgba(255, 107, 53, 0.5);
+  filter: brightness(1.1);
 }
 
 .ctaButton:hover::before {
@@ -167,7 +169,7 @@
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .testimonialCard::before {
@@ -359,13 +361,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
 .navBtn:hover {
-  transform: translateY(-2px) scale(1.05);
+  transform: scale(1.1) rotate(3deg);
+  background: var(--primary-blue);
   box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+  filter: brightness(1.1);
 }
 
 .navIcon {
@@ -385,7 +389,7 @@
   border: none;
   background: rgba(37, 99, 235, 0.2);
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .indicator.active {
@@ -424,14 +428,15 @@
   background: rgba(255, 255, 255, 0.8);
   border-radius: var(--radius-xl);
   border: 1px solid rgba(37, 99, 235, 0.1);
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   animation: fadeInUp 0.6s ease-out forwards;
   opacity: 0;
 }
 
 .statCard:hover {
-  transform: translateY(-4px);
+  transform: scale(1.05);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  filter: brightness(1.05);
 }
 
 .statIcon {
@@ -488,13 +493,14 @@
   padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
 .miniTestimonial:hover {
-  transform: translateY(-4px);
+  transform: scale(1.03);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  filter: brightness(1.05);
 }
 
 .miniTestimonial.highlighted {
