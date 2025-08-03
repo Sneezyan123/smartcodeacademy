@@ -19,7 +19,6 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Navigation */}
           <nav className={styles.navigation}>
             <div className={styles.navItem}>
               <button className={styles.navButton}>
