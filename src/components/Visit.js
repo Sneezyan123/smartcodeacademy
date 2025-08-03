@@ -14,6 +14,9 @@ import {
 	Star,
 	Award,
 	Clock,
+	BookOpen,
+	Trophy,
+	TrendingUp,
 } from 'lucide-react'
 import styles from './Visit.module.css'
 
@@ -27,7 +30,7 @@ const Visit = () => {
 
 		// Анімація статистики
 		const interval = setInterval(() => {
-			setCurrentStat(prev => (prev + 1) % 4)
+			setCurrentStat(prev => (prev + 1) % 6)
 		}, 3000)
 
 		return () => clearInterval(interval)
@@ -36,21 +39,21 @@ const Visit = () => {
 	const stats = [
 		{ number: '500+', label: 'Випускників', icon: <Users /> },
 		{ number: '95%', label: 'Працевлаштування', icon: <Award /> },
-		{ number: '2+', label: 'Роки досвіду', icon: <Clock /> },
+		{ number: '3+', label: 'Роки досвіду', icon: <Clock /> },
 		{ number: '4.9', label: 'Рейтинг', icon: <Star /> },
-		{ number: '4.9', label: 'Рейтинг', icon: <Star /> },
-		{ number: '4.9', label: 'Рейтинг', icon: <Star /> },
+		{ number: '20+', label: 'Проектів', icon: <BookOpen /> },
+		{ number: '98%', label: 'Задоволених учнів', icon: <Trophy /> },
 	]
 
 	const courses = [
 		{
 			id: 'programming',
-			title: 'ПРОГРАМУЄМО',
-			subtitle: 'Основи кодингу',
+			title: 'ПРОГРАМУВАННЯ',
+			subtitle: 'Основи кодування майбутнього',
 			icon: <Code className={styles.courseIcon} />,
-			description: 'Python, JavaScript, алгоритми',
+			description: 'Python, JavaScript, алгоритми та структури даних',
 			gradient: 'programming',
-			features: ['Змінні та функції', 'Умови та цикли', 'Проекти'],
+			features: ['Змінні та функції', 'Умови та цикли', 'Реальні проекти'],
 			duration: '6 місяців',
 			age: '10-16 років',
 			elements: [
@@ -87,12 +90,16 @@ const Visit = () => {
 		},
 		{
 			id: 'games',
-			title: 'СТВОРЮЄМО ІГРИ',
-			subtitle: 'Геймдев для дітей',
+			title: 'ГЕЙМДЕВ',
+			subtitle: 'Створення власних ігор',
 			icon: <Gamepad2 className={styles.courseIcon} />,
-			description: 'Unity, Scratch, Roblox Studio',
+			description: 'Unity, Scratch, Roblox Studio - від ідеї до релізу',
 			gradient: 'games',
-			features: ['Створення персонажів', 'Логіка гри', 'Публікація'],
+			features: [
+				'Персонажі та анімація',
+				'Логіка та механіки',
+				'Публікація ігор',
+			],
 			duration: '8 місяців',
 			age: '8-17 років',
 			elements: [
@@ -126,7 +133,7 @@ const Visit = () => {
 				},
 				{
 					type: 'score',
-					content: 'Рівень: 5',
+					content: 'Рівень: 42',
 					x: '15%',
 					y: '80%',
 					delay: '2s',
@@ -136,11 +143,15 @@ const Visit = () => {
 		{
 			id: 'web',
 			title: 'ВЕБ-РОЗРОБКА',
-			subtitle: 'Сайти та додатки',
+			subtitle: 'Сучасні сайти та додатки',
 			icon: <Monitor className={styles.courseIcon} />,
-			description: 'HTML, CSS, React, дизайн',
+			description: 'HTML, CSS, JavaScript, React - повний стек веб-розробки',
 			gradient: 'web',
-			features: ['Верстка сторінок', 'Стилізація', 'Інтерактивність'],
+			features: [
+				'Адаптивна верстка',
+				'Інтерактивні інтерфейси',
+				'Сучасні технології',
+			],
 			duration: '7 місяців',
 			age: '12-18 років',
 			elements: [
@@ -160,7 +171,7 @@ const Visit = () => {
 				},
 				{
 					type: 'web-element',
-					content: 'CSS',
+					content: 'React',
 					x: '60%',
 					y: '60%',
 					delay: '1s',
@@ -198,7 +209,8 @@ const Visit = () => {
 						</h1>
 
 						<p className={styles.subtitle}>
-							Школа програмування, де діти стають творцями майбутнього
+							Школа програмування нового покоління, де діти створюють технології
+							майбутнього
 						</p>
 
 						<div className={styles.heroFeatures}>
@@ -206,29 +218,29 @@ const Visit = () => {
 								<div className={styles.featureIcon}>
 									<Users className={styles.icon} />
 								</div>
-								<span>8-17 років</span>
+								<span>Віком 8-17 років</span>
 							</div>
 							<div className={styles.feature}>
 								<div className={styles.featureIcon}>
 									<Monitor className={styles.icon} />
 								</div>
-								<span>Онлайн/Офлайн</span>
+								<span>Онлайн і офлайн</span>
 							</div>
 							<div className={styles.feature}>
 								<div className={styles.featureIcon}>
 									<Award className={styles.icon} />
 								</div>
-								<span>Сертифікат</span>
+								<span>Міжнародний сертифікат</span>
 							</div>
 						</div>
 
 						<div className={styles.ctaButtons}>
 							<button className={styles.primaryButton}>
 								<Play className={styles.buttonIcon} />
-								Почати навчання
+								Почати навчання безкоштовно
 							</button>
 							<button className={styles.secondaryButton}>
-								Безкоштовний урок
+								Записатися на пробний урок
 							</button>
 						</div>
 					</div>
@@ -255,9 +267,10 @@ const Visit = () => {
 				{/* Courses Showcase */}
 				<div className={styles.coursesSection}>
 					<div className={styles.sectionHeader}>
-						<h2 className={styles.sectionTitle}>Наші напрямки</h2>
+						<h2 className={styles.sectionTitle}>Наші навчальні напрямки</h2>
 						<p className={styles.sectionSubtitle}>
-							Обери свій шлях у світі технологій
+							Обери свій шлях у світі IT-технологій та почни створювати майбутнє
+							вже сьогодні
 						</p>
 					</div>
 
@@ -340,7 +353,7 @@ const Visit = () => {
 									</div>
 
 									<button className={styles.courseButton}>
-										Дізнатися більше
+										Дізнатися більше про курс
 									</button>
 								</div>
 							</div>
@@ -350,7 +363,9 @@ const Visit = () => {
 
 				{/* Scroll Indicator */}
 				<div className={styles.scrollIndicator}>
-					<div className={styles.scrollText}>Прокрути вниз</div>
+					<div className={styles.scrollText}>
+						Прокрути для більш детальної інформації
+					</div>
 					<ChevronDown className={styles.scrollIcon} />
 				</div>
 			</div>
