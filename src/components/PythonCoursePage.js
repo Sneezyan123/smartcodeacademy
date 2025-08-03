@@ -25,11 +25,10 @@ import Link from 'next/link'
 import styles from './PythonCoursePage.module.css'
 
 const PythonCoursePage = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [scrollY, setScrollY] = useState(0)
   const [activeModule, setActiveModule] = useState(0)
   const [isLoaded, setIsLoaded] = useState(false)
   const [visibleSections, setVisibleSections] = useState([])
+  const [sunPosition, setSunPosition] = useState('topRight')
 
   useEffect(() => {
     setIsLoaded(true)
@@ -49,22 +48,47 @@ const PythonCoursePage = () => {
     // Спостерігаємо за секціями
     const sections = document.querySelectorAll('[data-scroll-section]')
     sections.forEach(section => observer.observe(section))
-
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
     
+    // Scroll listener для переслідування сонця
     const handleScroll = () => {
-      setScrollY(window.scrollY)
+      const scrollY = window.scrollY
+      const windowHeight = window.innerHeight
+      const documentHeight = document.documentElement.scrollHeight
+      
+      // Обчислюємо позицію сонця в залежності від скролу
+      const scrollProgress = scrollY / (documentHeight - windowHeight)
+      
+      // Логіка з невеликою зоною гістерезису для плавнішого переходу
+      // При скролі вниз: переключається на 45%
+      // При скролі вгору: переключається на 55%
+      setSunPosition(prev => {
+        if (scrollProgress < 0.45) {
+          return 'topRight'
+        } else if (scrollProgress > 0.55) {
+          return 'topLeft'
+        }
+        // Зберігаємо поточну позицію в зоні 45-55%
+        return prev
+      })
+    }
+
+    // Додаємо scroll listener з throttling
+    let ticking = false
+    const scrollListener = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll()
+          ticking = false
+        })
+        ticking = true
+      }
     }
     
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', scrollListener, { passive: true })
     
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('scroll', handleScroll)
       observer.disconnect()
+      window.removeEventListener('scroll', scrollListener)
     }
   }, [])
 
@@ -176,37 +200,137 @@ const PythonCoursePage = () => {
       <div className={styles.animatedBackground}>
         <div className={styles.gradientBackground}></div>
         
-        {/* Floating particles */}
-        {[...Array(50)].map((_, i) => (
+        {/* Основні зірки (фіолетові) */}
+        {[...Array(30)].map((_, i) => (
           <div
-            key={i}
-            className={styles.floatingParticle}
+            key={`star-purple-${i}`}
+            className={`${styles.floatingParticle} ${styles.starPurple}`}
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${2 + Math.random() * 3}s`
+              animationDelay: `${Math.random() * 12}s`,
+              animationDuration: `${8 + Math.random() * 8}s`
             }}
           />
         ))}
         
-        {/* Large floating orbs */}
-        <div 
-          className={styles.floatingOrb}
-          style={{
-            left: `${mousePosition.x * 0.05}px`,
-            top: `${mousePosition.y * 0.05}px`,
-            transform: `translate(-50%, -50%) scale(${1 + scrollY * 0.001})`
-          }}
-        />
-        <div 
-          className={styles.floatingOrbSecondary}
-          style={{
-            right: `${mousePosition.x * 0.03}px`,
-            bottom: `${mousePosition.y * 0.03}px`,
-            transform: `translate(50%, 50%) scale(${1 + scrollY * 0.0005})`
-          }}
-        />
+        {/* Блакитні зірки */}
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={`star-blue-${i}`}
+            className={`${styles.floatingParticle} ${styles.starBlue}`}
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 8}s`,
+              animationDuration: `${5 + Math.random() * 6}s`
+            }}
+          />
+        ))}
+        
+        {/* Рожеві зірки */}
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={`star-pink-${i}`}
+            className={`${styles.floatingParticle} ${styles.starPink}`}
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 15}s`,
+              animationDuration: `${10 + Math.random() * 10}s`
+            }}
+          />
+        ))}
+        
+        {/* Золоті зірки */}
+        {[...Array(10)].map((_, i) => (
+          <div
+            key={`star-gold-${i}`}
+            className={`${styles.floatingParticle} ${styles.starGold}`}
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 6}s`,
+              animationDuration: `${4 + Math.random() * 4}s`
+            }}
+          />
+        ))}
+        
+        {/* Мерехтливі зірки */}
+        {[...Array(25)].map((_, i) => (
+          <div
+            key={`star-twinkle-${i}`}
+            className={`${styles.floatingParticle} ${styles.starTwinkle}`}
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 4}s`,
+              animationDuration: `${2 + Math.random() * 4}s`
+            }}
+          />
+        ))}
+        
+        {/* Зірки з випадковими анімаціями */}
+        {[...Array(20)].map((_, i) => {
+          const animations = ['starWave', 'starDiagonal'];
+          const colors = ['starBlue', 'starPink', 'starPurple'];
+          const randomAnimation = animations[Math.floor(Math.random() * animations.length)];
+          const randomColor = colors[Math.floor(Math.random() * colors.length)];
+          
+          return (
+            <div
+              key={`star-random-${i}`}
+              className={`${styles.floatingParticle} ${styles[randomColor]}`}
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationName: randomAnimation,
+                animationDuration: `${6 + Math.random() * 6}s`,
+                animationDelay: `${Math.random() * 8}s`,
+                animationIterationCount: 'infinite',
+                animationTimingFunction: 'ease-in-out'
+              }}
+            />
+          );
+        })}
+        
+        {/* Анімоване сонце з пелюстками */}
+        <div className={`${styles.followingSun} ${styles[sunPosition]}`}>
+          {/* Пелюстки навколо сонця */}
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={`petal-${i}`}
+              className={styles.sunPetal}
+              style={{
+                animationDelay: `${i * 0.4}s`
+              }}
+            />
+          ))}
+          
+          {/* Частинки, що розлітаються у всі сторони */}
+          {[...Array(12)].map((_, i) => {
+            const angle = (i * 30) + Math.random() * 20; // Розподіл по колу з варіацією
+            const distance = 40 + Math.random() * 20; // Відстань польоту
+            const radians = (angle * Math.PI) / 180;
+            
+            return (
+              <div
+                key={`particle-${i}`}
+                className={styles.sunParticle}
+                style={{
+                  '--end-x': `${Math.cos(radians) * distance}px`,
+                  '--end-y': `${Math.sin(radians) * distance}px`,
+                  animationDelay: `${i * 0.2 + Math.random() * 2}s`,
+                  animationDuration: `${3 + Math.random() * 2}s`
+                }}
+              />
+            );
+          })}
+        </div>
+        
+        {/* Великі орби */}
+        <div className={styles.floatingOrb} />
+        <div className={styles.floatingOrbSecondary} />
       </div>
 
       {/* Main Content */}
