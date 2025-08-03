@@ -21,7 +21,7 @@ import {
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import styles from './Visit.module.css'
-
+import EnhancedCourseCards from './EnhancedCourseCards'
 // Реєструємо ScrollTrigger
 gsap.registerPlugin(ScrollTrigger)
 
@@ -329,102 +329,7 @@ const Visit = () => {
 					</div>
 				</div>
 
-				{/* Courses Showcase */}
-				<div className={styles.coursesSection}>
-					<div className={styles.sectionHeader}>
-						<h2 className={styles.sectionTitle}>Наші навчальні напрямки</h2>
-						<p className={styles.sectionSubtitle}>
-							Обери свій шлях у світі IT-технологій та почни створювати майбутнє
-							вже сьогодні
-						</p>
-					</div>
-
-					<div className={styles.coursesGrid}>
-						{courses.map((course, index) => (
-							<div
-								key={course.id}
-								className={`${styles.courseCard} ${
-									isVisible ? styles.courseCardVisible : ''
-								}`}
-								style={{ animationDelay: `${0.5 + index * 0.2}s` }}
-								onMouseEnter={() => setHoveredCard(index)}
-								onMouseLeave={() => setHoveredCard(null)}
-							>
-								<div className={styles.courseHeader}>
-									<div className={styles.courseInfo}>
-										<h3 className={styles.courseTitle}>{course.title}</h3>
-										<p className={styles.courseSubtitle}>{course.subtitle}</p>
-									</div>
-									<div
-										className={`${styles.courseIconContainer} ${
-											styles[course.gradient]
-										}`}
-									>
-										{course.icon}
-									</div>
-								</div>
-
-								{/* Interactive Screen */}
-								<div
-									className={`${styles.courseScreen} ${
-										styles[course.gradient]
-									}`}
-								>
-									<div className={styles.screenContent}>
-										<p className={styles.courseDescription}>
-											{course.description}
-										</p>
-									</div>
-
-									{/* Animated Elements */}
-									<div className={styles.animatedElements}>
-										{course.elements.map((element, elementIndex) => (
-											<div
-												key={elementIndex}
-												className={`${styles.animatedElement} ${
-													styles[element.type]
-												} ${hoveredCard === index ? styles.elementActive : ''}`}
-												style={{
-													left: element.x,
-													top: element.y,
-													animationDelay: element.delay,
-												}}
-											>
-												{element.content}
-											</div>
-										))}
-									</div>
-								</div>
-
-								{/* Course Details */}
-								<div className={styles.courseDetails}>
-									<div className={styles.courseFeatures}>
-										{course.features.map((feature, featureIndex) => (
-											<span key={featureIndex} className={styles.featureTag}>
-												{feature}
-											</span>
-										))}
-									</div>
-
-									<div className={styles.courseMeta}>
-										<div className={styles.metaItem}>
-											<Clock className={styles.metaIcon} />
-											<span>{course.duration}</span>
-										</div>
-										<div className={styles.metaItem}>
-											<Users className={styles.metaIcon} />
-											<span>{course.age}</span>
-										</div>
-									</div>
-
-									<button className={styles.courseButton}>
-										Дізнатися більше про курс
-									</button>
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
+				<EnhancedCourseCards/>
 
 
 			</div>

@@ -13,10 +13,10 @@ export default function Home() {
 			<Visit />
 
 			{/* Features Section - Секція з функціями та можливостями */}
+			<Testimonials />
 			<HeroSection />
 
 			{/* Testimonials Section - Відгуки студентів */}
-			<Testimonials />
 
 			{/* Contact Form Section - Форма зв'язку */}
 			<ContactForm />

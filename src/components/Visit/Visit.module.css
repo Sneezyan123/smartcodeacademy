@@ -178,7 +178,7 @@
 .mainContainer {
 	max-width: 1200px;
 	margin: 0 auto;
-	padding: 2rem 1rem 0;
+	padding: 0rem 1rem 0;
 	position: relative;
 	z-index: 10;
 }
