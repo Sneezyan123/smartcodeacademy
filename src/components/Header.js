@@ -40,7 +40,7 @@ const Header = () => {
 			([entry]) => {
 				setIsScrolled(!entry.isIntersecting)
 			},
-			{ threshold: 0, rootMargin: '-72px 0px 0px 0px' }
+			{ threshold: 0, rootMargin: '-88px 0px 0px 0px' }
 		)
 
 		observer.observe(header)

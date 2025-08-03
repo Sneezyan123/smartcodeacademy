@@ -368,15 +368,37 @@
   padding: 0.75rem;
   border-radius: 0.75rem;
   border: 1px solid #e2e8f0;
-  transition: all var(--transition-fast);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
 
+.courseCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(37, 99, 235, 0.1) 50%,
+    transparent 70%
+  );
+  transition: left 0.6s ease;
+}
+
+.courseCard:hover::before {
+  left: 100%;
+}
+
 .courseCard:hover {
-  transform: scale(1.03) rotateY(1deg);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  filter: brightness(1.05);
+  transform: scale(1.05) rotateY(3deg) rotateX(2deg);
+  box-shadow: 0 15px 40px rgba(37, 99, 235, 0.2);
+  filter: brightness(1.1) saturate(1.2);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(240, 249, 255, 1) 100%);
+  border: 1px solid rgba(37, 99, 235, 0.3);
 }
 
 .courseStatus {
@@ -386,6 +408,17 @@
   width: 3px;
   height: 100%;
   background: linear-gradient(135deg, var(--primary-green) 0%, #059669 100%);
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.courseCard:hover .courseStatus {
+  width: 5px;
+  background: linear-gradient(
+    180deg,
+    var(--primary-blue) 0%,
+    var(--primary-purple) 50%,
+    #ff6b35 100%
+  );
 }
 
 .courseContent {
