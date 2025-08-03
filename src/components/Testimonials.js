@@ -242,19 +242,19 @@ const Testimonials = () => {
 								styles[currentTestimonialData.gradient]
 							}`}
 						>
-							<div className={styles.testimonialHeader}>
+							<div className={`${styles.testimonialHeader} testimonial-content`}>
 								<div className={styles.authorInfo}>
 									<div className={styles.avatar}>
 										{currentTestimonialData.avatar}
 									</div>
 									<div className={styles.authorDetails}>
-										<h3 className={styles.authorName}>
+										<h3 className={`${styles.authorName} testimonial-content`}>
 											{currentTestimonialData.name}
 											<span className={styles.authorAge}>
 												({currentTestimonialData.age} років)
 											</span>
 										</h3>
-										<p className={styles.authorPosition}>
+										<p className={`${styles.authorPosition} testimonial-content`}>
 											{currentTestimonialData.position}
 										</p>
 										<p className={styles.authorCompany}>
@@ -267,14 +267,14 @@ const Testimonials = () => {
 								</div>
 							</div>
 
-							<div className={styles.testimonialContent}>
+							<div className={`${styles.testimonialContent} testimonial-content`}>
 								<Quote className={styles.quoteIcon} />
-								<p className={styles.testimonialText}>
+								<p className={`${styles.testimonialText} testimonial-content`}>
 									{currentTestimonialData.text}
 								</p>
 							</div>
 
-							<div className={styles.testimonialFooter}>
+							<div className={`${styles.testimonialFooter} testimonial-content`}>
 								<div className={styles.courseInfo}>
 									<div className={styles.courseTag}>
 										📚 {currentTestimonialData.course}
