@@ -120,9 +120,13 @@
 /* Main Container */
 .container {
 	min-height: 100vh;
-	background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
+	 background: linear-gradient(135deg, 
+    #f8fafc 0%, 
+    #e0f2fe 25%, 
+    #f3e8ff 50%, 
+    #fdf2f8 75%, 
+    #f0fdf4 100%);
 	position: relative;
-	overflow: hidden;
 }
 
 .backgroundElements {

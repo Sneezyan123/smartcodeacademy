@@ -1,6 +1,7 @@
 /* Header.module.css */
 
 .header {
+	position: sticky;
 	top: 0;
 	left: 0;
 	right: 0;
@@ -93,7 +94,7 @@
 	font-weight: 800;
 	letter-spacing: -0.5px;
 	color: var(--text-primary);
-	background: linear-gradient(135deg, #2563eb 0%, #8b5cf6 100%);
+	background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
 	-webkit-background-clip: text;
 	background-clip: text;
 	-webkit-text-fill-color: transparent;
@@ -101,7 +102,7 @@
 
 .logoSubtitle {
 	font-size: 0.75rem;
-	color: var(--text-secondary);
+	color:#e55a2b ;
 	font-weight: 600;
 	text-transform: uppercase;
 	letter-spacing: 1px;
