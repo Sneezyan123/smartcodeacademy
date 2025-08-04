@@ -13,7 +13,7 @@
   --neon-purple: #cc00ff;
   --dark-bg: #0a0a0a;
   --grid-color: rgba(0, 204, 255, 0.1);
-  --pixel-size: 4px;
+  --pixel-size: 8px;
 }
 
 /* === KEYFRAMES === */
@@ -44,7 +44,24 @@
 
 @keyframes ghostFloat {
   0%, 100% { transform: translateY(0) scaleY(1); }
-  50% { transform: translateY(-20px) scaleY(0.95); }
+  50% { transform: translateY(-8px) scaleY(0.98); }
+}
+
+@keyframes ghostEyeMove {
+  0%, 25% { transform: translateX(0); }
+  25%, 50% { transform: translateX(2px); }
+  50%, 75% { transform: translateX(-2px); }
+  75%, 100% { transform: translateX(0); }
+}
+
+@keyframes ghostBodyPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes ghostScaredFlash {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(0.7); }
 }
 
 @keyframes coinSpin {
@@ -129,6 +146,42 @@
   50% { opacity: 0.3; color: var(--neon-orange); }
 }
 
+@keyframes chomp-top {
+  0%, 100% { transform: rotate(-30deg); }
+  50% { transform: rotate(0deg); }
+}
+
+@keyframes chomp-bottom {
+  0%, 100% { transform: rotate(30deg); }
+  50% { transform: rotate(0deg); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pixelatedMovement {
+  0%, 100% { 
+    transform: translate(0, 0);
+  }
+  25% { 
+    transform: translate(1px, -1px);
+  }
+  50% { 
+    transform: translate(-1px, 1px);
+  }
+  75% { 
+    transform: translate(1px, 1px);
+  }
+}
+
 /* === MAIN CONTAINER === */
 .container {
   min-height: 100vh;
@@ -137,6 +190,9 @@
   font-family: 'Press Start 2P', monospace;
   overflow-x: hidden;
   position: relative;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 /* === BACK BUTTON === */
@@ -230,21 +286,27 @@
   background-image: 
     linear-gradient(var(--grid-color) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-  background-size: 50px 50px;
-  animation: pixelMove 10s linear infinite;
+  background-size: var(--pixel-size) var(--pixel-size);
+  animation: pixelMove 8s linear infinite;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 /* === COINS === */
 .coin {
   position: absolute;
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
   background: var(--neon-yellow);
-  border-radius: 50%;
+  border-radius: 0; /* Square for pixelated look */
   animation: coinSpin 2s linear infinite;
   box-shadow: 
     0 0 10px var(--neon-yellow),
     0 0 20px var(--neon-yellow);
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 .coin.collected {
@@ -257,10 +319,13 @@
 /* === POWER UPS === */
 .powerUp {
   position: absolute;
-  font-size: 1.5rem;
+  font-size: 2rem;
   animation: powerUpBounce 2s ease-in-out infinite;
   filter: drop-shadow(0 0 10px currentColor);
   cursor: pointer;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 .powerUp.cherry { color: var(--neon-pink); }
@@ -276,73 +341,189 @@
   transition: all 0.5s ease;
 }
 
-/* === GHOSTS === */
+/* === PIXELATED GHOSTS - 8-BIT STYLE === */
 .ghost {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  animation: ghostFloat 3s ease-in-out infinite;
-  transition: all 0.1s ease;
+  width: 60px;
+  height: 70px;
+  animation: ghostFloat 2s ease-in-out infinite;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  filter: drop-shadow(0 0 12px currentColor);
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
-.ghost.blinky {
+.ghost.pixelated {
+  animation: ghostFloat 2s ease-in-out infinite, pixelatedMovement 0.5s ease-in-out infinite;
+}
+
+/* Main ghost body with pixelated rounded top */
+.ghost::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px 30px 0 0;
+  z-index: 1;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.ghost.blinky::before {
   background: var(--neon-pink);
-  box-shadow: 0 0 20px var(--neon-pink);
+  box-shadow: 
+    0 0 25px var(--neon-pink),
+    inset 0 0 15px rgba(255, 255, 255, 0.15),
+    inset 0 0 30px rgba(255, 0, 102, 0.3);
 }
 
-.ghost.pinky {
+.ghost.pinky::before {
   background: #ffb8ff;
-  box-shadow: 0 0 20px #ffb8ff;
+  box-shadow: 
+    0 0 25px #ffb8ff,
+    inset 0 0 15px rgba(255, 255, 255, 0.15),
+    inset 0 0 30px rgba(255, 184, 255, 0.3);
 }
 
-.ghost.inky {
+.ghost.inky::before {
   background: var(--neon-blue);
-  box-shadow: 0 0 20px var(--neon-blue);
+  box-shadow: 
+    0 0 25px var(--neon-blue),
+    inset 0 0 15px rgba(255, 255, 255, 0.15),
+    inset 0 0 30px rgba(0, 204, 255, 0.3);
 }
 
-.ghost.clyde {
+.ghost.clyde::before {
   background: var(--neon-orange);
-  box-shadow: 0 0 20px var(--neon-orange);
+  box-shadow: 
+    0 0 25px var(--neon-orange),
+    inset 0 0 15px rgba(255, 255, 255, 0.15),
+    inset 0 0 30px rgba(255, 102, 0, 0.3);
 }
 
 .ghostEyes {
   display: flex;
   justify-content: center;
-  gap: 4px;
-  padding-top: 8px;
+  gap: 8px;
+  padding-top: 18px;
+  position: relative;
+  z-index: 2;
 }
 
 .ghostEye {
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 15px;
   background: white;
-  border-radius: 50%;
+  border-radius: 0; /* Square for pixelated look */
   position: relative;
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 .ghostEye::after {
   content: '';
   position: absolute;
-  width: 4px;
-  height: 4px;
-  background: black;
-  border-radius: 50%;
-  top: 2px;
-  left: 2px;
+  width: 6px;
+  height: 8px;
+  background: #000;
+  border-radius: 0; /* Square for pixelated look */
+  top: 4px;
+  left: 3px;
+  animation: ghostEyeMove 3s ease-in-out infinite;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
+/* Pixelated wavy bottom */
 .ghostBottom {
   position: absolute;
   bottom: 0;
-  width: 100%;
-  height: 10px;
+  left: 0;
+  width: 60px;
+  height: 20px;
   display: flex;
+  z-index: 1;
+  overflow: hidden;
 }
 
 .ghostWave {
   flex: 1;
-  background: inherit;
-  border-radius: 0 0 50% 50%;
+  height: 20px;
+  position: relative;
+}
+
+/* Create pixelated wavy bottom */
+.ghostWave::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: polygon(
+    0% 0%, 
+    50% 100%, 
+    100% 0%, 
+    100% 0%, 
+    0% 0%
+  );
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.ghost.blinky .ghostWave::before {
+  background: var(--neon-pink);
+  box-shadow: 0 0 15px var(--neon-pink);
+}
+
+.ghost.pinky .ghostWave::before {
+  background: #ffb8ff;
+  box-shadow: 0 0 15px #ffb8ff;
+}
+
+.ghost.inky .ghostWave::before {
+  background: var(--neon-blue);
+  box-shadow: 0 0 15px var(--neon-blue);
+}
+
+.ghost.clyde .ghostWave::before {
+  background: var(--neon-orange);
+  box-shadow: 0 0 15px var(--neon-orange);
+}
+
+/* Enhanced pixelated ghost hover effects */
+.ghost:hover {
+  transform: scale(1.15);
+  filter: brightness(1.3) saturate(1.4) drop-shadow(0 0 18px currentColor);
+  animation: ghostFloat 1s ease-in-out infinite, pixelatedMovement 0.3s ease-in-out infinite;
+}
+
+.ghost:hover::before {
+  animation: ghostBodyPulse 0.5s ease-in-out;
+}
+
+/* Scared ghost state with pixelated effect */
+.ghost.scared::before {
+  background: #4169e1 !important;
+  box-shadow: 0 0 25px #4169e1 !important;
+  animation: ghostScaredFlash 0.2s infinite;
+}
+
+.ghost.scared .ghostWave::before {
+  background: #4169e1 !important;
+  box-shadow: 0 0 15px #4169e1 !important;
 }
 
 /* === PAC-MAN CURSOR === */
@@ -380,16 +561,6 @@
   animation: chomp-bottom 0.5s infinite;
 }
 
-@keyframes chomp-top {
-  0%, 100% { transform: rotate(-30deg); }
-  50% { transform: rotate(0deg); }
-}
-
-@keyframes chomp-bottom {
-  0%, 100% { transform: rotate(30deg); }
-  50% { transform: rotate(0deg); }
-}
-
 /* === MAZE LINES === */
 .mazeLines {
   position: absolute;
@@ -401,10 +572,13 @@
 .mazePath {
   fill: none;
   stroke: var(--neon-blue);
-  stroke-width: 3;
-  stroke-linecap: round;
-  opacity: 0.3;
+  stroke-width: 4;
+  stroke-linecap: square;
+  opacity: 0.4;
   animation: mazeGlow 4s ease-in-out infinite;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 /* === MAIN CONTENT === */
@@ -1256,28 +1430,49 @@
   }
   
   .ghost {
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 53px;
+  }
+  
+  .ghost::before {
+    width: 45px;
+    height: 45px;
+    border-radius: 22px 22px 0 0;
+  }
+  
+  .ghostBottom {
+    width: 45px;
+    height: 15px;
+  }
+  
+  .ghostEyes {
+    gap: 6px;
+    padding-top: 12px;
+  }
+  
+  .ghostEye {
+    width: 9px;
+    height: 12px;
+  }
+  
+  .ghostEye::after {
+    width: 4px;
+    height: 6px;
+    top: 3px;
+    left: 2.5px;
   }
   
   .pacman {
     width: 20px;
     height: 20px;
   }
+  
+  .coin {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .powerUp {
+    font-size: 1.5rem;
+  }
 }
-
-/* === ACCESSIBILITY === */
-/* @media (prefers-reduced-motion: reduce) {
-  * {
-    animation: none !important;
-    transition: none !important;
-  }
-  
-  .container {
-    cursor: auto;
-  }
-  
-  .pacman {
-    display: none;
-  }
-} */

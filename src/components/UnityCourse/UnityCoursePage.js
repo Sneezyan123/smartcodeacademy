@@ -31,28 +31,82 @@ const UnityCoursePage = () => {
 	const [isLoaded, setIsLoaded] = useState(false)
 	const [visibleSections, setVisibleSections] = useState([])
 	const [pacmanPosition, setPacmanPosition] = useState({ x: 50, y: 50 })
+	
+	// Bigger pixelated ghosts with collision detection
 	const [ghostPositions, setGhostPositions] = useState([
-		{ x: 200, y: 100, color: 'blinky' },
-		{ x: 300, y: 200, color: 'pinky' },
-		{ x: 150, y: 300, color: 'inky' },
-		{ x: 400, y: 150, color: 'clyde' },
+		{ 
+			x: 200, 
+			y: 100, 
+			color: 'blinky',
+			direction: 'right',
+			speed: 4,
+			lastDirectionChange: 0,
+			size: 60 // Bigger ghosts
+		},
+		{ 
+			x: 300, 
+			y: 200, 
+			color: 'pinky',
+			direction: 'down',
+			speed: 3.5,
+			lastDirectionChange: 0,
+			size: 60
+		},
+		{ 
+			x: 150, 
+			y: 300, 
+			color: 'inky',
+			direction: 'left',
+			speed: 5,
+			lastDirectionChange: 0,
+			size: 60
+		},
+		{ 
+			x: 400, 
+			y: 150, 
+			color: 'clyde',
+			direction: 'up',
+			speed: 4.2,
+			lastDirectionChange: 0,
+			size: 60
+		},
 	])
+	
 	const [coins, setCoins] = useState([])
 	const [powerUps, setPowerUps] = useState([])
 	const heroRef = useRef(null)
 
+	// Collision detection function
+	const checkCollision = (obj1, obj2, obj1Size = 60, obj2Size = 20) => {
+		const distance = Math.sqrt(
+			Math.pow(obj1.x - obj2.x, 2) + Math.pow(obj1.y - obj2.y, 2)
+		)
+		return distance < (obj1Size + obj2Size) / 2
+	}
+
+	// Respawn item at random location
+	const respawnItem = () => {
+		const margin = 100
+		return {
+			x: margin + Math.random() * (window.innerWidth - margin * 2),
+			y: margin + Math.random() * (window.innerHeight - margin * 2),
+		}
+	}
+
 	useEffect(() => {
 		setIsLoaded(true)
 
-		// Генерація монет
+		// Generate coins with bigger size for collision
 		const generateCoins = () => {
 			const newCoins = []
-			for (let i = 0; i < 30; i++) {
+			for (let i = 0; i < 25; i++) {
+				const position = respawnItem()
 				newCoins.push({
 					id: i,
-					x: Math.random() * window.innerWidth,
-					y: Math.random() * window.innerHeight,
+					x: position.x,
+					y: position.y,
 					collected: false,
+					size: 12,
 				})
 			}
 			setCoins(newCoins)
@@ -60,16 +114,18 @@ const UnityCoursePage = () => {
 
 		generateCoins()
 
-		// Генерація power-ups
+		// Generate power-ups with bigger size for collision
 		const generatePowerUps = () => {
 			const newPowerUps = []
-			for (let i = 0; i < 5; i++) {
+			for (let i = 0; i < 8; i++) {
+				const position = respawnItem()
 				newPowerUps.push({
 					id: i,
-					x: Math.random() * window.innerWidth,
-					y: Math.random() * window.innerHeight,
-					type: ['cherry', 'strawberry', 'orange', 'apple', 'melon'][i],
+					x: position.x,
+					y: position.y,
+					type: ['cherry', 'strawberry', 'orange', 'apple', 'melon', 'cherry', 'strawberry', 'orange'][i],
 					collected: false,
+					size: 24,
 				})
 			}
 			setPowerUps(newPowerUps)
@@ -92,34 +148,212 @@ const UnityCoursePage = () => {
 		const sections = document.querySelectorAll('[data-scroll-section]')
 		sections.forEach(section => observer.observe(section))
 
-		
-
-		// Рух привидів
+		// Enhanced ghost movement with collision detection
 		const moveGhosts = () => {
-			setGhostPositions(prev =>
-				prev.map(ghost => ({
-					...ghost,
-					x: ghost.x + (Math.random() - 0.5) * 10,
-					y: ghost.y + (Math.random() - 0.5) * 10,
-				}))
-			)
+			setGhostPositions(prev => {
+				const newGhostPositions = prev.map(ghost => {
+					let newX = ghost.x
+					let newY = ghost.y
+					let newDirection = ghost.direction
+					let newLastDirectionChange = ghost.lastDirectionChange + 1
+
+					// Get viewport dimensions with margins
+					const margin = 80 // Bigger margin for bigger ghosts
+					const viewportWidth = window.innerWidth - margin * 2
+					const viewportHeight = window.innerHeight - margin * 2
+					const ghostSize = ghost.size
+
+					// Each ghost has different behavior patterns - more frequent changes
+					const ghostBehaviors = {
+						blinky: { speed: 4, changeFrequency: 60 }, // Changes every 1.8 seconds
+						pinky: { speed: 3.5, changeFrequency: 80 }, // Changes every 2.4 seconds
+						inky: { speed: 5, changeFrequency: 45 }, // Changes every 1.4 seconds
+						clyde: { speed: 4.2, changeFrequency: 70 } // Changes every 2.1 seconds
+					}
+
+					const behavior = ghostBehaviors[ghost.color]
+					const speed = behavior.speed
+
+					// Move ghost in current direction
+					switch (ghost.direction) {
+						case 'right':
+							newX += speed
+							break
+						case 'left':
+							newX -= speed
+							break
+						case 'up':
+							newY -= speed
+							break
+						case 'down':
+							newY += speed
+							break
+					}
+
+					// Check boundaries
+					const hitLeftBoundary = newX <= margin
+					const hitRightBoundary = newX >= viewportWidth + margin - ghostSize
+					const hitTopBoundary = newY <= margin
+					const hitBottomBoundary = newY >= viewportHeight + margin - ghostSize
+
+					const hitBoundary = hitLeftBoundary || hitRightBoundary || hitTopBoundary || hitBottomBoundary
+
+					// Check if it's time for random direction change (with some randomness)
+					const baseFrequency = behavior.changeFrequency
+					const randomVariation = Math.random() * 30 - 15 // ±15 frames variation
+					const timeForRandomChange = newLastDirectionChange > (baseFrequency + randomVariation)
+
+					if (hitBoundary || timeForRandomChange) {
+						// Determine valid directions based on position
+						const validDirections = []
+						
+						if (!hitLeftBoundary && newX > margin + 50) validDirections.push('left')
+						if (!hitRightBoundary && newX < viewportWidth + margin - ghostSize - 50) validDirections.push('right')
+						if (!hitTopBoundary && newY > margin + 50) validDirections.push('up')
+						if (!hitBottomBoundary && newY < viewportHeight + margin - ghostSize - 50) validDirections.push('down')
+
+						// If we hit a boundary, prioritize directions that move away
+						if (hitBoundary) {
+							const escapeDirections = []
+							if (hitLeftBoundary) escapeDirections.push('right')
+							if (hitRightBoundary) escapeDirections.push('left')
+							if (hitTopBoundary) escapeDirections.push('down')
+							if (hitBottomBoundary) escapeDirections.push('up')
+							
+							// Use escape directions if available, otherwise use valid directions
+							const directionsToUse = escapeDirections.length > 0 ? escapeDirections : validDirections
+							if (directionsToUse.length > 0) {
+								newDirection = directionsToUse[Math.floor(Math.random() * directionsToUse.length)]
+							}
+						} else if (validDirections.length > 0) {
+							// Encourage variety - avoid staying on same axis
+							const currentAxis = (ghost.direction === 'up' || ghost.direction === 'down') ? 'vertical' : 'horizontal'
+							
+							// Prefer opposite axis for variety (horizontal if currently vertical, vice versa)
+							const oppositeAxisDirections = validDirections.filter(dir => {
+								const dirAxis = (dir === 'up' || dir === 'down') ? 'vertical' : 'horizontal'
+								return dirAxis !== currentAxis
+							})
+							
+							// Also avoid immediate reversal
+							const nonReverseDirections = validDirections.filter(dir => {
+								const opposites = { up: 'down', down: 'up', left: 'right', right: 'left' }
+								return dir !== opposites[ghost.direction]
+							})
+							
+							// Priority: opposite axis + non-reverse > opposite axis > non-reverse > any valid
+							let directionsToUse = []
+							
+							if (oppositeAxisDirections.length > 0 && nonReverseDirections.length > 0) {
+								// Best case: opposite axis and not reverse
+								directionsToUse = oppositeAxisDirections.filter(dir => nonReverseDirections.includes(dir))
+							}
+							
+							if (directionsToUse.length === 0 && oppositeAxisDirections.length > 0) {
+								// Second choice: opposite axis (even if reverse)
+								directionsToUse = oppositeAxisDirections
+							}
+							
+							if (directionsToUse.length === 0 && nonReverseDirections.length > 0) {
+								// Third choice: same axis but not reverse
+								directionsToUse = nonReverseDirections
+							}
+							
+							if (directionsToUse.length === 0) {
+								// Last resort: any valid direction
+								directionsToUse = validDirections
+							}
+							
+							newDirection = directionsToUse[Math.floor(Math.random() * directionsToUse.length)]
+						}
+
+						// Reset direction change timer
+						newLastDirectionChange = 0
+
+						// Correct position if outside boundaries
+						if (hitLeftBoundary) newX = margin + 1
+						if (hitRightBoundary) newX = viewportWidth + margin - ghostSize - 1
+						if (hitTopBoundary) newY = margin + 1
+						if (hitBottomBoundary) newY = viewportHeight + margin - ghostSize - 1
+					}
+
+					return {
+						...ghost,
+						x: newX,
+						y: newY,
+						direction: newDirection,
+						lastDirectionChange: newLastDirectionChange
+					}
+				})
+
+				// Check collisions after movement
+				// Check coin collisions
+				setCoins(prevCoins => 
+					prevCoins.map(coin => {
+						if (coin.collected) return coin
+						
+						// Check collision with any ghost
+						const collision = newGhostPositions.some(ghost => 
+							checkCollision(ghost, coin, ghost.size, coin.size)
+						)
+						
+						if (collision) {
+							// Respawn coin at new location
+							const newPosition = respawnItem()
+							return {
+								...coin,
+								x: newPosition.x,
+								y: newPosition.y,
+								collected: false
+							}
+						}
+						
+						return coin
+					})
+				)
+
+				// Check power-up collisions
+				setPowerUps(prevPowerUps => 
+					prevPowerUps.map(powerUp => {
+						if (powerUp.collected) return powerUp
+						
+						// Check collision with any ghost
+						const collision = newGhostPositions.some(ghost => 
+							checkCollision(ghost, powerUp, ghost.size, powerUp.size)
+						)
+						
+						if (collision) {
+							// Respawn power-up at new location
+							const newPosition = respawnItem()
+							return {
+								...powerUp,
+								x: newPosition.x,
+								y: newPosition.y,
+								collected: false
+							}
+						}
+						
+						return powerUp
+					})
+				)
+
+				return newGhostPositions
+			})
 		}
 
-		const ghostInterval = setInterval(moveGhosts, 100)
+		// Ghost movement with improved timing
+		const ghostInterval = setInterval(moveGhosts, 40) // 25 FPS for pixelated movement
 
 		// Score animation
 		const scoreInterval = setInterval(() => {
 			setScore(prev => {
-				const newScore = prev + Math.floor(Math.random() * 10)
+				const newScore = prev + Math.floor(Math.random() * 15)
 				return newScore > 999999 ? 0 : newScore
 			})
 		}, 2000)
 
-		
-
 		return () => {
 			observer.disconnect()
-			
 			clearInterval(ghostInterval)
 			clearInterval(scoreInterval)
 		}
@@ -292,14 +526,21 @@ const UnityCoursePage = () => {
 					</div>
 				))}
 
-				{/* Ghosts */}
+				{/* Bigger Pixelated Ghosts */}
 				{ghostPositions.map((ghost, index) => (
 					<div
 						key={index}
-						className={`${styles.ghost} ${styles[ghost.color]}`}
+						className={`${styles.ghost} ${styles[ghost.color]} ${styles.pixelated}`}
 						style={{
 							left: `${ghost.x}px`,
 							top: `${ghost.y}px`,
+							width: `${ghost.size}px`,
+							height: `${ghost.size + 10}px`,
+							transform: `${
+								ghost.direction === 'left' ? 'scaleX(-1)' : 
+								ghost.direction === 'right' ? 'scaleX(1)' : 
+								''
+							}`,
 						}}
 					>
 						<div className={styles.ghostEyes}>
@@ -307,6 +548,8 @@ const UnityCoursePage = () => {
 							<div className={styles.ghostEye}></div>
 						</div>
 						<div className={styles.ghostBottom}>
+							<div className={styles.ghostWave}></div>
+							<div className={styles.ghostWave}></div>
 							<div className={styles.ghostWave}></div>
 							<div className={styles.ghostWave}></div>
 							<div className={styles.ghostWave}></div>
