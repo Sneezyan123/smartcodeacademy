@@ -7,357 +7,407 @@ import {
 	ChevronLeft,
 	ChevronRight,
 	Users,
-	Award,
 	Heart,
 } from 'lucide-react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import styles from './Testimonials.module.css'
+import styles from './Testimonials.module.css' // Імпортуємо CSS модуль
 
-// Реєструємо ScrollTrigger
+// Реєструємо плагін ScrollTrigger для GSAP
 gsap.registerPlugin(ScrollTrigger)
 
+// --- ДАНІ ---
+const testimonials = [
+	{
+		id: 1,
+		name: 'Костя Горілов',
+		age: 16,
+		position: 'Випускник SmartCode Academy',
+		company: 'Junior Developer в стартапі',
+		rating: 5,
+		text: 'SmartCode Academy - це найкраща школа програмування! Завдяки якісному навчанню та підтримці менторів я зміг освоїти Python та створити свій перший додаток. Тепер я навіть підробляю як джуніор розробник!',
+		avatar: '👨‍💻',
+		course: 'Python & Web Development',
+		duration: '8 місяців',
+		achievement: 'Створив власний додаток',
+		color: 'blue',
+	},
+	{
+		id: 2,
+		name: 'Анастасія Суханова',
+		age: 15,
+		position: 'Випускниця SmartCode Academy',
+		company: 'Фрілансер веб-дизайнер',
+		rating: 5,
+		text: 'Навчання в SmartCode Academy змінило моє життя! Тут я не тільки вивчила HTML, CSS та JavaScript, але й навчилася працювати в команді. Тепер я створюю сайти для малого бізнесу та заробляю власні гроші.',
+		avatar: '👩‍💻',
+		course: 'Frontend Development',
+		duration: '6 місяців',
+		achievement: 'Запустила власне агентство',
+		color: 'purple',
+	},
+	{
+		id: 3,
+		name: 'Богдан Яремчук',
+		age: 14,
+		position: 'Студент SmartCode Academy',
+		company: 'Переможець хакатону',
+		rating: 5,
+		text: 'В SmartCode Academy я знайшов друзів-однодумців та створив свою першу гру в Unity! Викладачі завжди готові допомогти, а навчальна платформа дуже зручна. Рекомендую всім, хто хоче стати програмістом!',
+		avatar: '👨‍🎓',
+		course: 'Game Development',
+		duration: '10 місяців',
+		achievement: '1-е місце на хакатоні',
+		color: 'green',
+	},
+	{
+		id: 4,
+		name: 'Влад Шульженко',
+		age: 17,
+		position: 'Випускник SmartCode Academy',
+		company: 'Студент технічного ВНЗ',
+		rating: 5,
+		text: 'Завдяки SmartCode Academy я вступив до технічного університету з відмінною підготовкою! Знання програмування, які я отримав тут, допомагають мені бути кращим за однокурсників. Дуже вдячний за якісну освіту!',
+		avatar: '🧑‍💻',
+		course: 'Full-Stack Development',
+		duration: '12 місяців',
+		achievement: 'Вступ до ТОП ВНЗ',
+		color: 'orange',
+	},
+	{
+		id: 5,
+		name: 'Галина Петрова',
+		age: 13,
+		position: 'Студентка SmartCode Academy',
+		company: 'Молодший розробник',
+		rating: 5,
+		text: 'Мені тільки 13, але завдяки SmartCode Academy я вже створюю власні проекти! Особливо подобається робота з ментором - він завжди пояснить складні моменти простими словами. Мрію стати професійним програмістом!',
+		avatar: '👩‍🎓',
+		course: 'Python for Kids',
+		duration: '4 місяці',
+		achievement: 'Наймолодший випускник',
+		color: 'pink',
+	},
+]
+
+const stats = [
+	{
+		number: '500+',
+		label: 'Випускників',
+		icon: <Users size={24} />,
+		color: 'blue',
+	},
+	{
+		number: '4.9/5',
+		label: 'Рейтинг',
+		icon: <Star size={24} />,
+		color: 'yellow',
+	},
+	{
+		number: '95%',
+		label: 'Задоволених',
+		icon: <Heart size={24} />,
+		color: 'red',
+	},
+	
+]
+
+// --- ДОПОМІЖНІ КОМПОНЕНТИ ---
+const RatingStars = ({ rating, className = '' }) => (
+	<div className={`${styles.ratingStars} ${className}`}>
+		{Array.from({ length: 5 }, (_, i) => (
+			<Star
+				key={i}
+				size={18}
+				className={i < rating ? styles.starFilled : styles.starEmpty}
+				fill='currentColor'
+			/>
+		))}
+	</div>
+)
+
+// --- ОСНОВНИЙ КОМПОНЕНТ ---
 const Testimonials = () => {
 	const [currentTestimonial, setCurrentTestimonial] = useState(0)
-	const [isVisible, setIsVisible] = useState(false)
 	const sectionRef = useRef(null)
-	const testimonialsRef = useRef(null)
+	const testimonialCardRef = useRef(null) // Ref на всю картку
+	const timelineRef = useRef(null)
 
+	// Анімації при першій появі компонента
 	useEffect(() => {
-		const timer = setTimeout(() => setIsVisible(true), 300)
-		
-		// GSAP анімації входу при скролі
-		if (sectionRef.current) {
-			gsap.fromTo(sectionRef.current.querySelectorAll('.fade-in-up'),
-				{ y: 50, opacity: 0 },
-				{ 
-					y: 0, 
-					opacity: 1, 
-					duration: 0.8, 
-					ease: 'power3.out',
-					stagger: 0.2,
-					scrollTrigger: {
-						trigger: sectionRef.current,
-						start: 'top 80%',
-						end: 'bottom 20%',
-						toggleActions: 'play none none reverse'
-					}
-				}
-			)
+		const section = sectionRef.current
+		if (!section) return
 
-			gsap.fromTo(sectionRef.current.querySelectorAll('.slide-in-left'),
-				{ x: -50, opacity: 0 },
-				{ 
-					x: 0, 
-					opacity: 1, 
-					duration: 0.6, 
-					ease: 'power2.out',
-					stagger: 0.1,
-					scrollTrigger: {
-						trigger: sectionRef.current,
-						start: 'top 70%',
-						toggleActions: 'play none none reverse'
-					}
-				}
-			)
-		}
-		
-		return () => clearTimeout(timer)
-	}, [])
-
-	// Професійна анімація зміни відгуків
-	const animateTestimonialChange = (newIndex) => {
-		if (!testimonialsRef.current || newIndex === currentTestimonial) return
-		
-		const timeline = gsap.timeline()
-		
-		// Анімація виходу поточного відгуку
-		timeline.to(testimonialsRef.current.querySelectorAll('.testimonial-content'), {
-			y: -30,
-			opacity: 0,
-			duration: 0.3,
-			ease: 'power2.in'
-		})
-		
-		// Зміна відгуку
-		timeline.call(() => {
-			setCurrentTestimonial(newIndex)
-		})
-		
-		// Анімація входу нового відгуку
-		timeline.fromTo(testimonialsRef.current.querySelectorAll('.testimonial-content'), 
-			{ y: 30, opacity: 0 },
+		// Плавна поява елементів заголовку
+		gsap.fromTo(
+			section.querySelectorAll('.gsap-fade-up'),
+			{ y: 50, opacity: 0 },
 			{
 				y: 0,
 				opacity: 1,
-				duration: 0.5,
-				ease: 'back.out(1.7)',
-				stagger: 0.05
+				duration: 0.8,
+				ease: 'power3.out',
+				stagger: 0.15,
+				scrollTrigger: {
+					trigger: section,
+					start: 'top 80%',
+					toggleActions: 'play none none reverse',
+				},
 			}
 		)
+
+		// Плавна поява карток статистики
+		gsap.fromTo(
+			section.querySelectorAll('.gsap-stat-card'),
+			{ scale: 0.8, opacity: 0, y: 30 },
+			{
+				scale: 1,
+				opacity: 1,
+				y: 0,
+				duration: 0.6,
+				ease: 'back.out(1.7)',
+				stagger: 0.1,
+				scrollTrigger: {
+					trigger: `.${styles.statsGrid}`,
+					start: 'top 85%',
+					toggleActions: 'play none none reverse',
+				},
+			}
+		)
+	}, [])
+
+	// Покращена функція анімації зміни відгуку
+	const animateTestimonialChange = newIndex => {
+		if (
+			newIndex === currentTestimonial ||
+			(timelineRef.current && timelineRef.current.isActive())
+		) {
+			return
+		}
+
+		const card = testimonialCardRef.current
+		if (!card) return
+
+		// Отримуємо всі дочірні елементи, які будемо анімувати
+		const contentToAnimate = card.querySelector(
+			`.${styles.testimonialContentWrapper}`
+		)
+
+		timelineRef.current = gsap.timeline({
+			// Колбек onComplete тепер не потрібен тут для оновлення стану
+		})
+
+		timelineRef.current
+			// 1. Анімуємо зникнення поточного контенту
+			.to(contentToAnimate, {
+				opacity: 0,
+				y: -25,
+				duration: 0.4,
+				ease: 'expo.in',
+			})
+			// 2. ОНОВЛЮЄМО СТАН В СЕРЕДИНІ АНІМАЦІЇ - це виправляє баг
+			.call(() => {
+				setCurrentTestimonial(newIndex)
+			})
+			// 3. Готуємо елементи до появи (вони будуть невидимі та зміщені)
+			.set(contentToAnimate.children, {
+				opacity: 0,
+				y: 25,
+			})
+			// 4. Повертаємо контейнер у видимий стан
+			.set(contentToAnimate, {
+				opacity: 1,
+				y: 0,
+			})
+			// 5. Анімуємо появу нових елементів по черзі (stagger)
+			.to(contentToAnimate.children, {
+				opacity: 1,
+				y: 0,
+				duration: 0.5,
+				ease: 'power3.out',
+				stagger: 0.08, // Ключ до професійного вигляду!
+			})
 	}
 
-	const testimonials = [
-		{
-			id: 1,
-			name: 'Костя Горілов',
-			age: 16,
-			position: 'Випускник SmartCode Academy',
-			company: 'Junior Developer в стартапі',
-			rating: 5,
-			text: 'SmartCode Academy - це найкраща школа програмування! Завдяки якісному навчанню та підтримці менторів я зміг освоїти Python та створити свій перший додаток. Тепер я навіть підробляю як джуніор розробник!',
-			avatar: '👨‍💻',
-			course: 'Python & Web Development',
-			duration: '8 місяців',
-			achievement: 'Створив власний додаток',
-			gradient: 'blue',
-		},
-		{
-			id: 2,
-			name: 'Анастасія Суханова',
-			age: 15,
-			position: 'Випускниця SmartCode Academy',
-			company: 'Фрілансер веб-дизайнер',
-			rating: 5,
-			text: 'Навчання в SmartCode Academy змінило моє життя! Тут я не тільки вивчила HTML, CSS та JavaScript, але й навчилася працювати в команді. Тепер я створюю сайти для малого бізнесу та заробляю власні гроші.',
-			avatar: '👩‍💻',
-			course: 'Frontend Development',
-			duration: '6 місяців',
-			achievement: 'Запустила власне агентство',
-			gradient: 'purple',
-		},
-		{
-			id: 3,
-			name: 'Богдан Яремчук',
-			age: 14,
-			position: 'Студент SmartCode Academy',
-			company: 'Переможець хакатону',
-			rating: 5,
-			text: 'В SmartCode Academy я знайшов друзів-однодумців та створив свою першу гру в Unity! Викладачі завжди готові допомогти, а навчальна платформа дуже зручна. Рекомендую всім, хто хоче стати програмістом!',
-			avatar: '👨‍🎓',
-			course: 'Game Development',
-			duration: '10 місяців',
-			achievement: '1-е місце на хакатоні',
-			gradient: 'green',
-		},
-		{
-			id: 4,
-			name: 'Влад Шульженко',
-			age: 17,
-			position: 'Випускник SmartCode Academy',
-			company: 'Студент технічного ВНЗ',
-			rating: 5,
-			text: 'Завдяки SmartCode Academy я вступив до технічного університету з відмінною підготовкою! Знання програмування, які я отримав тут, допомагають мені бути кращим за однокурсників. Дуже вдячний за якісну освіту!',
-			avatar: '🧑‍💻',
-			course: 'Full-Stack Development',
-			duration: '12 місяців',
-			achievement: 'Вступ до ТОП ВНЗ',
-			gradient: 'orange',
-		},
-		{
-			id: 5,
-			name: 'Галина Петрова',
-			age: 13,
-			position: 'Студентка SmartCode Academy',
-			company: 'Молодший розробник',
-			rating: 5,
-			text: 'Мені тільки 13, але завдяки SmartCode Academy я вже створюю власні проекти! Особливо подобається робота з ментором - він завжди пояснить складні моменти простими словами. Мрію стати професійним програмістом!',
-			avatar: '👩‍🎓',
-			course: 'Python for Kids',
-			duration: '4 місяці',
-			achievement: 'Наймолодший випускник',
-			gradient: 'pink',
-		},
-	]
-
-	const stats = [
-		{ number: '500+', label: 'Випускників', icon: <Users /> },
-		{ number: '4.9', label: 'Рейтинг', icon: <Star /> },
-		{ number: '95%', label: 'Задоволених', icon: <Heart /> },
-		{ number: '50+', label: 'Нагород', icon: <Award /> },
-	]
-
-	const nextTestimonial = () => {
-		setCurrentTestimonial(prev => (prev + 1) % testimonials.length)
+	const handleNext = () => {
+		animateTestimonialChange((currentTestimonial + 1) % testimonials.length)
 	}
 
-	const prevTestimonial = () => {
-		setCurrentTestimonial(
-			prev => (prev - 1 + testimonials.length) % testimonials.length
+	const handlePrev = () => {
+		animateTestimonialChange(
+			(currentTestimonial - 1 + testimonials.length) % testimonials.length
 		)
 	}
 
-	const renderStars = rating => {
-		return Array.from({ length: 5 }, (_, index) => (
-			<Star
-				key={index}
-				size={16}
-				className={index < rating ? styles.starFilled : styles.starEmpty}
-				fill={index < rating ? '#fbbf24' : 'none'}
-			/>
-		))
+	const handleIndicatorClick = index => {
+		animateTestimonialChange(index)
 	}
 
-	const currentTestimonialData = testimonials[currentTestimonial]
+	const currentData = testimonials[currentTestimonial]
+
+	// Функція для отримання рядка з класами кольорів
+	const getColorClasses = color => {
+		const colorName = color.charAt(0).toUpperCase() + color.slice(1)
+		return {
+			badge: styles[`badge${colorName}`],
+			titleAccent: styles[`titleAccent${colorName}`],
+			cardBorder: styles[`cardBorder${colorName}`],
+			avatarBg: styles[`avatarBg${colorName}`],
+			positionText: styles[`positionText${colorName}`],
+			tag: styles[`tag${colorName}`],
+			navButton: styles[`navButton${colorName}`],
+			indicatorActive: styles[`indicatorActive${colorName}`],
+			avatarButtonActive: styles[`avatarButtonActive${colorName}`],
+		}
+	}
+
+	const currentTheme = getColorClasses(currentData.color)
 
 	return (
-		<section className={styles.testimonialsSection} ref={sectionRef}>
+		<section ref={sectionRef} className={styles.testimonialsSection}>
 			<div className={styles.container}>
-				{/* Header */}
-				<div
-					className={`${styles.header} ${
-						isVisible ? styles.headerVisible : ''
-					}`}
-				>
-					<div className={styles.headerContent}>
-						<div className={`${styles.badge} fade-in-up`}>
-							<Quote className={styles.badgeIcon} />
-							Відгуки студентів
-						</div>
-						<h2 className={`${styles.title} fade-in-up`}>
-							Історії успіху наших
-							<span className={styles.titleAccent}>випускників</span>
-						</h2>
-						<p className={styles.subtitle}>
-							Дізнайтеся, як SmartCode Academy змінила життя сотень дітей та
-							підлітків
-						</p>
+				<div className={styles.header}>
+					<div className={`gsap-fade-up ${styles.badge} ${currentTheme.badge}`}>
+						<Quote size={16} />
+						<span>Відгуки студентів</span>
 					</div>
-					<button className={styles.ctaButton}>
-						<Users className={styles.ctaIcon} />
-						Приєднатися до спільноти
-					</button>
-				</div>
-
-				{/* Main Content */}
-				<div
-					className={`${styles.content} ${
-						isVisible ? styles.contentVisible : ''
-					}`}
-				>
-					{/* Featured Testimonial */}
-					<div className={styles.featuredTestimonial} ref={testimonialsRef}>
-						<div
-							className={`${styles.testimonialCard} ${
-								styles[currentTestimonialData.gradient]
-							}`}
+					<h2 className={`gsap-fade-up ${styles.title}`}>
+						Історії успіху наших{' '}
+						<span
+							className={`${styles.titleAccent} ${currentTheme.titleAccent}`}
 						>
-							<div className={`${styles.testimonialHeader} testimonial-content`}>
+							випускників
+						</span>
+					</h2>
+					<p className={`gsap-fade-up ${styles.subtitle}`}>
+						Дізнайтеся, як SmartCode Academy змінила життя сотень дітей та
+						підлітків.
+					</p>
+				</div>
+
+				<div className={styles.contentGrid}>
+					<div ref={testimonialCardRef} className={styles.testimonialCard}>
+						<div
+							className={`${styles.cardBorder} ${currentTheme.cardBorder}`}
+						></div>
+
+						{/* Створюємо обгортку для контенту, щоб анімувати його */}
+						<div className={styles.testimonialContentWrapper}>
+							<div className={styles.cardHeader}>
+								<div className={`${styles.avatar} ${currentTheme.avatarBg}`}>
+									{currentData.avatar}
+								</div>
 								<div className={styles.authorInfo}>
-									<div className={styles.avatar}>
-										{currentTestimonialData.avatar}
-									</div>
-									<div className={styles.authorDetails}>
-										<h3 className={`${styles.authorName} testimonial-content`}>
-											{currentTestimonialData.name}
-											<span className={styles.authorAge}>
-												({currentTestimonialData.age} років)
-											</span>
-										</h3>
-										<p className={`${styles.authorPosition} testimonial-content`}>
-											{currentTestimonialData.position}
-										</p>
-										<p className={styles.authorCompany}>
-											{currentTestimonialData.company}
-										</p>
-									</div>
+									<h3 className={styles.authorName}>
+										{currentData.name}, {currentData.age} років
+									</h3>
+									<p
+										className={`${styles.authorPosition} ${currentTheme.positionText}`}
+									>
+										{currentData.position}
+									</p>
+									<p className={styles.authorCompany}>{currentData.company}</p>
 								</div>
-								<div className={styles.rating}>
-									{renderStars(currentTestimonialData.rating)}
-								</div>
+								<RatingStars
+									rating={currentData.rating}
+									className={styles.ratingStarsWrapper}
+								/>
 							</div>
 
-							<div className={`${styles.testimonialContent} testimonial-content`}>
-								<Quote className={styles.quoteIcon} />
-								<p className={`${styles.testimonialText} testimonial-content`}>
-									{currentTestimonialData.text}
-								</p>
+							<div className={styles.testimonialBody}>
+								<Quote
+									size={48}
+									className={`${styles.quoteIcon} ${currentTheme.positionText}`}
+								/>
+								<p className={styles.testimonialText}>"{currentData.text}"</p>
 							</div>
 
-							<div className={`${styles.testimonialFooter} testimonial-content`}>
-								<div className={styles.courseInfo}>
-									<div className={styles.courseTag}>
-										📚 {currentTestimonialData.course}
-									</div>
-									<div className={styles.duration}>
-										⏱️ {currentTestimonialData.duration}
-									</div>
-								</div>
-								<div className={styles.achievement}>
-									🏆 {currentTestimonialData.achievement}
-								</div>
+							<div className={styles.cardFooter}>
+								<span className={`${styles.tag} ${currentTheme.tag}`}>
+									📚 {currentData.course}
+								</span>
+								<span className={`${styles.tag} ${styles.tagSlate}`}>
+									⏱️ {currentData.duration}
+								</span>
+								<span className={`${styles.tag} ${styles.tagGreen}`}>
+									🏆 {currentData.achievement}
+								</span>
 							</div>
 						</div>
 
-						{/* Navigation */}
-						<div className={styles.testimonialNavigation}>
-							<button className={styles.navBtn} onClick={prevTestimonial}>
-								<ChevronLeft className={styles.navIcon} />
+						<div className={styles.cardNavigation}>
+							<button
+								onClick={handlePrev}
+								aria-label='Попередній відгук'
+								className={styles.navButton}
+							>
+								<ChevronLeft size={20} />
 							</button>
-							<div className={styles.testimonialIndicators}>
-								{testimonials.map((_, index) => (
-									<button
-										key={index}
-										className={`${styles.indicator} ${
-											index === currentTestimonial ? styles.active : ''
-										}`}
-										onClick={() => animateTestimonialChange(index)}
-									/>
-								))}
-							</div>
-							<button className={styles.navBtn} onClick={nextTestimonial}>
-								<ChevronRight className={styles.navIcon} />
+							<button
+								onClick={handleNext}
+								aria-label='Наступний відгук'
+								className={`${styles.navButton} ${styles.navButtonColored} ${currentTheme.navButton}`}
+							>
+								<ChevronRight size={20} />
 							</button>
 						</div>
 					</div>
 
-					{/* Statistics */}
-					<div className={styles.statsSection}>
-						<h3 className={styles.statsTitle}>Наші досягнення</h3>
-						<div className={styles.statsGrid}>
-							{stats.map((stat, index) => (
-								<div
-									key={index}
-									className={styles.statCard}
-									style={{ animationDelay: `${index * 0.1}s` }}
-								>
-									<div className={styles.statIcon}>{stat.icon}</div>
-									<div className={styles.statNumber}>{stat.number}</div>
-									<div className={styles.statLabel}>{stat.label}</div>
+					<div className={`${styles.statsGrid} stats-grid`}>
+						{stats.map((stat, index) => (
+							<div
+								key={index}
+								className={`gsap-stat-card ${styles.statCard} ${
+									styles[
+										`statCard${
+											stat.color.charAt(0).toUpperCase() + stat.color.slice(1)
+										}`
+									]
+								}`}
+							>
+								<div className={styles.statContent}>
+									<div className={styles.statIconWrapper}>{stat.icon}</div>
+									<div>
+										<div className={styles.statNumber}>{stat.number}</div>
+										<div className={styles.statLabel}>{stat.label}</div>
+									</div>
 								</div>
-							))}
-						</div>
+							</div>
+						))}
 					</div>
 				</div>
 
-				{/* Additional Testimonials Grid */}
-				<div className={styles.additionalTestimonials}>
-					<h3 className={styles.gridTitle}>Більше відгуків</h3>
-					<div className={styles.testimonialsGrid}>
-						{testimonials.slice(0, 4).map((testimonial, index) => (
-							<div
-								key={testimonial.id}
-								className={`${styles.miniTestimonial} ${
-									index === currentTestimonial ? styles.highlighted : ''
+				<div className={styles.bottomNav}>
+					<div className={styles.indicatorGroup}>
+						{testimonials.map((_, index) => (
+							<button
+								key={index}
+								onClick={() => handleIndicatorClick(index)}
+								aria-label={`Перейти до відгуку ${index + 1}`}
+								className={`${styles.indicator} ${
+									currentTestimonial === index
+										? `${styles.indicatorActive} ${currentTheme.indicatorActive}`
+										: ''
 								}`}
-								onClick={() => animateTestimonialChange(index)}
+							/>
+						))}
+					</div>
+					<div className={styles.avatarGroup}>
+						{testimonials.map((testimonial, index) => (
+							<button
+								key={testimonial.id}
+								onClick={() => handleIndicatorClick(index)}
+								aria-label={`Перейти до відгуку ${testimonial.name}`}
+								className={`${styles.avatarButton} ${
+									currentTestimonial === index
+										? `${styles.avatarButtonActive} ${
+												getColorClasses(testimonial.color).avatarButtonActive
+										  }`
+										: ''
+								}`}
 							>
-								<div className={styles.miniHeader}>
-									<div className={styles.miniAvatar}>{testimonial.avatar}</div>
-									<div className={styles.miniInfo}>
-										<div className={styles.miniName}>{testimonial.name}</div>
-										<div className={styles.miniCourse}>
-											{testimonial.course}
-										</div>
-									</div>
-									<div className={styles.miniRating}>
-										{renderStars(testimonial.rating)}
-									</div>
-								</div>
-								<p className={styles.miniText}>
-									{testimonial.text.substring(0, 120)}...
-								</p>
-							</div>
+								<span>{testimonial.avatar}</span>
+							</button>
 						))}
 					</div>
 				</div>
