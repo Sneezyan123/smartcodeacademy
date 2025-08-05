@@ -97,9 +97,9 @@ body {
 
 }
 @media (prefers-reduced-motion: reduce) {
-  :global(*),
-  :global(*::before),
-  :global(*::after) {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -124,5 +124,155 @@ body {
   .starDiagonal {
     animation: none;
     opacity: 0.6;
+  }
+}
+/* Додайте ці стилі до src/app/globals.css */
+
+/* Анімації для курсових карток */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Космічні анімації для Python картки */
+@keyframes starDrift {
+  0% { 
+    transform: translate(0, 0) rotate(0deg) scale(0.5);
+    opacity: 0.4;
+  }
+  25% { 
+    transform: translate(30px, -40px) rotate(90deg) scale(1.5);
+    opacity: 1;
+  }
+  50% { 
+    transform: translate(-20px, -80px) rotate(180deg) scale(2);
+    opacity: 0.7;
+  }
+  75% { 
+    transform: translate(-40px, -40px) rotate(270deg) scale(1.5);
+    opacity: 1;
+  }
+  100% { 
+    transform: translate(0, 0) rotate(360deg) scale(0.5);
+    opacity: 0.4;
+  }
+}
+
+@keyframes starFloat {
+  0%, 100% { 
+    transform: translateY(0px) scale(0.6);
+    opacity: 0.5;
+  }
+  50% { 
+    transform: translateY(-60px) scale(2);
+    opacity: 1;
+  }
+}
+
+@keyframes starTwinkle {
+  0% { 
+    transform: scale(0.3) rotate(0deg);
+    opacity: 0.2;
+  }
+  25% { 
+    transform: scale(2.5) rotate(90deg);
+    opacity: 1;
+  }
+  50% { 
+    transform: scale(1.5) rotate(180deg);
+    opacity: 0.4;
+  }
+  75% { 
+    transform: scale(3) rotate(270deg);
+    opacity: 1;
+  }
+  100% { 
+    transform: scale(0.3) rotate(360deg);
+    opacity: 0.2;
+  }
+}
+
+@keyframes starOrbit {
+  0% { 
+    transform: rotate(0deg) translateX(50px) rotate(0deg) scale(0.7);
+  }
+  50% { 
+    transform: rotate(180deg) translateX(50px) rotate(-180deg) scale(1.8);
+  }
+  100% { 
+    transform: rotate(360deg) translateX(50px) rotate(-360deg) scale(0.7);
+  }
+}
+
+@keyframes cosmicFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(2deg);
+  }
+}
+
+@keyframes cosmicPulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 4s linear infinite;
+}
+
+.animate-starDrift {
+  animation: starDrift 12s ease-in-out infinite;
+}
+
+.animate-starFloat {
+  animation: starFloat 8s ease-in-out infinite;
+}
+
+.animate-starTwinkle {
+  animation: starTwinkle 4s ease-in-out infinite;
+}
+
+.animate-starOrbit {
+  animation: starOrbit 15s linear infinite;
+}
+
+.animate-cosmicFloat {
+  animation: cosmicFloat 6s ease-in-out infinite;
+}
+
+.animate-cosmicPulse {
+  animation: cosmicPulse 2s ease-in-out infinite;
+}
+
+/* Покращений accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .animate-spin-slow,
+  .animate-bounce,
+  .animate-pulse,
+  .animate-ping,
+  .animate-starDrift,
+  .animate-starFloat,
+  .animate-starTwinkle,
+  .animate-starOrbit,
+  .animate-cosmicFloat,
+  .animate-cosmicPulse {
+    animation: none !important;
+  }
+  
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
   }
 }
