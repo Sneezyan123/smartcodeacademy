@@ -1,33 +1,6 @@
 /* Visit.module.css */
 
 /* CSS Variables */
-:root {
-	--primary-blue: #2563eb;
-	--primary-purple: #8b5cf6;
-	--primary-orange: #ff6b35;
-	--primary-green: #10b981;
-
-	--text-primary: #1e293b;
-	--text-secondary: #64748b;
-	--text-tertiary: #94a3b8;
-
-	--bg-primary: #ffffff;
-	--bg-secondary: #f8fafc;
-	--bg-glass: rgba(255, 255, 255, 0.95);
-
-	--radius-sm: 0.375rem;
-	--radius-md: 0.5rem;
-	--radius-lg: 0.75rem;
-	--radius-xl: 1rem;
-	--radius-2xl: 1.5rem;
-	--radius-full: 9999px;
-
-	--transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-	--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-	--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-	--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-	--shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-}
 
 /* Keyframes */
 @keyframes fadeInUp {

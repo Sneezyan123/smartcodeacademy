@@ -3,18 +3,6 @@
 /* === FONTS === */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-/* === VARIABLES === */
-:root {
-  --neon-yellow: #ffcc00;
-  --neon-pink: #ff0066;
-  --neon-blue: #00ccff;
-  --neon-green: #00ff00;
-  --neon-orange: #ff6600;
-  --neon-purple: #cc00ff;
-  --dark-bg: #0a0a0a;
-  --grid-color: rgba(0, 204, 255, 0.1);
-  --pixel-size: 8px;
-}
 
 /* === KEYFRAMES === */
 @keyframes blink {

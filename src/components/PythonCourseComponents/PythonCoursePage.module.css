@@ -1505,34 +1505,3 @@
   }
 }
 
-/* === ACCESSIBILITY === */
-@media (prefers-reduced-motion: reduce) {
-  :global(*),
-  :global(*::before),
-  :global(*::after) {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-  
-  .followingSun {
-    animation: none;
-    transition: none;
-  }
-  
-  .sunPetal {
-    animation: none;
-    opacity: 0.7;
-  }
-
-  .starPurple,
-  .starBlue, 
-  .starPink,
-  .starGold,
-  .starTwinkle,
-  .starWave,
-  .starDiagonal {
-    animation: none;
-    opacity: 0.6;
-  }
-}

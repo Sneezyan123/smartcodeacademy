@@ -15,6 +15,7 @@ import {
 import styles from './Header.module.css'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import Link from 'next/link'
 
 // Реєструємо ScrollTrigger для GSAP
 gsap.registerPlugin(ScrollTrigger)
@@ -486,7 +487,7 @@ const Header = () => {
 			<div className={styles.container}>
 				<div className={styles.headerContent}>
 					{/* Logo з 3D ефектом */}
-					<a href='/' className={styles.logo} aria-current='page'>
+					<Link href='/' className={styles.logo} aria-current='page'>
 						<div className={styles.logoIcon}>
 							<img
 								src='logo.jpg'
@@ -500,8 +501,7 @@ const Header = () => {
 							<span className={styles.logoTitle}>SmartCode</span>
 							<span className={styles.logoSubtitle}>Academy</span>
 						</div>
-					</a>
-
+					</Link>
 					{/* Navigation */}
 					<nav className={styles.nav} aria-label='Головне меню'>
 						{navItems.map((item, index) =>

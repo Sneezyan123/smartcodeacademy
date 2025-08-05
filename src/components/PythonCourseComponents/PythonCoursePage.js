@@ -407,7 +407,7 @@ const PythonCoursePage = () => {
           {/* Floating Code Snippets */}
           <div className={`${styles.floatingCode} ${styles.codeLeft}`}>
             <code className={styles.codeGreen}>
-              print("Hello, Future!")
+              print(&quot;Hello, Future!&quot;)
             </code>
           </div>
           <div className={`${styles.floatingCode} ${styles.codeRight}`}>
