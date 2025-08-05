@@ -1,10 +1,8 @@
-/* ===== COURSE SECTION ===== */
+/* ===== ORIGINAL STYLES (ЗБЕРЕЖЕНО БЕЗ ЗМІН) ===== */
 .courseSection {
   padding: 5rem 2rem;
-  
   min-height: 100vh;
   position: relative;
-
 }
 
 .courseSection::before {
@@ -14,11 +12,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  
   pointer-events: none;
 }
 
-/* ===== SECTION HEADER ===== */
 .sectionHeader {
   text-align: center;
   margin-bottom: 4rem;
@@ -96,7 +92,6 @@
   animation: fadeInUp 1s ease-out 0.5s forwards;
 }
 
-/* ===== CARDS CONTAINER ===== */
 .cardsContainer {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -107,7 +102,6 @@
   z-index: 10;
 }
 
-/* ===== COURSE CARD ===== */
 .courseCard {
   position: relative;
   background: rgba(255, 255, 255, 0.95);
@@ -141,7 +135,6 @@
     0 1px 0 rgba(255, 255, 255, 0.8) inset;
 }
 
-/* ===== CARD BACKGROUNDS ===== */
 .cardBackground {
   position: absolute;
   inset: 0;
@@ -212,7 +205,6 @@
   opacity: 1;
 }
 
-/* ===== BADGE ===== */
 .courseBadge {
   position: absolute;
   top: -0.5rem;
@@ -247,7 +239,6 @@
   height: 0.875rem;
 }
 
-/* ===== CARD HEADER ===== */
 .cardHeader {
   display: flex;
   align-items: flex-start;
@@ -372,7 +363,6 @@
   line-height: 1.4;
 }
 
-/* ===== DEMO SECTION ===== */
 .demoSection {
   position: relative;
   border-radius: 1.5rem;
@@ -548,7 +538,6 @@
   animation: pulse 1.5s ease-in-out infinite;
 }
 
-/* ===== FEATURES SECTION ===== */
 .featuresSection {
   margin-bottom: 1.5rem;
 }
@@ -588,7 +577,6 @@
   flex-shrink: 0;
 }
 
-/* ===== TECHNOLOGIES ===== */
 .technologiesSection {
   margin-bottom: 1.5rem;
 }
@@ -616,7 +604,6 @@
   transform: translateY(-1px);
 }
 
-/* ===== STATS GRID ===== */
 .statsGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -666,7 +653,6 @@
   line-height: 1.2;
 }
 
-/* ===== CARD FOOTER ===== */
 .cardFooter {
   position: relative;
   z-index: 10;
@@ -729,7 +715,6 @@
   height: 0.875rem;
 }
 
-/* ===== ACTION BUTTONS ===== */
 .actionButtons {
   display: flex;
   flex-direction: column;
@@ -825,7 +810,6 @@
   height: 1rem;
 }
 
-/* ===== HOVER EFFECTS ===== */
 .hoverEffects {
   position: absolute;
   inset: 0;
@@ -866,7 +850,6 @@
   opacity: 1;
 }
 
-/* ===== BOTTOM SECTION ===== */
 .bottomSection {
   margin-top: 4rem;
   position: relative;
@@ -929,7 +912,372 @@
   line-height: 1.5;
 }
 
-/* ===== ANIMATIONS ===== */
+/* ===== КОСМІЧНІ АНІМАЦІЇ ДЛЯ PYTHON ===== */
+@keyframes starDrift {
+  0% { 
+    transform: translate(0, 0) rotate(0deg) scale(0.5);
+    opacity: 0.4;
+  }
+  25% { 
+    transform: translate(30px, -40px) rotate(90deg) scale(1.5);
+    opacity: 1;
+  }
+  50% { 
+    transform: translate(-20px, -80px) rotate(180deg) scale(2);
+    opacity: 0.7;
+  }
+  75% { 
+    transform: translate(-40px, -40px) rotate(270deg) scale(1.5);
+    opacity: 1;
+  }
+  100% { 
+    transform: translate(0, 0) rotate(360deg) scale(0.5);
+    opacity: 0.4;
+  }
+}
+
+@keyframes starFloat {
+  0%, 100% { 
+    transform: translateY(0px) scale(0.6);
+    opacity: 0.5;
+  }
+  50% { 
+    transform: translateY(-60px) scale(2);
+    opacity: 1;
+  }
+}
+
+@keyframes starTwinkleMove {
+  0% { 
+    transform: scale(0.3) rotate(0deg);
+    opacity: 0.2;
+  }
+  25% { 
+    transform: scale(2.5) rotate(90deg);
+    opacity: 1;
+  }
+  50% { 
+    transform: scale(1.5) rotate(180deg);
+    opacity: 0.4;
+  }
+  75% { 
+    transform: scale(3) rotate(270deg);
+    opacity: 1;
+  }
+  100% { 
+    transform: scale(0.3) rotate(360deg);
+    opacity: 0.2;
+  }
+}
+
+@keyframes starOrbit {
+  0% { 
+    transform: rotate(0deg) translateX(50px) rotate(0deg) scale(0.7);
+  }
+  50% { 
+    transform: rotate(180deg) translateX(50px) rotate(-180deg) scale(1.8);
+  }
+  100% { 
+    transform: rotate(360deg) translateX(50px) rotate(-360deg) scale(0.7);
+  }
+}
+
+@keyframes cosmicFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(2deg);
+  }
+}
+
+@keyframes cosmicPulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes cosmicGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.6),
+                0 0 60px rgba(139, 92, 246, 0.4);
+  }
+}
+
+/* ===== КОСМІЧНІ СТИЛІ ДЛЯ PYTHON КАРТКИ ===== */
+
+/* Космічна картка */
+.spaceCard {
+  background: linear-gradient(135deg, 
+    rgba(0, 0, 0, 0.8) 0%, 
+    rgba(139, 92, 246, 0.2) 50%, 
+    rgba(0, 0, 0, 0.9) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  box-shadow: 
+    0 20px 40px rgba(139, 92, 246, 0.3),
+    0 0 60px rgba(139, 92, 246, 0.2);
+  color: white;
+}
+
+.spaceCard:hover {
+  transform: translateY(-1rem) scale(1.05) rotateY(2deg);
+  box-shadow: 
+    0 50px 100px rgba(139, 92, 246, 0.5),
+    0 0 80px rgba(139, 92, 246, 0.4),
+    inset 0 0 20px rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.8);
+}
+
+/* Космічний фон */
+.spaceBackground {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #581c87 0%, #000 50%, #312e81 100%);
+  border-radius: 2rem;
+  opacity: 0.7;
+}
+
+/* Зоряне поле для Python */
+.pythonStarField {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 2rem;
+  overflow: hidden;
+}
+
+.spaceStar {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.spaceStar.starPurple {
+  background: radial-gradient(circle, #c084fc 0%, #a855f7 50%, #7c3aed 100%);
+  width: 3px;
+  height: 3px;
+  animation: starDrift 12s ease-in-out infinite;
+  box-shadow: 0 0 6px rgba(196, 132, 252, 0.8);
+}
+
+.spaceStar.starBlue {
+  background: radial-gradient(circle, #60a5fa 0%, #3b82f6 50%, #1d4ed8 100%);
+  width: 2px;
+  height: 2px;
+  animation: starFloat 8s ease-in-out infinite;
+  box-shadow: 0 0 4px rgba(96, 165, 250, 0.7);
+}
+
+.spaceStar.starPink {
+  background: radial-gradient(circle, #f472b6 0%, #ec4899 50%, #be185d 100%);
+  width: 3px;
+  height: 3px;
+  animation: starOrbit 15s linear infinite;
+  box-shadow: 0 0 5px rgba(244, 114, 182, 0.6);
+}
+
+.spaceStar.starGold {
+  background: radial-gradient(circle, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+  width: 4px;
+  height: 4px;
+  animation: starFloat 6s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.9);
+}
+
+.spaceStar.starTwinkle {
+  background: radial-gradient(circle, #fef3c7 0%, #fde047 50%, #eab308 100%);
+  width: 2px;
+  height: 2px;
+  animation: starTwinkleMove 4s ease-in-out infinite;
+  box-shadow: 0 0 3px rgba(254, 243, 199, 0.8);
+}
+
+/* Космічні орби */
+.cosmicOrbs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 2rem;
+  overflow: hidden;
+}
+
+.cosmicOrb {
+  position: absolute;
+  width: 8rem;
+  height: 8rem;
+  background: rgb(139, 92, 246);
+  border-radius: 50%;
+  opacity: 0.1;
+  filter: blur(24px);
+  animation: cosmicFloat 6s infinite;
+  top: 10%;
+  left: 5%;
+}
+
+.cosmicOrbSecondary {
+  position: absolute;
+  width: 6rem;
+  height: 6rem;
+  background: rgb(251, 191, 36);
+  border-radius: 50%;
+  opacity: 0.08;
+  filter: blur(16px);
+  animation: cosmicFloat 8s infinite;
+  bottom: 20%;
+  right: 10%;
+}
+
+/* Космічний badge */
+.spaceBadge,
+.badgecosmic {
+  background: linear-gradient(135deg, #8b5cf6, #c084fc);
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  animation: cosmicPulse 2s ease-in-out infinite;
+}
+
+/* Космічна іконка */
+.spaceIcon {
+  background: linear-gradient(135deg, #8b5cf6, #c084fc) !important;
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  animation: cosmicGlow 2s ease-in-out infinite;
+}
+
+/* Космічні тексти */
+.spaceText {
+  color: #c084fc !important;
+}
+
+.spaceTitle {
+  color: white !important;
+  text-shadow: 0 0 20px rgba(196, 132, 252, 0.5);
+}
+
+.spaceCard:hover .spaceTitle {
+  background: linear-gradient(135deg, #c084fc, #fbbf24) !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.spaceSubtitle {
+  color: #cbd5e1 !important;
+}
+
+/* Космічна демо секція */
+.spaceDemo {
+  background: linear-gradient(135deg, 
+    #8b5cf6 0%, 
+    #c084fc 50%, 
+    #7c3aed 100%) !important;
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+}
+
+/* Космічні елементи */
+.spaceElement {
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-shadow: 0 0 10px currentColor;
+}
+
+.spaceCard .spaceElement.elementcode,
+.spaceCard .spaceElement.elementhtml,
+.spaceCard .spaceElement.elementcss {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(139, 92, 246, 0.5) !important;
+}
+
+.spaceCard .spaceElement.elementscore,
+.spaceCard .spaceElement.elementvariable,
+.spaceCard .spaceElement.elementreact {
+  background: rgba(139, 92, 246, 0.3) !important;
+  border: 1px solid rgba(139, 92, 246, 0.5) !important;
+}
+
+/* Космічні особливості */
+.spaceFeature {
+  color: #cbd5e1 !important;
+}
+
+.spaceFeature:hover {
+  color: #f1f5f9 !important;
+}
+
+/* Космічні технології */
+.spaceTech {
+  background: rgba(139, 92, 246, 0.2) !important;
+  color: #c084fc !important;
+  border: 1px solid rgba(139, 92, 246, 0.3) !important;
+}
+
+.spaceTech:hover {
+  background: rgba(139, 92, 246, 0.3) !important;
+  color: #e879f9 !important;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3) !important;
+}
+
+/* Космічна статистика */
+.spaceStat {
+  background: rgba(139, 92, 246, 0.1) !important;
+  border: 1px solid rgba(139, 92, 246, 0.2) !important;
+}
+
+.spaceStat:hover {
+  background: rgba(139, 92, 246, 0.2) !important;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3) !important;
+}
+
+.spaceStat .statIcon {
+  color: #c084fc !important;
+}
+
+.spaceStat .statValue {
+  color: white !important;
+}
+
+.spaceStat .statLabel {
+  color: #94a3b8 !important;
+}
+
+/* Космічна інформація про студентів */
+.spaceStudents {
+  background: rgba(139, 92, 246, 0.1) !important;
+  border: 1px solid rgba(139, 92, 246, 0.2) !important;
+  color: #94a3b8 !important;
+}
+
+/* Космічні кнопки */
+.spaceButton {
+  background: linear-gradient(135deg, #8b5cf6, #c084fc) !important;
+  border: 1px solid rgba(139, 92, 246, 0.5) !important;
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4) !important;
+}
+
+.spaceButton:hover {
+  box-shadow: 0 20px 40px rgba(139, 92, 246, 0.6) !important;
+  filter: brightness(1.1) saturate(1.2) !important;
+}
+
+.spaceSecondaryButton {
+  border: 2px solid rgba(139, 92, 246, 0.3) !important;
+  background: rgba(0, 0, 0, 0.3) !important;
+  color: #c084fc !important;
+}
+
+.spaceSecondaryButton:hover {
+  border-color: rgba(139, 92, 246, 0.6) !important;
+  color: #e879f9 !important;
+  background: rgba(139, 92, 246, 0.1) !important;
+  box-shadow: 0 8px 16px rgba(139, 92, 246, 0.2) !important;
+}
+
+/* ===== ОРИГІНАЛЬНІ АНІМАЦІЇ ===== */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
@@ -1052,6 +1400,41 @@
     flex-direction: column;
     text-align: center;
   }
+
+  .spaceStar.starPurple {
+    width: 2px;
+    height: 2px;
+  }
+
+  .spaceStar.starBlue {
+    width: 1.5px;
+    height: 1.5px;
+  }
+
+  .spaceStar.starPink {
+    width: 2px;
+    height: 2px;
+  }
+
+  .spaceStar.starGold {
+    width: 3px;
+    height: 3px;
+  }
+
+  .spaceStar.starTwinkle {
+    width: 1.5px;
+    height: 1.5px;
+  }
+
+  .cosmicOrb {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  .cosmicOrbSecondary {
+    width: 4rem;
+    height: 4rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1070,5 +1453,15 @@
   .demoSection {
     padding: 1rem;
     min-height: 8rem;
+  }
+}
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+  .spaceStar,
+  .cosmicOrb,
+  .cosmicOrbSecondary {
+    animation: none;
+    opacity: 0.6;
   }
 }

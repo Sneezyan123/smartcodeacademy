@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import {
 	Code,
 	Gamepad2,
@@ -24,6 +24,8 @@ import {
 	Palette,
 	Cpu,
 	Globe,
+	Terminal,
+	Database
 } from 'lucide-react'
 import styles from './EnhancedCourseCards.module.css'
 
@@ -31,55 +33,93 @@ const EnhancedCourseCards = () => {
 	const [hoveredCard, setHoveredCard] = useState(null)
 	const [isVisible, setIsVisible] = useState(false)
 
+	// Генеруємо зірки тільки для Python картки
+	const pythonStars = useMemo(() => {
+		const starTypes = [
+			{ type: 'starPurple', count: 20 },
+			{ type: 'starBlue', count: 15 },
+			{ type: 'starPink', count: 12 },
+			{ type: 'starGold', count: 8 },
+			{ type: 'starTwinkle', count: 18 }
+		];
+
+		const allStars = [];
+
+		starTypes.forEach(({ type, count }) => {
+			for (let i = 0; i < count; i++) {
+				allStars.push({
+					id: `${type}-${i}`,
+					type,
+					left: Math.random() * 100,
+					top: Math.random() * 100,
+					animationDelay: Math.random() * (type === 'starTwinkle' ? 4 : type === 'starGold' ? 6 : type === 'starBlue' ? 8 : type === 'starPink' ? 15 : 12),
+					animationDuration: type === 'starTwinkle' ? 2 + Math.random() * 4 : 
+									   type === 'starGold' ? 4 + Math.random() * 4 : 
+									   type === 'starBlue' ? 5 + Math.random() * 6 :
+									   type === 'starPink' ? 10 + Math.random() * 10 :
+									   8 + Math.random() * 8
+				});
+			}
+		});
+
+		return allStars;
+	}, []);
+
 	const courses = [
 		{
 			id: 'programming',
-			title: 'ПРОГРАМУВАННЯ',
-			subtitle: 'Основи кодування майбутнього',
+			title: 'PYTHON',
+			subtitle: 'Програмування майбутнього',
 			icon: <Code className={styles.cardIcon} />,
 			description:
-				'Вивчи Python, JavaScript та створюй власні додатки. Від змінних до складних алгоритмів.',
+				'Відкрий космос можливостей з найпопулярнішою мовою програмування світу. Створюй ІІ, веб-додатки та аналізуй дані.',
 			longDescription:
-				"Повний курс програмування для початківців та досвідчених учнів. Вивчай найпопулярніші мови програмування, створюй реальні проекти та готуйся до IT-кар'єри.",
+				"Повний курс Python програмування для початківців та досвідчених учнів. Від основ до машинного навчання та веб-розробки.",
 			features: [
-				'Основи Python та JavaScript',
-				'Алгоритми та структури даних',
-				'Веб-розробка та API',
-				'Робота з базами даних',
-				'Git та командна робота',
+				'Основи Python та синтаксис',
+				'ООП та алгоритми',
+				'Веб-розробка з Django/Flask',
+				'Data Science та ML',
+				'Telegram боти та API',
 			],
-			technologies: ['Python', 'JavaScript', 'Git', 'VS Code', 'SQL'],
+			technologies: ['Python', 'Django', 'NumPy', 'Pandas', 'TensorFlow'],
 			stats: {
 				duration: '6 місяців',
 				age: '10-16 років',
-				projects: '15+ проектів',
-				level: 'Початковий → Просунутий',
+				projects: '20+ проектів',
+				level: 'Початковий → Експерт',
 			},
 			pricing: {
 				price: '2800',
-				discount: '20%',
-				originalPrice: '3500',
+				discount: '25%',
+				originalPrice: '3700',
 			},
 			rating: 4.9,
-			students: 245,
+			students: 324,
 			badge: {
-				text: 'Найпопулярніший',
-				icon: <Trophy className={styles.badgeIcon} />,
-				type: 'popular',
+				text: 'Космічний хіт',
+				icon: <Rocket className={styles.badgeIcon} />,
+				type: 'cosmic',
 			},
 			gradient: 'programming',
 			demoElements: [
-				
 				{
 					type: 'code',
-					content: '  print("Привіт світ!")',
-					x: '0%',
-					y: '111%',
+					content: 'print("Hello, Universe!")',
+					x: '5%',
+					y: '115%',
 				},
-				{ type: 'code', content: 'hello_world()', x: '50%', y: '140%' },
-				,
-				{ type: 'variable', content: 'x = 42', x: '85%', y: '115%' },
+				{ type: 'code', content: 'import numpy as np', x: '45%', y: '130%' },
+				{ type: 'code', content: 'def explore_space():', x: '75%', y: '110%' },
+				{ type: 'variable', content: 'AI = True', x: '25%', y: '145%' },
+				{
+					type: 'icon',
+					content: <Terminal className={styles.demoIcon} />,
+					x: '85%',
+					y: '140%',
+				},
 			],
+			isSpaceTheme: true, // Спеціальний флаг для космічної теми
 		},
 		{
 			id: 'gamedev',
@@ -113,7 +153,7 @@ const EnhancedCourseCards = () => {
 			students: 189,
 			badge: {
 				text: 'Тренд 2024',
-				icon: <Rocket className={styles.badgeIcon} />,
+				icon: <Trophy className={styles.badgeIcon} />,
 				type: 'trending',
 			},
 			gradient: 'gamedev',
@@ -194,7 +234,6 @@ const EnhancedCourseCards = () => {
 		<section className={styles.courseSection}>
 			{/* Header */}
 			<div className={styles.sectionHeader}>
-				
 				<h2 className={styles.sectionTitle}>
 					Обери свій шлях
 				</h2>
@@ -214,6 +253,7 @@ const EnhancedCourseCards = () => {
 							${styles[`card${course.gradient}`]}
 							${isVisible ? styles.cardVisible : styles.cardHidden}
 							${hoveredCard === index ? styles.cardHovered : ''}
+							${course.isSpaceTheme ? styles.spaceCard : ''}
 						`}
 						style={{ '--delay': `${index * 150}ms` }}
 						onMouseEnter={() => handleCardHover(index)}
@@ -224,13 +264,38 @@ const EnhancedCourseCards = () => {
 							<div className={styles.gradientOverlay}></div>
 							<div className={styles.meshGradient}></div>
 							<div className={styles.glowEffect}></div>
+							
+							{/* Космічні ефекти тільки для Python */}
+							{course.isSpaceTheme && (
+								<>
+									<div className={styles.spaceBackground}></div>
+									<div className={styles.pythonStarField}>
+										{pythonStars.map((star) => (
+											<div
+												key={star.id}
+												className={`${styles.spaceStar} ${styles[star.type]}`}
+												style={{
+													left: `${star.left}%`,
+													top: `${star.top}%`,
+													animationDelay: `${star.animationDelay}s`,
+													animationDuration: `${star.animationDuration}s`
+												}}
+											/>
+										))}
+									</div>
+									<div className={styles.cosmicOrbs}>
+										<div className={styles.cosmicOrb}></div>
+										<div className={styles.cosmicOrbSecondary}></div>
+									</div>
+								</>
+							)}
 						</div>
 
 						{/* Badge */}
 						<div
 							className={`${styles.courseBadge} ${
 								styles[`badge${course.badge.type}`]
-							}`}
+							} ${course.isSpaceTheme ? styles.spaceBadge : ''}`}
 						>
 							{course.badge.icon}
 							<span>{course.badge.text}</span>
@@ -242,7 +307,7 @@ const EnhancedCourseCards = () => {
 								<div
 									className={`${styles.iconBackground} ${
 										styles[`iconBg${course.gradient}`]
-									}`}
+									} ${course.isSpaceTheme ? styles.spaceIcon : ''}`}
 								>
 									{course.icon}
 									<div className={styles.iconShine}></div>
@@ -263,11 +328,17 @@ const EnhancedCourseCards = () => {
 											/>
 										))}
 									</div>
-									<span className={styles.ratingValue}>{course.rating}</span>
+									<span className={`${styles.ratingValue} ${course.isSpaceTheme ? styles.spaceText : ''}`}>
+										{course.rating}
+									</span>
 								</div>
 
-								<h3 className={styles.courseTitle}>{course.title}</h3>
-								<p className={styles.courseSubtitle}>{course.subtitle}</p>
+								<h3 className={`${styles.courseTitle} ${course.isSpaceTheme ? styles.spaceTitle : ''}`}>
+									{course.title}
+								</h3>
+								<p className={`${styles.courseSubtitle} ${course.isSpaceTheme ? styles.spaceSubtitle : ''}`}>
+									{course.subtitle}
+								</p>
 							</div>
 						</header>
 
@@ -275,7 +346,7 @@ const EnhancedCourseCards = () => {
 						<div
 							className={`${styles.demoSection} ${
 								styles[`demo${course.gradient}`]
-							}`}
+							} ${course.isSpaceTheme ? styles.spaceDemo : ''}`}
 						>
 							<div className={styles.demoBackground}>
 								<div className={styles.animatedPattern}></div>
@@ -300,7 +371,7 @@ const EnhancedCourseCards = () => {
 											key={i}
 											className={`${styles.demoElement} ${
 												styles[`element${element.type}`]
-											}`}
+											} ${course.isSpaceTheme ? styles.spaceElement : ''}`}
 											style={{
 												left: element.x,
 												top: element.y,
@@ -316,20 +387,16 @@ const EnhancedCourseCards = () => {
 									))}
 								</div>
 							</div>
-
-							{/* Floating Icons */}
-							<div className={styles.floatingIcons}>
-								
-								
-							</div>
 						</div>
 
 						{/* Features List */}
 						<div className={styles.featuresSection}>
-							<h4 className={styles.featuresTitle}>Що вивчатимеш:</h4>
+							<h4 className={`${styles.featuresTitle} ${course.isSpaceTheme ? styles.spaceText : ''}`}>
+								{course.isSpaceTheme ? 'Що вивчатимеш у космосі:' : 'Що вивчатимеш:'}
+							</h4>
 							<ul className={styles.featuresList}>
 								{course.features.map((feature, i) => (
-									<li key={i} className={styles.featureItem}>
+									<li key={i} className={`${styles.featureItem} ${course.isSpaceTheme ? styles.spaceFeature : ''}`}>
 										<CheckCircle className={styles.featureIcon} />
 										<span>{feature}</span>
 									</li>
@@ -341,7 +408,7 @@ const EnhancedCourseCards = () => {
 						<div className={styles.technologiesSection}>
 							<div className={styles.techList}>
 								{course.technologies.map((tech, i) => (
-									<span key={i} className={styles.techBadge}>
+									<span key={i} className={`${styles.techBadge} ${course.isSpaceTheme ? styles.spaceTech : ''}`}>
 										{tech}
 									</span>
 								))}
@@ -350,7 +417,7 @@ const EnhancedCourseCards = () => {
 
 						{/* Stats Grid */}
 						<div className={styles.statsGrid}>
-							<div className={styles.statItem}>
+							<div className={`${styles.statItem} ${course.isSpaceTheme ? styles.spaceStat : ''}`}>
 								<Clock className={styles.statIcon} />
 								<div className={styles.statInfo}>
 									<span className={styles.statValue}>
@@ -359,14 +426,14 @@ const EnhancedCourseCards = () => {
 									<span className={styles.statLabel}>Тривалість</span>
 								</div>
 							</div>
-							<div className={styles.statItem}>
+							<div className={`${styles.statItem} ${course.isSpaceTheme ? styles.spaceStat : ''}`}>
 								<Users className={styles.statIcon} />
 								<div className={styles.statInfo}>
 									<span className={styles.statValue}>{course.stats.age}</span>
 									<span className={styles.statLabel}>Вік</span>
 								</div>
 							</div>
-							<div className={styles.statItem}>
+							<div className={`${styles.statItem} ${course.isSpaceTheme ? styles.spaceStat : ''}`}>
 								<BookOpen className={styles.statIcon} />
 								<div className={styles.statInfo}>
 									<span className={styles.statValue}>
@@ -375,7 +442,7 @@ const EnhancedCourseCards = () => {
 									<span className={styles.statLabel}>Проекти</span>
 								</div>
 							</div>
-							<div className={styles.statItem}>
+							<div className={`${styles.statItem} ${course.isSpaceTheme ? styles.spaceStat : ''}`}>
 								<TrendingUp className={styles.statIcon} />
 								<div className={styles.statInfo}>
 									<span className={styles.statValue}>{course.stats.level}</span>
@@ -400,9 +467,9 @@ const EnhancedCourseCards = () => {
 										</span>
 									</div>
 								</div>
-								<div className={styles.studentsInfo}>
+								<div className={`${styles.studentsInfo} ${course.isSpaceTheme ? styles.spaceStudents : ''}`}>
 									<Eye className={styles.eyeIcon} />
-									<span>{course.students} учнів</span>
+									<span>{course.students} {course.isSpaceTheme ? 'космонавтів' : 'учнів'}</span>
 								</div>
 							</div>
 
@@ -410,15 +477,15 @@ const EnhancedCourseCards = () => {
 								<button
 									className={`${styles.primaryButton} ${
 										styles[`btnPrimary${course.gradient}`]
-									}`}
+									} ${course.isSpaceTheme ? styles.spaceButton : ''}`}
 								>
-									<span>Записатися на курс</span>
+									<span>{course.isSpaceTheme ? 'Почати космічну подорож' : 'Записатися на курс'}</span>
 									<ArrowRight className={styles.buttonIcon} />
 									<div className={styles.buttonShine}></div>
 								</button>
-								<button className={styles.secondaryButton}>
+								<button className={`${styles.secondaryButton} ${course.isSpaceTheme ? styles.spaceSecondaryButton : ''}`}>
 									<PlayCircle className={styles.secondaryIcon} />
-									<span>Переглянути програму</span>
+									<span>{course.isSpaceTheme ? 'Дослідити програму' : 'Переглянути програму'}</span>
 								</button>
 							</div>
 						</footer>
