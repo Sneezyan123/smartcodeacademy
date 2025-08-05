@@ -1,0 +1,351 @@
+/* WebCoursePage.module.css */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
+
+:root {
+    --primary-blue: #2563eb;
+    --primary-purple: #8b5cf6;
+    --primary-cyan: #0891b2;
+    --primary-green: #10b981;
+    --primary-orange: #f97316;
+    --primary-red: #ef4444;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --bg-light: #dfb9f8;
+    --code-font: 'Fira Code', monospace;
+    --main-font: 'Manrope', sans-serif;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+    --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- ОСНОВНА СТРУКТУРА --- */
+.container {
+    background: var(--bg-light);
+    color: var(--text-primary);
+    font-family: var(--main-font);
+    overflow-x: hidden;
+    position: relative;
+}
+.backgroundElements {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    opacity: 0.5;
+}
+.floatingTag {
+    position: absolute;
+    font-family: var(--code-font);
+    color: #e2e8f0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    animation: float 20s infinite ease-in-out;
+    user-select: none;
+}
+.tag1 { top: 15%; left: 10%; animation-duration: 25s; }
+.tag2 { top: 30%; right: 15%; animation-duration: 30s; animation-direction: reverse; font-size: 2rem; color: #eef2ff; }
+.tag3 { bottom: 20%; left: 20%; animation-duration: 22s; }
+.tag4 { bottom: 40%; right: 25%; animation-duration: 28s; animation-direction: reverse; font-size: 1.75rem; color: #eef2ff; }
+.tag5 { top: 70%; left: 15%; animation-duration: 20s; }
+
+/* --- HUD СТОРІНКИ --- */
+.pageHud {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+}
+.backButton, .statsBoard {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-full);
+    padding: 0.5rem 1rem;
+    pointer-events: all;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+.backButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all var(--transition-base);
+}
+.backButton:hover {
+    background: white;
+    color: var(--text-primary);
+    transform: scale(1.05);
+}
+.statsBoard { display: flex; gap: 1.5rem; }
+.statItem { text-align: right; }
+.statLabel {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.statValue {
+    font-family: var(--code-font);
+    font-size: 1rem;
+    color: var(--primary-green);
+}
+
+/* --- ОСНОВНИЙ КОНТЕНТ --- */
+.mainContent {
+    position: relative;
+    z-index: 10;
+    padding: 0 1rem;
+}
+
+/* --- HERO СЕКЦІЯ --- */
+.heroSection {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.heroContent {
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.browserWindow {
+    width: 100%;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-xl);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1);
+    margin-bottom: 2.5rem;
+}
+.browserHeader {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+.browserDots { display: flex; gap: 0.5rem; }
+.browserDots span { width: 12px; height: 12px; border-radius: 50%; }
+.browserDots span:nth-child(1) { background: #ef4444; }
+.browserDots span:nth-child(2) { background: #f9b922; }
+.browserDots span:nth-child(3) { background: #10b981; }
+.browserUrl {
+    flex: 1;
+    text-align: center;
+    font-family: var(--code-font);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    background: #f1f5f9;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-lg);
+    margin: 0 2rem;
+}
+.browserBody { padding: 3rem 2rem; }
+.heroTitle {
+    font-family: var(--code-font);
+    font-size: clamp(3rem, 8vw, 4.5rem);
+    line-height: 1;
+    background: linear-gradient(135deg, var(--primary-cyan), var(--primary-green));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.heroSubtitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-purple);
+    margin-top: 1rem;
+}
+.description {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+    max-width: 55ch;
+}
+.ctaButtons { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+.startButton, .secondaryButton {
+    padding: 1rem 2rem;
+    border-radius: var(--radius-full);
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.startButton {
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+    color: white;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+.startButton:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 12px 30px rgba(99, 102, 241, 0.4); }
+.secondaryButton {
+    background: white;
+    color: var(--primary-blue);
+    border: 2px solid #e2e8f0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+.secondaryButton:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary-blue);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
+}
+
+/* --- ЗАГАЛЬНІ СТИЛІ СЕКЦІЙ --- */
+.modulesSection, .projectsSection, .featuresSection, .ctaSection { padding: 6rem 0; }
+.sectionHeader { text-align: center; margin-bottom: 4rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+.sectionTitle {
+    font-family: var(--code-font);
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    color: var(--primary-cyan);
+    margin-bottom: 1rem;
+}
+.sectionSubtitle { font-size: 1.25rem; color: var(--text-secondary); line-height: 1.6; }
+
+/* --- СЕКЦІЯ МОДУЛІВ --- */
+.modulesGrid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.moduleCard {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-base);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+}
+.moduleCard:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary-blue);
+    box-shadow: 0 20px 40px rgba(37, 99, 235, 0.1);
+}
+.moduleHeader { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+.moduleIcon {
+    width: 3.5rem;
+    height: 3.5rem;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+    border-radius: var(--radius-lg);
+    color: white;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+}
+.levelBadge {
+    background: var(--primary-cyan);
+    color: white;
+    font-family: var(--code-font);
+    font-size: 0.7rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius-full);
+}
+.moduleTitle { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-primary); }
+.moduleDuration { font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem; }
+.moduleTopics {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+}
+.moduleTopics li::before { content: '>'; color: var(--primary-cyan); margin-right: 0.75rem; font-family: var(--code-font); }
+
+/* --- СЕКЦІЯ ПРОЕКТІВ --- */
+.projectsGrid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.projectCard {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    transition: all var(--transition-base);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+}
+.projectCard:hover { transform: translateY(-10px); border-color: var(--primary-green); box-shadow: 0 20px 40px rgba(16, 185, 129, 0.1); }
+.projectHeader { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+.projectIcon { font-size: 2.5rem; }
+.projectTitle { font-size: 1.25rem; font-weight: 800; margin-bottom: 1rem; color: var(--text-primary); }
+.difficultyBar { margin-bottom: 1rem; }
+.difficultyLabel { font-family: var(--code-font); font-size: 0.7rem; color: #f59e0b; margin-bottom: 0.5rem; }
+.difficultyProgress { height: 8px; background: #f1f5f9; border-radius: var(--radius-full); }
+.difficultyFill { height: 100%; background: linear-gradient(90deg, #34d399, #fcd34d, #f87171); border-radius: var(--radius-full); }
+.projectDescription { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem; }
+.projectFooter { display: flex; justify-content: space-between; align-items: center; }
+.projectTime { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--text-secondary); }
+.selectButton { background: #f1f5f9; color: var(--text-primary); border: 1px solid #e2e8f0; font-family: var(--code-font); font-size: 0.7rem; padding: 0.5rem 1rem; border-radius: var(--radius-full); cursor: pointer; transition: all var(--transition-base); }
+.selectButton:hover { background: var(--text-primary); color: white; }
+
+/* --- СЕКЦІЯ НАВИЧОК --- */
+.featuresGrid { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.featureCard {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-xl);
+    transition: all var(--transition-base);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+}
+.featureCard:hover { transform: translateY(-10px); border-color: var(--primary-blue); box-shadow: 0 20px 40px rgba(37, 99, 235, 0.1); }
+.featureIcon {
+    width: 4rem;
+    height: 4rem;
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+    display: grid;
+    place-items: center;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    color: white;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+    transition: transform 0.5s ease;
+}
+.featureCard:hover .featureIcon { transform: rotateY(180deg); }
+.featureTitle { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-primary); }
+.featureDescription { font-size: 1rem; color: var(--text-secondary); }
+
+/* --- CTA СЕКЦІЯ --- */
+.ctaSection { text-align: center; }
+.ctaContainer {
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+    border-radius: var(--radius-2xl);
+    padding: 4rem 2rem;
+    box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.3);
+    color: white;
+}
+.ctaTitle { font-family: var(--code-font); font-size: 2rem; margin-bottom: 1rem; }
+.ctaText { font-size: 1.25rem; max-width: 50ch; margin: 0 auto 2rem; opacity: 0.9; }
+
+/* --- АДАПТИВНІСТЬ --- */
+@media (max-width: 768px) {
+    .pageHud { flex-direction: column; align-items: flex-end; gap: 0.5rem; }
+    .backButton { position: absolute; top: 1rem; left: 1rem; }
+    .statsBoard { position: static; }
+    .heroSection { padding-top: 8rem; }
+}
+
+/* --- КЛЮЧОВІ КАДРИ АНІМАЦІЙ --- */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(-5deg); }
+    50% { transform: translateY(-30px) rotate(5deg); }
+}
+@keyframes neonFlicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { text-shadow: 0 0 5px currentColor, 0 0 10px currentColor; }
+    20%, 24%, 55% { text-shadow: none; }
+}

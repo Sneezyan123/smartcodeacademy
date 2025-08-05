@@ -14,496 +14,163 @@ import {
 } from 'lucide-react'
 import styles from './Header.module.css'
 import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Link from 'next/link'
-
-// Реєструємо ScrollTrigger для GSAP
-gsap.registerPlugin(ScrollTrigger)
 
 const Header = () => {
 	const [isCoursesOpen, setIsCoursesOpen] = useState(false)
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 	const [isScrolled, setIsScrolled] = useState(false)
-	const [hasInteracted, setHasInteracted] = useState(false)
-	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 	const headerRef = useRef(null)
-	const mobileMenuRef = useRef(null)
-	const coursesRef = useRef(null)
-	const underlineRefs = useRef([])
-	const shineRef = useRef(null)
-
-	// Покращена логіка таймерів для dropdown
 	const dropdownTimerRef = useRef(null)
-	const dropdownAnimationRef = useRef(null)
 
-	// Використовуємо Intersection Observer замість scroll event для кращої продуктивності
+	// Відстеження прокрутки для зміни стилю хедера
 	useEffect(() => {
-		const header = headerRef.current
-		if (!header) return
+		const handleScroll = () => {
+			setIsScrolled(window.scrollY > 20)
+		}
+		window.addEventListener('scroll', handleScroll, { passive: true })
+		return () => window.removeEventListener('scroll', handleScroll)
+	}, [])
 
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				setIsScrolled(!entry.isIntersecting)
-			},
-			{ threshold: 0, rootMargin: '-88px 0px 0px 0px' }
+	// Анімація появи хедера
+	useEffect(() => {
+		gsap.fromTo(
+			headerRef.current,
+			{ y: -80, opacity: 0 },
+			{ y: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.2 }
 		)
-
-		observer.observe(header)
-		return () => observer.unobserve(header)
 	}, [])
 
-	// Відстежуємо позицію миші для інтерактивного ефекту
+	// Анімація випадаючого меню
 	useEffect(() => {
-		const updateMousePosition = e => {
-			setMousePosition({ x: e.clientX, y: e.clientY })
+		const dropdown = headerRef.current?.querySelector(`.${styles.dropdown}`)
+		if (!dropdown) return
+
+		if (isCoursesOpen) {
+			gsap
+				.timeline()
+				.set(dropdown, { display: 'block' })
+				.to(dropdown, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' })
+				.fromTo(
+					`.${styles.dropdownItem}`,
+					{ opacity: 0, x: -15 },
+					{
+						opacity: 1,
+						x: 0,
+						stagger: 0.05,
+						duration: 0.3,
+						ease: 'power2.out',
+					},
+					'-=0.2'
+				)
+		} else {
+			gsap.to(dropdown, {
+				opacity: 0,
+				y: -10,
+				duration: 0.2,
+				ease: 'power2.in',
+				onComplete: () => gsap.set(dropdown, { display: 'none' }),
+			})
 		}
+	}, [isCoursesOpen])
 
-		window.addEventListener('mousemove', updateMousePosition)
-		return () => window.removeEventListener('mousemove', updateMousePosition)
-	}, [])
-
-	// Відстежуємо взаємодію з користувачем для анімацій
+	// Анімація мобільного меню
 	useEffect(() => {
-		const handleInteraction = () => setHasInteracted(true)
-
-		window.addEventListener('click', handleInteraction, { once: true })
-		window.addEventListener('touchstart', handleInteraction, { once: true })
-
-		return () => {
-			window.removeEventListener('click', handleInteraction)
-			window.removeEventListener('touchstart', handleInteraction)
-		}
-	}, [])
-
-	// Анімації для мобільного меню
-	useEffect(() => {
-		if (!mobileMenuRef.current) return
+		const mobileMenu = headerRef.current?.querySelector(`.${styles.mobileMenu}`)
+		if (!mobileMenu) return
 
 		if (isMobileMenuOpen) {
-			gsap.fromTo(
-				mobileMenuRef.current,
-				{ x: '100%', opacity: 0.9 },
-				{
-					x: 0,
-					opacity: 1,
-					duration: 0.6,
-					ease: 'power3.out',
-				}
-			)
-
-			// Анімація елементів меню з затримкою
-			const menuItems = mobileMenuRef.current.querySelectorAll(
-				`.${styles.mobileNavLink}, .${styles.mobileCourseLink}`
-			)
-			gsap.fromTo(
-				menuItems,
-				{ y: 20, opacity: 0 },
-				{
-					y: 0,
-					opacity: 1,
-					duration: 0.4,
-					stagger: 0.05,
-					ease: 'back.out(1.7)',
-				}
-			)
+			gsap
+				.timeline()
+				.set(mobileMenu, { display: 'block' })
+				.to(mobileMenu, { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' })
+				.fromTo(
+					`.${styles.mobileNavLink}, .${styles.mobileCourseLink}`,
+					{ opacity: 0, y: 20 },
+					{
+						opacity: 1,
+						y: 0,
+						stagger: 0.07,
+						duration: 0.4,
+						ease: 'power2.out',
+					},
+					'-=0.3'
+				)
 		} else {
-			gsap.to(mobileMenuRef.current, {
+			gsap.to(mobileMenu, {
+				opacity: 0,
 				x: '100%',
-				opacity: 0.9,
-				duration: 0.5,
+				duration: 0.4,
 				ease: 'power3.in',
+				onComplete: () => gsap.set(mobileMenu, { display: 'none' }),
 			})
 		}
 	}, [isMobileMenuOpen])
 
-	// Покращені анімації для dropdown
-	useEffect(() => {
-		if (!coursesRef.current) return
-
-		// Очищуємо попередні анімації
-		if (dropdownAnimationRef.current) {
-			dropdownAnimationRef.current.kill()
-		}
-
-		if (isCoursesOpen) {
-			// Спочатку робимо елемент видимим
-			gsap.set(coursesRef.current, {
-				visibility: 'visible',
-				display: 'block',
-			})
-
-			// Створюємо timeline для плавної анімації
-			dropdownAnimationRef.current = gsap.timeline()
-
-			dropdownAnimationRef.current
-				.fromTo(
-					coursesRef.current,
-					{
-						y: -10,
-						opacity: 0,
-						scaleY: 0.95,
-					},
-					{
-						y: 0,
-						opacity: 1,
-						scaleY: 1,
-						duration: 0.3,
-						ease: 'power2.out',
-					}
-				)
-				.fromTo(
-					coursesRef.current.querySelectorAll(`.${styles.dropdownItem}`),
-					{ x: -15, opacity: 0 },
-					{
-						x: 0,
-						opacity: 1,
-						duration: 0.2,
-						stagger: 0.03,
-						ease: 'power2.out',
-					},
-					0.1
-				)
-		} else {
-			// Анімація закриття
-			dropdownAnimationRef.current = gsap.timeline()
-
-			dropdownAnimationRef.current
-				.to(coursesRef.current.querySelectorAll(`.${styles.dropdownItem}`), {
-					x: -10,
-					opacity: 0,
-					duration: 0.15,
-					stagger: 0.02,
-					ease: 'power2.in',
-				})
-				.to(
-					coursesRef.current,
-					{
-						y: -5,
-						opacity: 0,
-						scaleY: 0.95,
-						duration: 0.2,
-						ease: 'power2.in',
-						onComplete: () => {
-							gsap.set(coursesRef.current, {
-								visibility: 'hidden',
-								display: 'none',
-							})
-						},
-					},
-					0.05
-				)
-		}
-
-		// Очищення при розмонтуванні
-		return () => {
-			if (dropdownAnimationRef.current) {
-				dropdownAnimationRef.current.kill()
-			}
-		}
-	}, [isCoursesOpen])
-
-	// Анімація входу для хедера
-	useEffect(() => {
-		if (headerRef.current) {
-			gsap.fromTo(
-				headerRef.current,
-				{
-					y: -50,
-					opacity: 0,
-				},
-				{
-					y: 0,
-					opacity: 1,
-					duration: 0.8,
-					ease: 'back.out(1.7)',
-					delay: 0.2,
-				}
-			)
-		}
-	}, [])
-
-	// Subtle логотип ефект
-	useEffect(() => {
-		const logo = headerRef.current?.querySelector(`.${styles.logoIcon}`)
-		if (!logo) return
-
-		const handleLogoHover = () => {
-			gsap.to(logo, {
-				rotationY: 5,
-				rotationX: 2,
-				duration: 0.6,
-				ease: 'power2.out',
-			})
-		}
-
-		const handleLogoLeave = () => {
-			gsap.to(logo, {
-				rotationY: 0,
-				rotationX: 0,
-				duration: 0.6,
-				ease: 'power2.out',
-			})
-		}
-
-		const logoContainer = headerRef.current?.querySelector(`.${styles.logo}`)
-		if (logoContainer) {
-			logoContainer.addEventListener('mouseenter', handleLogoHover)
-			logoContainer.addEventListener('mouseleave', handleLogoLeave)
-		}
-
-		return () => {
-			if (logoContainer) {
-				logoContainer.removeEventListener('mouseenter', handleLogoHover)
-				logoContainer.removeEventListener('mouseleave', handleLogoLeave)
-			}
-		}
-	}, [])
-
-	// Покращена функція для закриття меню при кліку поза ним
-	useEffect(() => {
-		const handleClickOutside = event => {
-			if (
-				isCoursesOpen &&
-				coursesRef.current &&
-				!coursesRef.current.contains(event.target) &&
-				!event.target.closest(`.${styles.navItemDropdown}`)
-			) {
-				setIsCoursesOpen(false)
-			}
-
-			if (
-				isMobileMenuOpen &&
-				mobileMenuRef.current &&
-				!mobileMenuRef.current.contains(event.target) &&
-				!event.target.closest(`.${styles.mobileMenuButton}`)
-			) {
-				setIsMobileMenuOpen(false)
-			}
-		}
-
-		document.addEventListener('mousedown', handleClickOutside)
-		return () => document.removeEventListener('mousedown', handleClickOutside)
-	}, [isCoursesOpen, isMobileMenuOpen])
-
-	// Покращені обробники для dropdown з правильною логікою таймерів
+	// Логіка для плавного відкриття/закриття випадаючого меню
 	const handleDropdownMouseEnter = () => {
-		// Очищуємо таймер закриття якщо він існує
-		if (dropdownTimerRef.current) {
-			clearTimeout(dropdownTimerRef.current)
-			dropdownTimerRef.current = null
-		}
-		// Відкриваємо dropdown одразу
+		clearTimeout(dropdownTimerRef.current)
 		setIsCoursesOpen(true)
 	}
-
 	const handleDropdownMouseLeave = () => {
-		// Додаємо невелику затримку перед закриттям для кращого UX
-		dropdownTimerRef.current = setTimeout(() => {
-			setIsCoursesOpen(false)
-		}, 150)
+		dropdownTimerRef.current = setTimeout(() => setIsCoursesOpen(false), 200)
 	}
 
-	// Обробники для самого dropdown контенту
-	const handleDropdownContentMouseEnter = () => {
-		// Очищуємо таймер якщо курсор увійшов в dropdown
-		if (dropdownTimerRef.current) {
-			clearTimeout(dropdownTimerRef.current)
-			dropdownTimerRef.current = null
-		}
-	}
-
-	const handleDropdownContentMouseLeave = () => {
-		// Закриваємо dropdown коли курсор виходить з нього
-		dropdownTimerRef.current = setTimeout(() => {
-			setIsCoursesOpen(false)
-		}, 100)
-	}
-
-	// Очищуємо таймер при розмонтуванні компонента
-	useEffect(() => {
-		return () => {
-			if (dropdownTimerRef.current) {
-				clearTimeout(dropdownTimerRef.current)
-			}
-			if (dropdownAnimationRef.current) {
-				dropdownAnimationRef.current.kill()
-			}
-		}
-	}, [])
-
-	// Покращена функція для навігації з View Transitions API (де підтримується)
-	const navigateWithTransition = url => {
-		if (typeof document.startViewTransition === 'function') {
-			document.startViewTransition(() => {
-				window.location.href = url
-			})
-		} else {
-			window.location.href = url
-		}
-	}
-
-	const courses = [
-		{
-			icon: <Code className={styles.courseIcon} />,
-			title: 'Python & JavaScript',
-			description: 'Основи програмування та алгоритми',
-			age: '10-16 років',
-			color: 'blue',
-			popular: true,
-		},
-		{
-			icon: <Gamepad2 className={styles.courseIcon} />,
-			title: 'Розробка ігор',
-			description: 'Unity, Roblox Studio, Scratch',
-			age: '8-17 років',
-			color: 'green',
-			popular: false,
-		},
-		{
-			icon: <Monitor className={styles.courseIcon} />,
-			title: 'Веб-розробка',
-			description: 'HTML, CSS, React, дизайн',
-			age: '12-18 років',
-			color: 'purple',
-			popular: false,
-		},
-	]
-
+	// Дані для навігації та курсів
 	const navItems = [
-		{ label: 'Курси', href: '#courses', dropdown: true },
+		{ label: 'Курси', dropdown: true },
 		{ label: 'Про нас', href: '#about' },
 		{ label: 'Відгуки', href: '#testimonials' },
 		{ label: 'Контакти', href: '#contacts' },
 	]
-
-	// Покращені обробники для hover ефектів
-	const handleNavLinkMouseEnter = (e, index) => {
-		const underline = underlineRefs.current[index]
-		if (underline) {
-			gsap.killTweensOf(underline)
-			gsap.fromTo(
-				underline,
-				{ width: 0 },
-				{ width: '100%', duration: 0.4, ease: 'power2.out' }
-			)
-		}
-	}
-
-	const handleNavLinkMouseLeave = (e, index) => {
-		const underline = underlineRefs.current[index]
-		if (underline) {
-			gsap.killTweensOf(underline)
-			gsap.to(underline, { width: 0, duration: 0.3, ease: 'power2.in' })
-		}
-	}
-
-	// Професійна анімація для CTA кнопки
-	const handleCtaMouseEnter = e => {
-		const button = e.currentTarget
-		const shine = button.querySelector('.shine-effect')
-
-		// Subtle glow ефект
-		gsap.to(button, {
-			filter: 'brightness(1.1) saturate(1.2)',
-			duration: 0.3,
-			ease: 'power2.out',
-		})
-
-		if (shine) {
-			gsap.fromTo(
-				shine,
-				{ x: '-100%', opacity: 0.5 },
-				{
-					x: '200%',
-					opacity: 0,
-					duration: 0.8,
-					ease: 'power2.out',
-				}
-			)
-		}
-	}
-
-	const handleCtaMouseLeave = e => {
-		const button = e.currentTarget
-
-		gsap.to(button, {
-			filter: 'brightness(1) saturate(1)',
-			duration: 0.3,
-			ease: 'power2.out',
-		})
-	}
-
-	// Професійна анімація для контактної інформації
-	const handleContactMouseEnter = e => {
-		const contact = e.currentTarget
-		const icon = contact.querySelector(`.${styles.contactIcon}`)
-
-		gsap.to(contact, {
-			scale: 1.02,
-			duration: 0.3,
-			ease: 'power2.out',
-		})
-
-		if (icon) {
-			gsap.to(icon, {
-				rotation: 5,
-				scale: 1.1,
-				duration: 0.3,
-				ease: 'back.out(1.7)',
-			})
-		}
-	}
-
-	const handleContactMouseLeave = e => {
-		const contact = e.currentTarget
-		const icon = contact.querySelector(`.${styles.contactIcon}`)
-
-		gsap.to(contact, {
-			scale: 1,
-			duration: 0.3,
-			ease: 'power2.out',
-		})
-
-		if (icon) {
-			gsap.to(icon, {
-				rotation: 0,
-				scale: 1,
-				duration: 0.3,
-				ease: 'power2.out',
-			})
-		}
-	}
+	const courses = [
+		{
+			icon: <Code size={24} />,
+			title: 'Python & JavaScript',
+			description: 'Основи програмування та алгоритми',
+			age: '10-16 років',
+			theme: 'blue',
+			popular: true,
+		},
+		{
+			icon: <Gamepad2 size={24} />,
+			title: 'Розробка ігор',
+			description: 'Unity, Roblox Studio, Scratch',
+			age: '8-17 років',
+			theme: 'green',
+		},
+		{
+			icon: <Monitor size={24} />,
+			title: 'Веб-розробка',
+			description: 'HTML, CSS, React, дизайн',
+			age: '12-18 років',
+			theme: 'purple',
+		},
+	]
 
 	return (
 		<header
 			ref={headerRef}
 			className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}
-			style={{
-				'--mouse-x': `${mousePosition.x}px`,
-				'--mouse-y': `${mousePosition.y}px`,
-			}}
-			aria-label='Основна навігація сайту'
 		>
 			<div className={styles.container}>
 				<div className={styles.headerContent}>
-					{/* Logo з 3D ефектом */}
-					<Link href='/' className={styles.logo} aria-current='page'>
-						<div className={styles.logoIcon}>
+					{/* Логотип */}
+					<a href='/' className={styles.logo}>
+						<div className={styles.logoIconWrapper}>
 							<img
 								src='logo.jpg'
-								alt='SmartCode Academy'
-								className={styles.logoSvg}
-								loading='eager'
-								decoding='async'
+								alt='SmartCode Academy Logo'
+								className={styles.logoImage}
 							/>
 						</div>
 						<div className={styles.logoText}>
 							<span className={styles.logoTitle}>SmartCode</span>
 							<span className={styles.logoSubtitle}>Academy</span>
 						</div>
-					</Link>
-					{/* Navigation */}
-					<nav className={styles.nav} aria-label='Головне меню'>
+					</a>
+
+					{/* Навігація для десктопу */}
+					<nav className={styles.nav}>
 						{navItems.map((item, index) =>
 							item.dropdown ? (
 								<div
@@ -511,48 +178,17 @@ const Header = () => {
 									className={styles.navItemDropdown}
 									onMouseEnter={handleDropdownMouseEnter}
 									onMouseLeave={handleDropdownMouseLeave}
-									aria-expanded={isCoursesOpen}
-									role='menu'
 								>
-									<button
-										className={styles.navLink}
-										aria-haspopup='true'
-										aria-expanded={isCoursesOpen}
-									>
+									<button className={styles.navLink}>
 										{item.label}
 										<ChevronDown
+											size={16}
 											className={`${styles.chevron} ${
 												isCoursesOpen ? styles.chevronRotated : ''
 											}`}
-											aria-hidden='true'
 										/>
-										<span
-											className='underline-effect'
-											style={{
-												display: 'block',
-												height: '3px',
-												background:
-													'linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-purple) 100%)',
-												borderRadius: 'var(--radius-full)',
-												width: '0',
-												position: 'absolute',
-												bottom: 0,
-												left: 0,
-											}}
-										></span>
 									</button>
-
-									{/* Dropdown Menu */}
-									<div
-										ref={coursesRef}
-										className={`${styles.dropdown} ${
-											isCoursesOpen ? styles.dropdownOpen : ''
-										}`}
-										role='menu'
-										aria-label='Меню курсів'
-										onMouseEnter={handleDropdownContentMouseEnter}
-										onMouseLeave={handleDropdownContentMouseLeave}
-									>
+									<div className={styles.dropdown}>
 										<div className={styles.dropdownContent}>
 											<div className={styles.dropdownHeader}>
 												<h3 className={styles.dropdownTitle}>Наші курси</h3>
@@ -565,25 +201,10 @@ const Header = () => {
 													key={courseIndex}
 													href={`#course-${courseIndex}`}
 													className={styles.dropdownItem}
-													role='menuitem'
-													onMouseEnter={e => {
-														const el = e.currentTarget
-														gsap.to(el, {
-															background: 'rgba(37, 99, 235, 0.08)',
-															duration: 0.3,
-														})
-													}}
-													onMouseLeave={e => {
-														const el = e.currentTarget
-														gsap.to(el, {
-															background: 'transparent',
-															duration: 0.3,
-														})
-													}}
 												>
 													<div
 														className={`${styles.dropdownIcon} ${
-															styles[course.color]
+															styles[course.theme]
 														}`}
 													>
 														{course.icon}
@@ -595,8 +216,7 @@ const Header = () => {
 															</h4>
 															{course.popular && (
 																<span className={styles.popularBadge}>
-																	<Star className={styles.starIcon} />
-																	Популярний
+																	<Star size={10} /> Популярний
 																</span>
 															)}
 														</div>
@@ -610,123 +230,44 @@ const Header = () => {
 												</a>
 											))}
 											<div className={styles.dropdownFooter}>
-												<a
-													href='#all-courses'
-													className={styles.dropdownLink}
-													role='menuitem'
-												>
-													<Users className={styles.linkIcon} />
-													Переглянути всі курси
+												<a href='#all-courses' className={styles.dropdownLink}>
+													<Users size={14} /> Переглянути всі курси
 												</a>
 											</div>
 										</div>
 									</div>
 								</div>
 							) : (
-								<a
-									key={index}
-									href={item.href}
-									className={styles.navLink}
-									role='menuitem'
-									onMouseEnter={e => handleNavLinkMouseEnter(e, index)}
-									onMouseLeave={e => handleNavLinkMouseLeave(e, index)}
-									onClick={e => {
-										e.preventDefault()
-										navigateWithTransition(item.href)
-									}}
-									ref={el => {
-										underlineRefs.current[index] =
-											el?.querySelector('.underline-effect') || null
-									}}
-								>
+								<a key={index} href={item.href} className={styles.navLink}>
 									{item.label}
-									<span
-										className='underline-effect'
-										style={{
-											display: 'block',
-											height: '3px',
-											background:
-												'linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-purple) 100%)',
-											borderRadius: 'var(--radius-full)',
-											width: '0',
-											position: 'absolute',
-											bottom: 0,
-											left: 0,
-										}}
-									></span>
 								</a>
 							)
 						)}
 					</nav>
 
-					{/* Right side */}
+					{/* Права частина хедера */}
 					<div className={styles.headerRight}>
-						{/* Contact Info */}
-						<a
-							href='tel:+380671234567'
-							className={styles.contactInfo}
-							aria-label='Подзвонити нам: +38 (067) 123-45-67'
-							onMouseEnter={handleContactMouseEnter}
-							onMouseLeave={handleContactMouseLeave}
-						>
-							<Phone className={styles.contactIcon} aria-hidden='true' />
+						<a href='tel:+380671234567' className={styles.contactInfo}>
+							<Phone size={18} />
 							<span className={styles.contactText}>+38 (067) 123-45-67</span>
 						</a>
-
-						{/* CTA Button з advanced hover ефектами */}
-						<button
-							className={styles.ctaButton}
-							onMouseEnter={handleCtaMouseEnter}
-							onMouseLeave={handleCtaMouseLeave}
-							aria-label='Записатися на безкоштовний урок'
-							ref={shineRef}
-						>
-							<Sparkles className={styles.ctaIcon} aria-hidden='true' />
+						<button className={styles.ctaButton}>
+							<Sparkles size={18} />
 							Безкоштовний урок
-							<span
-								className='shine-effect'
-								style={{
-									position: 'absolute',
-									top: 0,
-									left: 0,
-									width: '100%',
-									height: '100%',
-									background:
-										'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
-									transform: 'skewX(-25deg)',
-									pointerEvents: 'none',
-									opacity: 0,
-								}}
-							></span>
 						</button>
-
-						{/* Mobile menu button */}
 						<button
 							className={styles.mobileMenuButton}
 							onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-							aria-expanded={isMobileMenuOpen}
-							aria-label={isMobileMenuOpen ? 'Закрити меню' : 'Відкрити меню'}
+							aria-label='Меню'
 						>
-							{isMobileMenuOpen ? (
-								<X aria-hidden='true' />
-							) : (
-								<Menu aria-hidden='true' />
-							)}
+							{isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
 						</button>
 					</div>
 				</div>
 			</div>
 
-			{/* Mobile Menu */}
-			<div
-				ref={mobileMenuRef}
-				className={`${styles.mobileMenu} ${
-					isMobileMenuOpen ? styles.mobileMenuOpen : ''
-				}`}
-				role='dialog'
-				aria-modal={isMobileMenuOpen}
-				aria-label='Мобільне меню'
-			>
+			{/* Мобільне меню */}
+			<div className={styles.mobileMenu}>
 				<div className={styles.mobileMenuContent}>
 					<div className={styles.mobileNavSection}>
 						<h3 className={styles.mobileNavTitle}>Меню</h3>
@@ -735,17 +276,12 @@ const Header = () => {
 								key={index}
 								href={item.href}
 								className={styles.mobileNavLink}
-								onClick={() => {
-									setIsMobileMenuOpen(false)
-									navigateWithTransition(item.href)
-								}}
-								role='menuitem'
+								onClick={() => setIsMobileMenuOpen(false)}
 							>
 								{item.label}
 							</a>
 						))}
 					</div>
-
 					<div className={styles.mobileNavSection}>
 						<h3 className={styles.mobileNavTitle}>Курси</h3>
 						{courses.map((course, index) => (
@@ -754,11 +290,10 @@ const Header = () => {
 								href={`#course-${index}`}
 								className={styles.mobileCourseLink}
 								onClick={() => setIsMobileMenuOpen(false)}
-								role='menuitem'
 							>
 								<div
 									className={`${styles.mobileCourseIcon} ${
-										styles[course.color]
+										styles[course.theme]
 									}`}
 								>
 									{course.icon}
@@ -773,14 +308,13 @@ const Header = () => {
 							</a>
 						))}
 					</div>
-
 					<div className={styles.mobileFooter}>
 						<a href='tel:+380671234567' className={styles.mobileContact}>
-							<Phone className={styles.mobileContactIcon} aria-hidden='true' />
+							<Phone size={18} />
 							<span>+38 (067) 123-45-67</span>
 						</a>
 						<button className={styles.mobileCtaButton}>
-							<Sparkles className={styles.ctaIcon} aria-hidden='true' />
+							<Sparkles size={20} />
 							Безкоштовний урок
 						</button>
 					</div>
