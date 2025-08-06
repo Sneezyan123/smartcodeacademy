@@ -17,9 +17,17 @@ import {
 	Cpu,
 	Sparkles,
 	ArrowLeft,
-	Sword,
-	Shield,
-	Gem,
+	Code,
+	BookOpen,
+	Rocket,
+	GraduationCap,
+	Monitor,
+	Layers,
+	Settings,
+	Target,
+	Briefcase,
+	Coffee,
+	Lightbulb,
 } from 'lucide-react'
 import Link from 'next/link'
 import styles from './UnityCoursePage.module.css'
@@ -362,97 +370,107 @@ const UnityCoursePage = () => {
 	const modules = [
 		{
 			id: 1,
-			title: 'Unity Basics',
-			duration: '4 тижні',
-			topics: ['Інтерфейс Unity', 'C# основи', 'GameObject', 'Prefabs'],
-			icon: <Gamepad2 className='w-6 h-6' />,
+			title: 'C# Основи',
+			topics: ['Змінні і типи', 'Умови та цикли', 'Методи', 'ООП базово'],
+			icon: <Code className='w-6 h-6' />,
 			powerUp: '🍒',
 		},
 		{
 			id: 2,
-			title: '2D Games',
-			duration: '5 тижнів',
-			topics: ['Спрайти', 'Анімації', '2D фізика', 'Платформер'],
-			icon: <Zap className='w-6 h-6' />,
+			title: 'Unity Інтерфейс',
+			topics: ['Scene View', 'Inspector', 'Hierarchy', 'Project Window'],
+			icon: <Monitor className='w-6 h-6' />,
 			powerUp: '🍓',
 		},
 		{
 			id: 3,
-			title: '3D Games',
-			duration: '6 тижнів',
-			topics: ['3D моделі', 'Освітлення', 'Terrain', 'FPS Controller'],
-			icon: <Cpu className='w-6 h-6' />,
+			title: 'GameObjects',
+			topics: ['Components', 'Transform', 'Prefabs', 'Instancing'],
+			icon: <Layers className='w-6 h-6' />,
 			powerUp: '🍊',
 		},
 		{
 			id: 4,
-			title: 'Publishing',
-			duration: '3 тижні',
-			topics: ['Оптимізація', 'UI/UX', 'Білд', 'Магазини'],
-			icon: <Trophy className='w-6 h-6' />,
+			title: 'Physics & Animation',
+			topics: ['Rigidbody', 'Colliders', 'Animator', 'Timeline'],
+			icon: <Zap className='w-6 h-6' />,
 			powerUp: '🍉',
+		},
+		{
+			id:5,
+			title: "Unity 3D",
+			topics: ['3D Models', 'Materials', 'Lighting', 'Shadows'],
+			icon: <Gamepad2 className='w-6 h-6' />,
+			powerUp: '🍎',
+		},
+		{
+			id: 6,
+			title: "Final Project",
+			topics: ['Game Design', 'Scripting', 'UI/UX', 'Publishing'],
+			icon: <Rocket className='w-6 h-6' />,
+			powerUp: '🍒'
 		},
 	]
 
 	const projects = [
 		{
-			name: 'Pac-Man Clone',
-			difficulty: 'LEVEL 1',
+			name: 'Калькулятор C#',
+			difficulty: 'BEGINNER',
+			time: '1 тиждень',
+			description: 'Консольний калькулятор з базовими операціями',
+			icon: '🔢',
+			points: 500,
+		},
+		{
+			name: 'Roll-a-Ball',
+			difficulty: 'JUNIOR',
 			time: '2 тижні',
-			description: 'Класична аркада з власним дизайном',
-			icon: '👾',
+			description: 'Перша гра в Unity - збирай кульки',
+			icon: '⚽',
 			points: 1000,
 		},
 		{
-			name: 'Platformer 2D',
-			difficulty: 'LEVEL 2',
+			name: 'Flappy Bird',
+			difficulty: 'MIDDLE',
 			time: '3 тижні',
-			description: 'Маріо-стайл гра з рівнями',
-			icon: '🎮',
+			description: '2D гра з фізикою та анімаціями',
+			icon: '🐦',
 			points: 2500,
 		},
 		{
-			name: 'Racing 3D',
-			difficulty: 'LEVEL 3',
+			name: 'Tower Defense',
+			difficulty: 'SENIOR',
 			time: '4 тижні',
-			description: 'Гонки з фізикою та AI',
-			icon: '🏎️',
+			description: 'Стратегія з AI ворогів та системою апгрейдів',
+			icon: '🏰',
 			points: 5000,
-		},
-		{
-			name: 'FPS Shooter',
-			difficulty: 'BOSS',
-			time: '5 тижнів',
-			description: 'Мультиплеєрний шутер',
-			icon: '🔫',
-			points: 10000,
 		},
 	]
 
 	const features = [
 		{
-			icon: <Sword className='w-8 h-8' />,
-			title: 'Battle Mode',
-			desc: 'PvP проекти',
-			powerUp: '⚔️',
+			icon: <GraduationCap className='w-8 h-8' />,
+			title: 'Certification',
+			desc: 'Офіційний сертифікат',
+			powerUp: '📜',
 		},
 		{
-			icon: <Shield className='w-8 h-8' />,
-			title: 'Shield Up',
-			desc: 'Захист коду',
-			powerUp: '🛡️',
+			icon: <Users className='w-8 h-8' />,
+			title: 'Community',
+			desc: 'Спільнота студентів',
+			powerUp: '👥',
 		},
 		{
-			icon: <Gem className='w-8 h-8' />,
-			title: 'Loot Box',
-			desc: 'Бонуси щотижня',
-			powerUp: '💎',
+			icon: <Briefcase className='w-8 h-8' />,
+			title: 'Job Support',
+			desc: 'Допомога з працевлаштуванням',
+			powerUp: '💼',
 		},
 		{
-			icon: <Trophy className='w-8 h-8' />,
-			title: 'High Score',
-			desc: 'Топ студентів',
-			powerUp: '🏆',
+			icon: <Coffee className='w-8 h-8' />,
+			title: 'Code Review',
+			desc: 'Перевірка коду менторами',
+			powerUp: '☕',
 		},
 	]
 
@@ -461,19 +479,19 @@ const UnityCoursePage = () => {
 			{/* Back Button */}
 			<Link href='/' className={styles.backButton}>
 				<ArrowLeft className='w-5 h-5' />
-				<span className='hidden sm:inline'>MENU</span>
+				<span className='hidden sm:inline'>НАЗАД</span>
 			</Link>
 
 			{/* Score Board */}
 			<div className={styles.scoreBoard}>
 				<div className={styles.scoreItem}>
-					<span className={styles.scoreLabel}>SCORE</span>
+					<span className={styles.scoreLabel}>ПРОГРЕС</span>
 					<span className={styles.scoreValue}>
 						{score.toString().padStart(6, '0')}
 					</span>
 				</div>
 				<div className={styles.scoreItem}>
-					<span className={styles.scoreLabel}>LIVES</span>
+					<span className={styles.scoreLabel}>РІВЕНЬ</span>
 					<span className={styles.livesContainer}>
 						{[...Array(lives)].map((_, i) => (
 							<Heart key={i} className={styles.lifeHeart} fill='#ff0066' />
@@ -481,8 +499,8 @@ const UnityCoursePage = () => {
 					</span>
 				</div>
 				<div className={styles.scoreItem}>
-					<span className={styles.scoreLabel}>LEVEL</span>
-					<span className={styles.scoreValue}>01</span>
+					<span className={styles.scoreLabel}>ДОСВІД</span>
+					<span className={styles.scoreValue}>C#</span>
 				</div>
 			</div>
 
@@ -601,18 +619,18 @@ const UnityCoursePage = () => {
 							<div className={styles.screenGlow}></div>
 							<div className={styles.screenContent}>
 								<div className={styles.gameTitle}>
-									<div className={styles.titleLine}>UNITY</div>
-									<div className={styles.titleLine}>GAME DEV</div>
+									<div className={styles.titleLine}>C# & UNITY</div>
+									<div className={styles.titleLine}>РОЗРОБКА</div>
 								</div>
-								<div className={styles.pressStart}>PRESS START</div>
-								<div className={styles.insertCoin}>INSERT COIN</div>
+								<div className={styles.pressStart}>РОЗПОЧАТИ НАВЧАННЯ</div>
+								<div className={styles.insertCoin}>БЕЗКОШТОВНИЙ УРОК</div>
 							</div>
 							<div className={styles.screenScanlines}></div>
 						</div>
 
 						<p className={styles.description}>
-							Створюй власні ігри як справжній розробник! Від ретро аркад до AAA
-							проектів. Unity + C# = твоя суперсила в gamedev
+							Стань розробником ігор з нуля! Вивчай C# програмування та Unity Engine. 
+							Від перших рядків коду до повноцінних проектів в портфоліо.
 						</p>
 
 						{/* CTA Buttons */}
@@ -620,35 +638,17 @@ const UnityCoursePage = () => {
 							<button className={styles.startButton}>
 								<span className={styles.buttonPixel}>
 									<Play className='w-6 h-6' />
-									START GAME
+									ПОЧАТИ КУРС
 									<ChevronRight className={styles.buttonArrow} />
 								</span>
 							</button>
 
 							<button className={styles.coinButton}>
 								<span className={styles.buttonPixel}>
-									<Coins className='w-6 h-6' />
-									FREE PLAY
+									<BookOpen className='w-6 h-6' />
+									ПРОГРАМА
 								</span>
 							</button>
-						</div>
-
-						{/* High Scores */}
-						<div className={styles.highScores}>
-							<h3 className={styles.highScoresTitle}>HIGH SCORES</h3>
-							<div className={styles.scoresList}>
-								{[
-									{ rank: 1, name: 'AAA', score: 999999 },
-									{ rank: 2, name: 'PRO', score: 750000 },
-									{ rank: 3, name: 'DEV', score: 500000 },
-								].map(item => (
-									<div key={item.rank} className={styles.scoreEntry}>
-										<span className={styles.rank}>{item.rank}ST</span>
-										<span className={styles.playerName}>{item.name}</span>
-										<span className={styles.playerScore}>{item.score}</span>
-									</div>
-								))}
-							</div>
 						</div>
 					</div>
 				</section>
@@ -665,7 +665,7 @@ const UnityCoursePage = () => {
 								visibleSections.includes('modules') ? styles.visible : ''
 							}`}
 						>
-							<span className={styles.pixelText}>GAME LEVELS</span>
+							<span className={styles.pixelText}>МОДУЛІ КУРСУ</span>
 						</h2>
 
 						<div className={styles.modulesGrid}>
@@ -683,7 +683,7 @@ const UnityCoursePage = () => {
 									onMouseEnter={() => setActiveModule(index)}
 								>
 									{/* Level Badge */}
-									<div className={styles.levelBadge}>LEVEL {index + 1}</div>
+									<div className={styles.levelBadge}>МОДУЛЬ {index + 1}</div>
 
 									{/* Power Up Icon */}
 									<div className={styles.modulePowerUp}>{module.powerUp}</div>
@@ -723,7 +723,7 @@ const UnityCoursePage = () => {
 								visibleSections.includes('projects') ? styles.visible : ''
 							}`}
 						>
-							<span className={styles.pixelText}>BOSS BATTLES</span>
+							<span className={styles.pixelText}>ПРАКТИЧНІ ПРОЕКТИ</span>
 						</h2>
 
 						<div className={styles.projectsGrid}>
@@ -739,7 +739,7 @@ const UnityCoursePage = () => {
 									<div className={styles.projectHeader}>
 										<div className={styles.projectIcon}>{project.icon}</div>
 										<div className={styles.projectPoints}>
-											+{project.points} PTS
+											+{project.points} XP
 										</div>
 									</div>
 
@@ -765,7 +765,7 @@ const UnityCoursePage = () => {
 											<Clock className='w-4 h-4' />
 											{project.time}
 										</div>
-										<button className={styles.selectButton}>SELECT</button>
+										<button className={styles.selectButton}>ОБРАТИ</button>
 									</div>
 
 									<div className={styles.projectGlow}></div>
@@ -793,7 +793,7 @@ const UnityCoursePage = () => {
 								visibleSections.includes('features') ? styles.visible : ''
 							}`}
 						>
-							<span className={styles.pixelText}>POWER-UPS</span>
+							<span className={styles.pixelText}>ПЕРЕВАГИ КУРСУ</span>
 						</h2>
 
 						<div className={styles.featuresGrid}>
@@ -820,22 +820,22 @@ const UnityCoursePage = () => {
 				<section className={styles.ctaSection}>
 					<div className={styles.ctaContainer}>
 						<div className={styles.gameOverScreen}>
-							<h2 className={styles.gameOverTitle}>GAME OVER</h2>
-							<p className={styles.continueText}>CONTINUE?</p>
-							<div className={styles.countdown}>9</div>
+							<h2 className={styles.gameOverTitle}>ГОТОВИЙ ПОЧАТИ?</h2>
+							<p className={styles.continueText}>ЗАПИСАТИСЯ НА КУРС</p>
+							<div className={styles.countdown}>💻</div>
 
 							<div className={styles.ctaButtons}>
 								<button className={styles.continueButton}>
 									<span className={styles.buttonPixel}>
-										<Zap className='w-6 h-6' />
-										INSERT COIN
+										<Rocket className='w-6 h-6' />
+										ЗАПИСАТИСЯ
 									</span>
 								</button>
 
 								<button className={styles.downloadButton}>
 									<span className={styles.buttonPixel}>
 										<Download className='w-6 h-6' />
-										SAVE GAME
+										ПРОГРАМА PDF
 									</span>
 								</button>
 							</div>

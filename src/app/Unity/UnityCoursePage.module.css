@@ -332,8 +332,8 @@
 /* === PIXELATED GHOSTS - 8-BIT STYLE === */
 .ghost {
   position: absolute;
-  width: 60px;
-  height: 70px;
+  width: 30px;
+  height: 40px;
   animation: ghostFloat 2s ease-in-out infinite;
   transition: all 0.2s ease;
   display: flex;
@@ -964,7 +964,7 @@
 }
 
 .topicItem {
-  font-size: 0.5rem;
+  font-size: 1rem;
   color: var(--neon-blue);
   display: flex;
   align-items: center;
