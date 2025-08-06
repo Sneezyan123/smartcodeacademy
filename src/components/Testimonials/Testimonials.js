@@ -319,7 +319,7 @@ const Testimonials = () => {
 									size={48}
 									className={`${styles.quoteIcon} ${currentTheme.positionText}`}
 								/>
-								<p className={styles.testimonialText}>"{currentData.text}"</p>
+								<p className={styles.testimonialText}>&quot;{currentData.text}&quot;</p>
 							</div>
 
 							<div className={styles.cardFooter}>

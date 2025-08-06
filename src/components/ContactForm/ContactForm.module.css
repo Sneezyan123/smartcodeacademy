@@ -1,18 +1,6 @@
 /* ContactForm.module.css */
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap');
 
-:root {
-    --primary-blue: #2563eb;
-    --primary-purple: #8b5cf6;
-    --primary-orange: #f97316;
-    --primary-red: #ef4444;
-    --text-primary: #1e293b;
-    --text-secondary: #475569;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
-    --radius-2xl: 24px;
-    --radius-full: 9999px;
-}
 
 /* --- ОСНОВНА СЕКЦІЯ --- */
 .contactSection {

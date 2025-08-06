@@ -73,7 +73,7 @@ const ContactForm = () => {
                         <div className={styles.content}>
                             <div className={styles.badge}>
                                 <Send size={16} />
-                                Зв'яжіться з нами
+                                Зв&apos;яжіться з нами
                             </div>
                             <h2 className={styles.title}>
                                 Почніть навчання
@@ -109,7 +109,7 @@ const ContactForm = () => {
                                 <>
                                     <div className={styles.formHeader}>
                                         <h3 className={styles.formTitle}>Записатися на консультацію</h3>
-                                        <p className={styles.formSubtitle}>Ми зв'яжемося з вами протягом 15 хвилин</p>
+                                        <p className={styles.formSubtitle}>Ми зв&apos;яжемося з вами протягом 15 хвилин</p>
                                     </div>
                                     <form onSubmit={handleSubmit} className={styles.form}>
                                         <div className={styles.formRow}>
@@ -165,7 +165,7 @@ const ContactForm = () => {
                                     </div>
                                     <h3 className={styles.successTitle}>Дякуємо за заявку!</h3>
                                     <p className={styles.successText}>
-                                        Наш менеджер вже готує для вас найкращу пропозицію і зв'яжеться з вами найближчим часом.
+                                        Наш менеджер вже готує для вас найкращу пропозицію і зв&apos;яжеться з вами найближчим часом.
                                     </p>
                                 </div>
                             )}

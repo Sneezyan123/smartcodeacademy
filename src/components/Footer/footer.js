@@ -20,6 +20,7 @@ import {
 	Facebook,
 	Linkedin,
 } from 'lucide-react'
+import Image from 'next/image'
 
 const Footer = () => {
 	const currentYear = new Date().getFullYear()
@@ -88,10 +89,12 @@ const Footer = () => {
 					<div className={styles.schoolInfo}>
 						<div className={styles.logoSection}>
 							<div className={styles.logoIconWrapper}>
-								<img
-									src='https://placehold.co/48x48/7c3aed/ffffff?text=SC'
+								<Image
+									src='/logo.jpg'
 									alt='SmartCode Academy Logo'
 									className={styles.logoImage}
+									width={48}
+									height={48}
 								/>
 							</div>
 							<div className={styles.logoText}>

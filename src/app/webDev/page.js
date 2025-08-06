@@ -57,7 +57,7 @@ const WebCoursePage = () => {
 			linesTl.kill()
 			projectsTl.kill()
 		}
-	}, [])
+	}, [stats])
 
 	// GSAP анімації при скролі
 	useEffect(() => {
@@ -356,7 +356,7 @@ const WebCoursePage = () => {
 					<div className={styles.ctaContainer}>
 						<h2 className={styles.ctaTitle}>Готові почати кодити?</h2>
 						<p className={styles.ctaText}>
-							Зробіть перший крок до кар'єри веб-розробника. Запишіться на
+							Зробіть перший крок до кар&apos;єри веб-розробника. Запишіться на
 							безкоштовний пробний урок!
 						</p>
 						

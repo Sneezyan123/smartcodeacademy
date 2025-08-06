@@ -1,32 +1,5 @@
 /* --- Змінні для кольорів та стилів --- */
-:root {
-    --color-blue-500: #3b82f6;
-    --color-cyan-400: #22d3ee;
-    --color-purple-500: #a855f7;
-    --color-pink-500: #ec4899;
-    --color-green-500: #22c55e;
-    --color-emerald-400: #34d399;
-    --color-orange-500: #f97316;
-    --color-amber-400: #fbbf24;
-    --color-rose-400: #fb7185;
-    --color-yellow-400: #facc15;
-    --color-red-500: #ef4444;
 
-    --color-slate-50: #f8fafc;
-    --color-slate-100: #f1f5f9;
-    --color-slate-300: #cbd5e1;
-    --color-slate-400: #94a3b8;
-    --color-slate-600: #475569;
-    --color-slate-700: #334155;
-    --color-slate-800: #1e293b;
-    
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
 
 /* --- Основна секція --- */
 .testimonialsSection {

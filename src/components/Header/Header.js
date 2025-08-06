@@ -14,6 +14,8 @@ import {
 } from 'lucide-react'
 import styles from './Header.module.css'
 import gsap from 'gsap'
+import Link from 'next/link'
+import Image from 'next/image'
 
 const Header = () => {
 	const [isCoursesOpen, setIsCoursesOpen] = useState(false)
@@ -155,19 +157,21 @@ const Header = () => {
 			<div className={styles.container}>
 				<div className={styles.headerContent}>
 					{/* Логотип */}
-					<a href='/' className={styles.logo}>
+					<Link href="/" className={styles.logo}>
 						<div className={styles.logoIconWrapper}>
-							<img
-								src='logo.jpg'
-								alt='SmartCode Academy Logo'
+							<Image
+								src="/logo.jpg"
+								alt="SmartCode Academy Logo"
 								className={styles.logoImage}
+								width={48}
+								height={48}
 							/>
 						</div>
 						<div className={styles.logoText}>
 							<span className={styles.logoTitle}>SmartCode</span>
 							<span className={styles.logoSubtitle}>Academy</span>
 						</div>
-					</a>
+					</Link>
 
 					{/* Навігація для десктопу */}
 					<nav className={styles.nav}>
