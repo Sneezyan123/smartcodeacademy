@@ -1,0 +1,467 @@
+/* UnityCoursePage.module.css */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* --- ОСНОВНА СТРУКТУРА --- */
+.container {
+    background: var(--bg-dark);
+    color: white;
+    font-family: var(--main-font);
+    position: relative;
+}
+
+/* --- ІНТЕРАКТИВНИЙ ФОН --- */
+.gameBackground {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+.gridPattern {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(37, 99, 235, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(37, 99, 235, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: background-pan 60s linear infinite;
+}
+.coin {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #fcd34d;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #fcd34d;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.ghost {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px 20px 0 0;
+    transition: transform 0.3s ease;
+    position: relative;
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+}
+
+.ghost::before {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 12px;
+    background: inherit;
+    clip-path: polygon(0% 0%, 12.5% 100%, 25% 0%, 37.5% 100%, 50% 0%, 62.5% 100%, 75% 0%, 87.5% 100%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+.ghostEyes {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+}
+.ghostEye {
+    width: 8px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.ghostEye::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #000;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    animation: ghostEyeMove 3s infinite ease-in-out;
+}
+
+.blinky { 
+    background: #ff0000; 
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2), 0 2px 8px rgba(255, 0, 0, 0.4);
+}
+.pinky { 
+    background: #ffb8ff; 
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2), 0 2px 8px rgba(255, 184, 255, 0.4);
+}
+.inky { 
+    background: #00ffff; 
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 255, 255, 0.4);
+}
+.clyde { 
+    background: #ffb852; 
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2), 0 2px 8px rgba(255, 184, 82, 0.4);
+}
+
+.pacman {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    background: #fcd34d;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 100;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 20px #fcd34d;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 55%, 50% 50%, 0% 45%);
+    animation: chomp 0.5s infinite;
+}
+
+/* --- ІГРОВИЙ HUD --- */
+.gameHud {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+}
+.backButton, .scoreBoard {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+    padding: 0.5rem 1rem;
+    pointer-events: all;
+}
+.backButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #cbd5e1;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all var(--transition-base);
+}
+.backButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transform: scale(1.05);
+}
+.scoreBoard { display: flex; gap: 1.5rem; }
+.scoreItem { text-align: right; }
+.scoreLabel {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #94a3b8;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.scoreValue {
+    font-family: var(--pixel-font);
+    font-size: 1rem;
+    color: #fcd34d;
+    text-shadow: 0 0 5px #fcd34d;
+}
+.livesContainer { display: flex; gap: 0.25rem; }
+.lifeHeart { width: 1rem; height: 1rem; color: #f43f5e; fill: currentColor; animation: pulse 1.5s infinite; }
+
+/* --- ОСНОВНИЙ КОНТЕНТ --- */
+.mainContent {
+    position: relative;
+    z-index: 10;
+    padding: 0 1rem;
+}
+
+/* --- HERO СЕКЦІЯ --- */
+.heroSection {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.heroContent {
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 3rem;
+    border-radius: var(--radius-2xl);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.gameTitle {
+    font-family: var(--pixel-font);
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    line-height: 1.1;
+    margin-bottom: 2rem;
+}
+.titleLine1 { color: #fcd34d; text-shadow: 0 0 15px #fcd34d; animation: neonFlicker 3s infinite; }
+.titleLine2 { color: #a78bfa; text-shadow: 0 0 15px #a78bfa; animation: neonFlicker 3s infinite 0.5s; }
+.description {
+    font-size: 1.25rem;
+    color: #cbd5e1;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+    max-width: 50ch;
+}
+.ctaButtons { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+.startButton, .secondaryButton {
+    padding: 1rem 2rem;
+    border-radius: var(--radius-full);
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.startButton {
+    max-width: 300px;
+    background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+    color: white;
+    box-shadow: 0 8px 25px rgba(249, 115, 22, 0.3);
+}
+.startButton:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 12px 30px rgba(249, 115, 22, 0.4); }
+.secondaryButton {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.secondaryButton:hover { background: rgba(255, 255, 255, 0.2); }
+
+/* --- ЗАГАЛЬНІ СТИЛІ СЕКЦІЙ --- */
+.modulesSection, .projectsSection, .featuresSection, .ctaSection {
+    padding: 6rem 0;
+}
+.sectionHeader {
+    text-align: center;
+    margin-bottom: 4rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.sectionTitle {
+    font-family: var(--pixel-font);
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    color: #fcd34d;
+    text-shadow: 0 0 10px #fcd34d;
+    margin-bottom: 1rem;
+    animation: neonFlicker 3s infinite;
+}
+.sectionSubtitle {
+    font-size: 1.25rem;
+    color: #cbd5e1;
+    line-height: 1.6;
+}
+
+/* --- СЕКЦІЯ МОДУЛІВ --- */
+.modulesGrid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.moduleCard {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-base);
+}
+.moduleCard:hover {
+    transform: translateY(-10px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+.moduleHeader { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+.moduleIcon {
+    width: 3.5rem;
+    height: 3.5rem;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+    border-radius: var(--radius-lg);
+    color: white;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+}
+.levelBadge {
+    background: #fcd34d;
+    color: var(--bg-dark);
+    font-family: var(--pixel-font);
+    font-size: 0.7rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius-full);
+}
+.moduleTitle { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; }
+.moduleDuration { font-size: 0.875rem; color: #94a3b8; margin-bottom: 1rem; }
+.moduleTopics {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: #cbd5e1;
+}
+.moduleTopics li::before {
+    content: '•';
+    color: #fcd34d;
+    margin-right: 0.5rem;
+}
+
+/* --- СЕКЦІЯ ПРОЕКТІВ --- */
+.projectsGrid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.projectCard {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    transition: all var(--transition-base);
+}
+.projectCard:hover {
+    transform: translateY(-10px);
+    border-color: #a78bfa;
+    box-shadow: 0 0 30px rgba(167, 139, 250, 0.2);
+}
+.projectHeader { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+.projectIcon { font-size: 2.5rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
+.projectPoints {
+    background: #34d399;
+    color: var(--bg-dark);
+    font-family: var(--pixel-font);
+    font-size: 0.7rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius-full);
+}
+.projectTitle { font-size: 1.25rem; font-weight: 800; margin-bottom: 1rem; }
+.difficultyBar { margin-bottom: 1rem; }
+.difficultyLabel {
+    font-family: var(--pixel-font);
+    font-size: 0.7rem;
+    color: #fcd34d;
+    margin-bottom: 0.5rem;
+}
+.difficultyProgress { height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: var(--radius-full); }
+.difficultyFill {
+    height: 100%;
+    background: linear-gradient(90deg, #34d399, #fcd34d, #f87171);
+    border-radius: var(--radius-full);
+}
+.projectDescription { font-size: 0.9rem; color: #94a3b8; line-height: 1.6; margin-bottom: 1.5rem; }
+.projectFooter { display: flex; justify-content: space-between; align-items: center; }
+.projectTime { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #94a3b8; }
+.selectButton {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-family: var(--pixel-font);
+    font-size: 0.7rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+.selectButton:hover { background: white; color: var(--bg-dark); }
+
+/* --- СЕКЦІЯ НАВИЧОК --- */
+.featuresGrid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+.featureCard {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-xl);
+    transition: all var(--transition-base);
+}
+.featureCard:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 30px rgba(37, 99, 235, 0.2);
+}
+.featureIcon {
+    width: 4rem;
+    height: 4rem;
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+    display: grid;
+    place-items: center;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    color: white;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+    transition: transform 0.5s ease;
+}
+.featureCard:hover .featureIcon { transform: rotateY(180deg); }
+.featureTitle { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; }
+.featureDescription { font-size: 1rem; color: #94a3b8; }
+
+/* --- CTA СЕКЦІЯ --- */
+.ctaSection { text-align: center; }
+.ctaContainer {
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+    border-radius: var(--radius-2xl);
+    padding: 4rem 2rem;
+    box-shadow: 0 25px 50px -12px rgba(99, 102, 241, 0.3);
+}
+.ctaTitle { font-family: var(--pixel-font); font-size: 2rem; margin-bottom: 1rem; }
+.ctaText { font-size: 1.25rem; max-width: 50ch; margin: 0 auto 2rem; opacity: 0.9; }
+
+/* --- АДАПТИВНІСТЬ --- */
+@media (max-width: 768px) {
+    .gameHud { flex-direction: column; align-items: flex-end; gap: 0.5rem; }
+    .backButton { position: absolute; top: 1rem; left: 1rem; }
+    .scoreBoard { position: static; }
+    .heroSection { padding-top: 8rem; }
+}
+
+/* --- КЛЮЧОВІ КАДРИ АНІМАЦІЙ --- */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+}
+@keyframes pulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 3px currentColor); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 8px currentColor); }
+}
+@keyframes neonFlicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 20px currentColor; }
+    20%, 24%, 55% { text-shadow: none; }
+}
+@keyframes background-pan {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+@keyframes chomp {
+    0%, 100% { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 55%, 50% 50%, 0% 45%); }
+    50% { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%, 50% 50%, 0% 50%); }
+}
+
+@keyframes ghostEyeMove {
+    0%, 50%, 100% { 
+        left: 2px; 
+    }
+    25% { 
+        left: 4px; 
+    }
+    75% { 
+        left: 0px; 
+    }
+}
