@@ -216,7 +216,7 @@
 /* === SCORE BOARD === */
 .scoreBoard {
   position: fixed;
-  top: 1rem;
+  top: 6.5rem;
   right: 1rem;
   z-index: 50;
   display: flex;
@@ -1326,7 +1326,6 @@
   font-size: clamp(2rem, 5vw, 3rem);
   color: var(--neon-pink);
   margin-bottom: 1rem;
-  animation: glitch 0.3s infinite;
   text-shadow: 
     0 0 10px currentColor,
     0 0 20px currentColor,
@@ -1462,5 +1461,138 @@
   
   .powerUp {
     font-size: 1.5rem;
+  }
+}
+
+/* === VIDEO MODAL === */
+.videoModal {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.85) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 9999 !important;
+  padding: 1rem;
+  backdrop-filter: blur(5px);
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.videoModalContent {
+  background: var(--dark-bg);
+  border: 4px solid var(--neon-pink);
+  border-radius: 8px;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 800px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 0 30px rgba(255, 0, 102, 0.3),
+    inset 0 0 20px rgba(255, 0, 102, 0.05);
+  /* Removed pulse animation for stable viewing */
+}
+
+.videoHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 0, 102, 0.1);
+  border-bottom: 2px solid var(--neon-pink);
+}
+
+.videoTitle {
+  color: var(--neon-yellow);
+  font-size: 1rem;
+  margin: 0;
+  text-shadow: 0 0 10px currentColor;
+  /* Removed neonFlicker animation for stable viewing */
+}
+
+.closeButton {
+  background: none;
+  border: 2px solid var(--neon-pink);
+  color: var(--neon-pink);
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.closeButton:hover {
+  background: var(--neon-pink);
+  color: var(--dark-bg);
+  transform: scale(1.1);
+  box-shadow: 0 0 15px var(--neon-pink);
+}
+
+.videoContainer {
+  position: relative;
+  width: 100%;
+  height: 450px;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  /* Stable container without animations */
+}
+
+.gameplayVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: none;
+  /* Removed pixelated rendering for smoother video playback */
+}
+
+.gameplayVideo::-webkit-media-controls {
+  filter: brightness(1.1) saturate(1.2);
+}
+
+.videoFooter {
+  padding: 1rem 1.5rem;
+  background: rgba(0, 0, 0, 0.8);
+  border-top: 2px solid var(--neon-blue);
+}
+
+.videoDescription {
+  color: var(--neon-blue);
+  font-size: 0.75rem;
+  margin: 0;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  text-shadow: 0 0 5px currentColor;
+}
+
+/* Video modal responsive */
+@media (max-width: 768px) {
+  .videoModalContent {
+    width: 95vw;
+    max-height: 80vh;
+  }
+  
+  .videoContainer {
+    height: 300px;
+  }
+  
+  .videoTitle {
+    font-size: 0.75rem;
+  }
+  
+  .videoDescription {
+    font-size: 0.625rem;
   }
 }

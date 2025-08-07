@@ -39,6 +39,9 @@ const UnityCoursePage = () => {
 	const [isLoaded, setIsLoaded] = useState(false)
 	const [visibleSections, setVisibleSections] = useState([])
 	const [pacmanPosition, setPacmanPosition] = useState({ x: 50, y: 50 })
+	const [isVideoModalOpen, setIsVideoModalOpen] = useState(false)
+	const [currentVideo, setCurrentVideo] = useState(null)
+	const videoRef = useRef(null)
 	
 	// Bigger pixelated ghosts with collision detection
 	const [ghostPositions, setGhostPositions] = useState([
@@ -83,6 +86,51 @@ const UnityCoursePage = () => {
 	const [coins, setCoins] = useState([])
 	const [powerUps, setPowerUps] = useState([])
 	const heroRef = useRef(null)
+
+	// Modal functions
+	const openVideoModal = (videoData) => {
+		setCurrentVideo(videoData)
+		setIsVideoModalOpen(true)
+		// Auto-play video when modal opens
+		setTimeout(() => {
+			if (videoRef.current) {
+				videoRef.current.play().catch(err => {
+					console.log('Auto-play prevented:', err)
+				})
+			}
+		}, 200)
+	}
+
+	const closeVideoModal = () => {
+		setIsVideoModalOpen(false)
+		setCurrentVideo(null)
+		// Pause video when modal closes
+		if (videoRef.current) {
+			videoRef.current.pause()
+			videoRef.current.currentTime = 0
+		}
+	}
+
+	// Handle escape key to close modal
+	useEffect(() => {
+		const handleEscapeKey = (event) => {
+			if (event.key === 'Escape') {
+				closeVideoModal()
+			}
+		}
+
+		if (isVideoModalOpen) {
+			document.addEventListener('keydown', handleEscapeKey)
+			document.body.style.overflow = 'hidden'
+		} else {
+			document.body.style.overflow = 'unset'
+		}
+
+		return () => {
+			document.removeEventListener('keydown', handleEscapeKey)
+			document.body.style.overflow = 'unset'
+		}
+	}, [isVideoModalOpen])
 
 	// Collision detection function
 	const checkCollision = (obj1, obj2, obj1Size = 60, obj2Size = 20) => {
@@ -414,36 +462,40 @@ const UnityCoursePage = () => {
 
 	const projects = [
 		{
-			name: 'Калькулятор C#',
-			difficulty: 'BEGINNER',
-			time: '1 тиждень',
-			description: 'Консольний калькулятор з базовими операціями',
-			icon: '🔢',
-			points: 500,
-		},
-		{
-			name: 'Roll-a-Ball',
-			difficulty: 'JUNIOR',
-			time: '2 тижні',
-			description: 'Перша гра в Unity - збирай кульки',
-			icon: '⚽',
-			points: 1000,
-		},
-		{
 			name: 'Flappy Bird',
-			difficulty: 'MIDDLE',
-			time: '3 тижні',
+			difficulty: 'BEGINNER',
+			time: '2 тижні',
 			description: '2D гра з фізикою та анімаціями',
 			icon: '🐦',
-			points: 2500,
+			points: 1500,
+			video: {
+				src: '/flappyyappy.MOV',
+				title: 'FLAPPY BIRD - ГЕЙМПЛЕЙ'
+			}
 		},
 		{
-			name: 'Tower Defense',
+			name: "Parkour Game",
+			difficulty: 'MIDDLE',
+			time: '3 тижні',
+			description: '3D гра з паркур механіками та анімаціями',
+			icon: '🏃‍♂️',
+			points: 3500,
+			video: {
+				src: '/shmobby.MOV',
+				title: 'HOLLOW KNIGHT PARODY - ГЕЙМПЛЕЙ'
+			}
+		},
+		{
+			name: 'Swing Simulator',
 			difficulty: 'SENIOR',
-			time: '4 тижні',
-			description: 'Стратегія з AI ворогів та системою апгрейдів',
-			icon: '🏰',
-			points: 5000,
+			time: '5 тижнів',
+			description: 'Симулятор польоту на грапплері з реалістичною фізикою',
+			icon: '🕷️',
+			points: 4000,
+			video: {
+				src: '/bobo.MOV',
+				title: 'SWING SIMULATOR - ГЕЙМПЛЕЙ'
+			}
 		},
 	]
 
@@ -476,11 +528,6 @@ const UnityCoursePage = () => {
 
 	return (
 		<div className={styles.container}>
-			{/* Back Button */}
-			<Link href='/' className={styles.backButton}>
-				<ArrowLeft className='w-5 h-5' />
-				<span className='hidden sm:inline'>НАЗАД</span>
-			</Link>
 
 			{/* Score Board */}
 			<div className={styles.scoreBoard}>
@@ -765,7 +812,17 @@ const UnityCoursePage = () => {
 											<Clock className='w-4 h-4' />
 											{project.time}
 										</div>
-										<button className={styles.selectButton}>ОБРАТИ</button>
+										<button 
+											className={styles.selectButton}
+											onClick={(e) => {
+												e.preventDefault()
+												e.stopPropagation()
+												openVideoModal(project.video)
+											}}
+											type="button"
+										>
+											ГЕЙМПЛЕЙ
+										</button>
 									</div>
 
 									<div className={styles.projectGlow}></div>
@@ -831,18 +888,61 @@ const UnityCoursePage = () => {
 										ЗАПИСАТИСЯ
 									</span>
 								</button>
-
-								<button className={styles.downloadButton}>
-									<span className={styles.buttonPixel}>
-										<Download className='w-6 h-6' />
-										ПРОГРАМА PDF
-									</span>
-								</button>
 							</div>
 						</div>
 					</div>
 				</section>
 			</div>
+
+			{/* Video Modal */}
+			{isVideoModalOpen && currentVideo && (
+				<div 
+					className={styles.videoModal} 
+					onClick={closeVideoModal}
+					style={{ 
+						position: 'fixed',
+						top: 0,
+						left: 0,
+						right: 0,
+						bottom: 0,
+						zIndex: 9999,
+						display: 'flex'
+					}}
+				>
+					<div className={styles.videoModalContent} onClick={(e) => e.stopPropagation()}>
+						<div className={styles.videoHeader}>
+							<h3 className={styles.videoTitle}>{currentVideo.title}</h3>
+							<button 
+								className={styles.closeButton}
+								onClick={closeVideoModal}
+								aria-label="Close video"
+								type="button"
+							>
+								✕
+							</button>
+						</div>
+						<div className={styles.videoContainer}>
+							<video
+								ref={videoRef}
+								className={styles.gameplayVideo}
+								controls
+								muted
+								playsInline
+								preload="metadata"
+							>
+								<source src={currentVideo.src} type="video/quicktime" />
+								<source src={currentVideo.src} type="video/mp4" />
+								Ваш браузер не підтримує відео.
+							</video>
+						</div>
+						<div className={styles.videoFooter}>
+							<p className={styles.videoDescription}>
+								🎮 Унікальний геймплей та механіки
+							</p>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }

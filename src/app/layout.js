@@ -1,6 +1,7 @@
 import Footer from '@/components/Footer/footer'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
+import Header from '@/components/Header/Header'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -117,7 +118,7 @@ export default function RootLayout({ children }) {
 				suppressHydrationWarning
 			>
 				<div className='min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'>
-					
+					<Header />
 					<main className='flex-1 pt-16 relative'>{children}</main>
 					<Footer />
 				</div>

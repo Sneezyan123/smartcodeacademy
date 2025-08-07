@@ -7,23 +7,22 @@ import Header from '@/components/Header/Header'
 export default function Home() {
 	return (
 		<div>
-		<Header/>
-		<div className='overflow-x-hidden'>
-			{/* Hero Section - Головна секція з інтро */}
-			<Visit />
+			<div className='overflow-x-hidden'>
+				{/* Hero Section - Головна секція з інтро */}
+				<Visit />
 
-			{/* Features Section - Секція з функціями та можливостями */}
-			<Testimonials />
-			<HeroSection />
+				{/* Features Section - Секція з функціями та можливостями */}
+				<Testimonials />
+				<HeroSection />
 
-			{/* Testimonials Section - Відгуки студентів */}
+				{/* Testimonials Section - Відгуки студентів */}
 
-			{/* Contact Form Section - Форма зв'язку */}
-			<ContactForm />
+				{/* Contact Form Section - Форма зв'язку */}
+				<ContactForm />
 
-			{/* FAQ Section - Часті питання */}
-			<FAQ />
-		</div>
+				{/* FAQ Section - Часті питання */}
+				<FAQ />
+			</div>
 		</div>
 	)
 }

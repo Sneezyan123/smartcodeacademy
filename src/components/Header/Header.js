@@ -34,13 +34,13 @@ const Header = () => {
 	}, [])
 
 	// Анімація появи хедера
-	useEffect(() => {
-		gsap.fromTo(
-			headerRef.current,
-			{ y: -80, opacity: 0 },
-			{ y: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.2 }
-		)
-	}, [])
+	// useEffect(() => {
+	// 	gsap.fromTo(
+	// 		headerRef.current,
+	// 		{ y: -80, opacity: 0 },
+	// 		{ y: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.2 }
+	// 	)
+	// }, [])
 
 	// Анімація випадаючого меню
 	useEffect(() => {
