@@ -251,9 +251,9 @@ const Header = () => {
 
 					{/* Права частина хедера */}
 					<div className={styles.headerRight}>
-						<a href='tel:+380671234567' className={styles.contactInfo}>
+						<a href='tel:+380966566243' className={styles.contactInfo}>
 							<Phone size={18} />
-							<span className={styles.contactText}>+38 (067) 123-45-67</span>
+							<span className={styles.contactText}>+380 96 656 62 43</span>
 						</a>
 						<button className={styles.ctaButton}>
 							<Sparkles size={18} />

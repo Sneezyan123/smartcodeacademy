@@ -100,155 +100,13 @@ const Visit = () => {
 
 	const stats = [
 		{ number: '500+', label: 'Випускників', icon: <Users /> },
-		{ number: '95%', label: 'Працевлаштування', icon: <Award /> },
+		{ number: '200+', label: 'Годин кодування', icon: <Code /> },
 		{ number: '3+', label: 'Роки досвіду', icon: <Clock /> },
 		{ number: '4.9', label: 'Рейтинг', icon: <Star /> },
 		{ number: '8+', label: 'Курсів', icon: <BookOpen /> },
 		{ number: '15+', label: 'Викладачів', icon: <Monitor /> },
 		{ number: '20+', label: 'Проектів', icon: <Rocket /> },
 		{ number: '98%', label: 'Задоволених учнів', icon: <Trophy /> },
-	]
-
-	const courses = [
-		{
-			id: 'programming',
-			title: 'ПРОГРАМУВАННЯ',
-			subtitle: 'Основи кодування майбутнього',
-			icon: <Code className={styles.courseIcon} />,
-			description: 'Python, JavaScript, алгоритми та структури даних',
-			gradient: 'programming',
-			features: ['Змінні та функції', 'Умови та цикли', 'Реальні проекти'],
-			duration: '6 місяців',
-			age: '10-16 років',
-			elements: [
-				{
-					type: 'code',
-					content: 'def hello():',
-					x: '15%',
-					y: '25%',
-					delay: '0s',
-				},
-				{
-					type: 'code',
-					content: '  print("Привіт!")',
-					x: '20%',
-					y: '35%',
-					delay: '0.5s',
-				},
-				{ type: 'code', content: 'hello()', x: '15%', y: '45%', delay: '1s' },
-				{
-					type: 'icon',
-					content: <Cpu className={styles.elementIcon} />,
-					x: '70%',
-					y: '30%',
-					delay: '1.5s',
-				},
-				{
-					type: 'bracket',
-					content: '{ }',
-					x: '65%',
-					y: '60%',
-					delay: '2s',
-				},
-			],
-		},
-		{
-			id: 'games',
-			title: 'ГЕЙМДЕВ',
-			subtitle: 'Створення власних ігор',
-			icon: <Gamepad2 className={styles.courseIcon} />,
-			description: 'Unity, Scratch, Roblox Studio - від ідеї до релізу',
-			gradient: 'games',
-			features: [
-				'Персонажі та анімація',
-				'Логіка та механіки',
-				'Публікація ігор',
-			],
-			duration: '8 місяців',
-			age: '8-17 років',
-			elements: [
-				{
-					type: 'game-element',
-					content: '🎯',
-					x: '25%',
-					y: '25%',
-					delay: '0s',
-				},
-				{
-					type: 'game-element',
-					content: '⭐',
-					x: '70%',
-					y: '20%',
-					delay: '0.5s',
-				},
-				{
-					type: 'game-element',
-					content: '🚀',
-					x: '60%',
-					y: '65%',
-					delay: '1s',
-				},
-				{
-					type: 'game-element',
-					content: '💎',
-					x: '20%',
-					y: '60%',
-					delay: '1.5s',
-				},
-				{
-					type: 'score',
-					content: 'Рівень: 42',
-					x: '15%',
-					y: '80%',
-					delay: '2s',
-				},
-			],
-		},
-		{
-			id: 'web',
-			title: 'ВЕБ-РОЗРОБКА',
-			subtitle: 'Сучасні сайти та додатки',
-			icon: <Monitor className={styles.courseIcon} />,
-			description: 'HTML, CSS, JavaScript, React - повний стек веб-розробки',
-			gradient: 'web',
-			features: [
-				'Адаптивна верстка',
-				'Інтерактивні інтерфейси',
-				'Сучасні технології',
-			],
-			duration: '7 місяців',
-			age: '12-18 років',
-			elements: [
-				{
-					type: 'web-element',
-					content: '<div>',
-					x: '20%',
-					y: '25%',
-					delay: '0s',
-				},
-				{
-					type: 'web-element',
-					content: '</div>',
-					x: '70%',
-					y: '30%',
-					delay: '0.5s',
-				},
-				{
-					type: 'web-element',
-					content: 'React',
-					x: '60%',
-					y: '60%',
-					delay: '1s',
-				},
-				{
-					type: 'icon',
-					content: <Palette className={styles.elementIcon} />,
-					x: '25%',
-					y: '65%',
-					delay: '1.5s',
-				},
-			],
-		},
 	]
 
 	return (
@@ -302,9 +160,6 @@ const Visit = () => {
 							<button className={styles.primaryButton}>
 								<Play className={styles.buttonIcon} />
 								Почати навчання безкоштовно
-							</button>
-							<button className={styles.secondaryButton}>
-								Записатися на пробний урок
 							</button>
 						</div>
 					</div>

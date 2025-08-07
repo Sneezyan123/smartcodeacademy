@@ -12,12 +12,16 @@ import {
 	ChevronRight,
 	Download,
 	ArrowLeft,
-	Bot,
 	Layers,
 	Wind,
 	MousePointerClick,
 	ShieldCheck,
 	Rocket,
+	Sparkles,
+	Terminal,
+	Globe,
+	Zap,
+	Heart,
 } from 'lucide-react'
 import Link from 'next/link'
 import styles from './WebCoursePage.module.css'
@@ -27,58 +31,166 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 const WebCoursePage = () => {
+	const [stats, setStats] = useState({ 
+		linesOfCode: 0, 
+		projects: 0,
+		students: 0
+	})
+	const [typedText, setTypedText] = useState('')
+	const [hoveredModule, setHoveredModule] = useState(null)
+	const [hoveredProject, setHoveredProject] = useState(null)
+	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+	
 	const mainRef = useRef(null)
-	const [stats, setStats] = useState({ linesOfCode: 12345, projects: 56 })
+	const heroRef = useRef(null)
+	const modulesRef = useRef(null)
+	const projectsRef = useRef(null)
 
-	// Анімація статистики
+	// Code string for typing animation
+	const codeString = `const createAwesomeWebsite = () => {
+  const skills = ['HTML', 'CSS', 'JavaScript', 'React'];
+  const creativity = Infinity;
+  
+  return buildFuture(skills, creativity);
+}`
+
+	// Typing animation
 	useEffect(() => {
-		const linesTl = gsap.to(stats, {
-			linesOfCode: 99999,
-			duration: 20,
-			ease: 'none',
-			repeat: -1,
-			onUpdate: () =>
-				setStats(prev => ({
-					...prev,
-					linesOfCode: Math.floor(stats.linesOfCode),
-				})),
-		})
+		let index = 0
+		const timer = setInterval(() => {
+			if (index <= codeString.length) {
+				setTypedText(codeString.slice(0, index))
+				index++
+			} else {
+				clearInterval(timer)
+			}
+		}, 30)
+		return () => clearInterval(timer)
+	}, [])
 
-		const projectsTl = gsap.to(stats, {
-			projects: 200,
-			duration: 30,
-			ease: 'none',
-			repeat: -1,
-			onUpdate: () =>
-				setStats(prev => ({ ...prev, projects: Math.floor(stats.projects) })),
-		})
-
-		return () => {
-			linesTl.kill()
-			projectsTl.kill()
+	// Mouse tracking for parallax
+	useEffect(() => {
+		const handleMouseMove = (e) => {
+			const x = (e.clientX / window.innerWidth - 0.5) * 2
+			const y = (e.clientY / window.innerHeight - 0.5) * 2
+			setMousePosition({ x, y })
 		}
-	}, [stats])
+		window.addEventListener('mousemove', handleMouseMove)
+		return () => window.removeEventListener('mousemove', handleMouseMove)
+	}, [])
 
-	// GSAP анімації при скролі
+	// Animated counters
+	useEffect(() => {
+		const animateValue = (start, end, duration, key) => {
+			const range = end - start
+			const startTime = Date.now()
+			
+			const timer = setInterval(() => {
+				const elapsed = Date.now() - startTime
+				const progress = Math.min(elapsed / duration, 1)
+				const easeOutQuart = 1 - Math.pow(1 - progress, 4)
+				const current = Math.floor(start + range * easeOutQuart)
+				
+				setStats(prev => ({ ...prev, [key]: current }))
+				
+				if (progress >= 1) {
+					clearInterval(timer)
+				}
+			}, 16)
+			
+			return timer
+		}
+
+		const timers = [
+			animateValue(0, 99999, 3000, 'linesOfCode'),
+			animateValue(0, 200, 2500, 'projects'),
+			animateValue(0, 1000, 2800, 'students')
+		]
+
+		return () => timers.forEach(timer => clearInterval(timer))
+	}, [])
+
+	// GSAP ScrollTrigger animations
 	useEffect(() => {
 		const ctx = gsap.context(() => {
+			// Hero section animations
 			gsap.fromTo(
-				`.${styles.animateUp}`,
-				{ y: 60, opacity: 0 },
+				`.${styles.heroLeft}`,
+				{ opacity: 0, x: -50 },
 				{
-					y: 0,
 					opacity: 1,
+					x: 0,
 					duration: 1,
 					ease: 'power3.out',
-					stagger: 0.15,
 					scrollTrigger: {
-						trigger: mainRef.current,
+						trigger: heroRef.current,
 						start: 'top 80%',
-						toggleActions: 'play none none reverse',
-					},
+					}
 				}
 			)
+
+			gsap.fromTo(
+				`.${styles.browserWindow}`,
+				{ opacity: 0, x: 50, rotateY: -30 },
+				{
+					opacity: 1,
+					x: 0,
+					rotateY: 0,
+					duration: 1,
+					ease: 'power3.out',
+					scrollTrigger: {
+						trigger: heroRef.current,
+						start: 'top 80%',
+					}
+				}
+			)
+
+			// Module cards stagger animation
+			gsap.fromTo(
+				`.${styles.moduleCard}`,
+				{ opacity: 0, y: 50, scale: 0.9 },
+				{
+					opacity: 1,
+					y: 0,
+					scale: 1,
+					duration: 0.8,
+					stagger: 0.1,
+					ease: 'power3.out',
+					scrollTrigger: {
+						trigger: modulesRef.current,
+						start: 'top 80%',
+					}
+				}
+			)
+
+			// Project cards animation
+			gsap.fromTo(
+				`.${styles.projectCard}`,
+				{ opacity: 0, scale: 0.8, rotateY: -20 },
+				{
+					opacity: 1,
+					scale: 1,
+					rotateY: 0,
+					duration: 0.8,
+					stagger: 0.15,
+					ease: 'power3.out',
+					scrollTrigger: {
+						trigger: projectsRef.current,
+						start: 'top 80%',
+					}
+				}
+			)
+
+			// Parallax effect for floating elements
+			gsap.to(`.${styles.floatingTag}`, {
+				scrollTrigger: {
+					scrub: 1
+				},
+				y: (i, target) => -ScrollTrigger.maxScroll(window) * target.dataset.speed,
+				ease: 'none'
+			})
 		}, mainRef)
+
 		return () => ctx.revert()
 	}, [])
 
@@ -90,9 +202,11 @@ const WebCoursePage = () => {
 				'HTML5 семантика',
 				'CSS Flexbox & Grid',
 				'Адаптивна верстка',
-				'Основи JavaScript',
+				'Основи JavaScript'
 			],
 			Icon: Layers,
+			color: 'iconPink',
+			gradient: 'from-pink-400 to-purple-400'
 		},
 		{
 			title: 'Інтерактивний JavaScript',
@@ -101,268 +215,327 @@ const WebCoursePage = () => {
 				'DOM-маніпуляції',
 				'Робота з API (Fetch)',
 				'Асинхронність',
-				'ES6+ синтаксис',
+				'ES6+ синтаксис'
 			],
 			Icon: MousePointerClick,
+			color: 'iconPurple',
+			gradient: 'from-purple-400 to-blue-400'
 		},
 		{
-			title: 'React та Сучасні Фреймворки',
+			title: 'React & Next.js',
 			duration: '6 тижнів',
 			topics: [
 				'Компонентний підхід',
 				'State та Props',
 				'React Hooks',
-				'Створення Single Page Application',
+				'SSR/SSG з Next.js'
 			],
 			Icon: Wind,
+			color: 'iconBlue',
+			gradient: 'from-blue-400 to-cyan-400'
 		},
 		{
-			title: 'Backend та Бази Даних',
+			title: 'Backend & Deployment',
 			duration: '4 тижні',
 			topics: [
 				'Node.js та Express',
 				'REST API',
-				'Робота з базами даних',
-				'Деплоймент проекту',
+				'MongoDB & PostgreSQL',
+				'Cloud deployment'
 			],
 			Icon: Server,
-		},
+			color: 'iconGreen',
+			gradient: 'from-cyan-400 to-teal-400'
+		}
 	]
 
 	const projects = [
 		{
 			name: 'Сайт-портфоліо',
-			difficulty: 'Легкий',
+			difficulty: 25,
 			time: '2 тижні',
-			description:
-				'Створіть свій перший професійний сайт з анімаціями та адаптивним дизайном.',
+			description: 'Створіть свій перший професійний сайт з анімаціями та адаптивним дизайном.',
 			icon: '🧑‍🎨',
+			fillClass: 'fillEasy'
 		},
 		{
-			name: 'Веб-додаток "To-Do List"',
-			difficulty: 'Середній',
+			name: 'Todo App',
+			difficulty: 50,
 			time: '3 тижні',
-			description:
-				'Розробіть інтерактивний планувальник завдань з можливістю зберігання даних.',
-			icon: '📝',
+			description: 'Розробіть розумний планувальник дій із синхронізацією.',
+			icon: '🤖',
+			fillClass: 'fillMedium'
 		},
 		{
-			name: 'Клон Instagram',
-			difficulty: 'Складний',
+			name: 'Social Network',
+			difficulty: 75,
 			time: '5 тижнів',
-			description:
-				'Створіть соціальну мережу з профілями, завантаженням фото та лайками.',
-			icon: '📸',
+			description: 'Створіть соціальну мережу з real-time чатом та stories.',
+			icon: '💬',
+			fillClass: 'fillHard'
 		},
 		{
-			name: 'Інтернет-магазин',
-			difficulty: 'Експерт',
+			name: 'E-commerce Platform',
+			difficulty: 100,
 			time: '6 тижнів',
-			description:
-				'Повноцінний e-commerce проект з каталогом товарів, кошиком та оформленням замовлення.',
-			icon: '🛒',
-		},
+			description: 'Повноцінний маркетплейс з платіжною системою та адмін-панеллю.',
+			icon: '🛍️',
+			fillClass: 'fillExpert'
+		}
 	]
 
 	const features = [
-		{
-			Icon: Palette,
-			title: 'UI/UX Дизайн',
-			desc: 'Створюйте не тільки функціональні, але й красиві інтерфейси.',
+		{ 
+			Icon: Palette, 
+			title: 'UI/UX Design', 
+			desc: 'Створюйте красиві та зручні інтерфейси',
+			emoji: '🎨'
 		},
-		{
-			Icon: Code,
-			title: 'Чистий код',
-			desc: 'Пишіть професійний, читабельний та ефективний код.',
+		{ 
+			Icon: Zap, 
+			title: 'Performance', 
+			desc: 'Оптимізація швидкості завантаження',
+			emoji: '⚡'
 		},
-		{
-			Icon: Rocket,
-			title: 'Оптимізація',
-			desc: 'Навчіться робити сайти швидкими та продуктивними.',
+		{ 
+			Icon: Globe, 
+			title: 'Web APIs', 
+			desc: 'Інтеграція з сучасними сервісами',
+			emoji: '🌐'
 		},
-		{
-			Icon: ShieldCheck,
-			title: 'Безпека',
-			desc: 'Дізнайтесь основи захисту веб-додатків від загроз.',
-		},
+		{ 
+			Icon: ShieldCheck, 
+			title: 'Security', 
+			desc: 'Захист додатків від загроз',
+			emoji: '🔒'
+		}
 	]
 
 	return (
-		<div className={styles.container}>
+		<div className={styles.container} ref={mainRef}>
+			{/* Animated Background */}
 			<div className={styles.backgroundElements}>
-				<span className={`${styles.floatingTag} ${styles.tag1}`}>
-					&lt;div&gt;
-				</span>
-				<span className={`${styles.floatingTag} ${styles.tag2}`}>{'{ }'}</span>
-				<span className={`${styles.floatingTag} ${styles.tag3}`}>
-					&lt;/body&gt;
-				</span>
-				<span className={`${styles.floatingTag} ${styles.tag4}`}>React</span>
-				<span className={`${styles.floatingTag} ${styles.tag5}`}>
-					&lt;h1&gt;
-				</span>
+				{/* Floating code tags */}
+				<span className={`${styles.floatingTag} ${styles.tag1}`} data-speed="0.5">&lt;div&gt;</span>
+				<span className={`${styles.floatingTag} ${styles.tag2}`} data-speed="0.3">{'{ }'}</span>
+				<span className={`${styles.floatingTag} ${styles.tag3}`} data-speed="0.7">&lt;/body&gt;</span>
+				<span className={`${styles.floatingTag} ${styles.tag4}`} data-speed="0.4">React</span>
+				<span className={`${styles.floatingTag} ${styles.tag5}`} data-speed="0.6">&lt;h1&gt;</span>
+				<span className={`${styles.floatingTag} ${styles.tag6}`} data-speed="0.2">async</span>
+				<span className={`${styles.floatingTag} ${styles.tag7}`} data-speed="0.8">=&gt;</span>
+				<span className={`${styles.floatingTag} ${styles.tag8}`} data-speed="0.5">const</span>
+				
+				{/* Gradient orbs with parallax */}
+				<div 
+					className={`${styles.gradientOrb} ${styles.orb1}`}
+					style={{
+						transform: `translate(${mousePosition.x * 30}px, ${mousePosition.y * 30}px)`
+					}}
+				/>
+				<div 
+					className={`${styles.gradientOrb} ${styles.orb2}`}
+					style={{
+						transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * -20}px)`
+					}}
+				/>
 			</div>
 
-			<div className={styles.pageHud}>
-				<Link href='/' className={styles.backButton}>
-					<ArrowLeft size={18} /> На головну
-				</Link>
-				<div className={styles.statsBoard}>
-					<div className={styles.statItem}>
-						<span className={styles.statLabel}>РЯДКІВ КОДУ</span>
-						<span className={styles.statValue}>{stats.linesOfCode}</span>
+			{/* Hero Section */}
+			<section className={styles.heroSection} ref={heroRef}>
+				<div className={styles.heroContent}>
+					<div className={styles.heroLeft}>
+						<div className={styles.heroBadge}>
+							<Sparkles size={16} />
+							<span>Новий курс 2025</span>
+						</div>
+						
+						<h1 className={styles.heroTitle}>
+							<span className={styles.gradientText}>Web</span>
+							<br />
+							Development
+						</h1>
+						
+						<p className={styles.heroDescription}>
+							Від простої сторінки до складних веб-додатків. 
+							Навчись створювати сайти, які вражають та надихають!
+						</p>
+						
+						<div className={styles.ctaButtons}>
+							<button className={styles.primaryButton}>
+								<Play size={20} />
+								Почати навчання
+							</button>
+						</div>
+						
 					</div>
-					<div className={styles.statItem}>
-						<span className={styles.statLabel}>ПРОЕКТІВ</span>
-						<span className={styles.statValue}>{stats.projects}</span>
-					</div>
-				</div>
-			</div>
-
-			<main className={styles.mainContent} ref={mainRef}>
-				<section className={`${styles.heroSection} ${styles.animateUp}`}>
-					<div className={styles.heroContent}>
+					
+					<div className={styles.heroRight}>
 						<div className={styles.browserWindow}>
 							<div className={styles.browserHeader}>
 								<div className={styles.browserDots}>
-									<span></span>
-									<span></span>
-									<span></span>
+									<span className={`${styles.browserDot} ${styles.dotRed}`}></span>
+									<span className={`${styles.browserDot} ${styles.dotYellow}`}></span>
+									<span className={`${styles.browserDot} ${styles.dotGreen}`}></span>
 								</div>
-								<div className={styles.browserUrl}>smartcode-academy.com</div>
+								<div className={styles.browserUrl}>localhost:3000</div>
 							</div>
 							<div className={styles.browserBody}>
-								<h1 className={styles.heroTitle}>WEB DEVELOPMENT</h1>
-								<p className={styles.heroSubtitle}>
-									Створюй майбутнє Інтернету
-								</p>
+								<pre className={styles.codeBlock}>
+									<code>{typedText}</code>
+									<span className={styles.cursor}></span>
+								</pre>
 							</div>
 						</div>
-						<p className={styles.description}>
-							Від простого сайту до складної веб-платформи. Опануйте повний цикл
-							розробки та станьте затребуваним спеціалістом у світі цифрових
-							технологій.
-						</p>
-						<div className={styles.ctaButtons}>
-							<button className={styles.startButton}>
-								<Play size={20} /> Записатись на курс
-							</button>
-							<button className={styles.secondaryButton}>
-								<Download size={20} /> Програма курсу
-							</button>
-						</div>
 					</div>
-				</section>
+				</div>
+			</section>
 
-				<section
-					className={`${styles.modulesSection} ${styles.animateUp}`}
-					id='modules'
-				>
-					<header className={styles.sectionHeader}>
-						<h2 className={styles.sectionTitle}>Програма курсу</h2>
-						<p className={styles.sectionSubtitle}>
-							Чотири модулі, що проведуть вас від основ HTML до створення
-							повноцінних веб-додатків.
-						</p>
-					</header>
-					<div className={styles.modulesGrid}>
-						{modules.map((module, index) => (
-							<div key={index} className={styles.moduleCard}>
-								<div className={styles.moduleHeader}>
-									<div className={styles.moduleIcon}>
-										<module.Icon size={24} />
-									</div>
-									<span className={styles.levelBadge}>Модуль {index + 1}</span>
-								</div>
+			{/* Modules Section */}
+			<section className={styles.modulesSection} ref={modulesRef}>
+				<header className={styles.sectionHeader}>
+					<h2 className={styles.sectionTitle}>Програма курсу</h2>
+					<p className={styles.sectionSubtitle}>
+						4 модулі = твій шлях до професії веб-розробника
+					</p>
+				</header>
+				
+				<div className={styles.modulesGrid}>
+					{modules.map((module, index) => (
+						<div 
+							key={index} 
+							className={styles.moduleCard}
+							onMouseEnter={() => setHoveredModule(index)}
+							onMouseLeave={() => setHoveredModule(null)}
+						>
+							<div className={`${styles.moduleIcon} ${styles[module.color]}`}>
+								<module.Icon size={28} />
+							</div>
+							
+							<div className={styles.moduleHeader}>
 								<h3 className={styles.moduleTitle}>{module.title}</h3>
-								<p className={styles.moduleDuration}>{module.duration}</p>
-								<ul className={styles.moduleTopics}>
-									{module.topics.map((topic, i) => (
-										<li key={i}>{topic}</li>
-									))}
-								</ul>
+								<span className={styles.moduleBadge}>Модуль {index + 1}</span>
 							</div>
-						))}
-					</div>
-				</section>
+							
+							<p className={styles.moduleDuration}>{module.duration}</p>
+							
+							<ul className={styles.moduleTopics}>
+								{module.topics.map((topic, i) => (
+									<li 
+										key={i} 
+										className={styles.moduleTopic}
+										style={{
+											transitionDelay: `${i * 50}ms`
+										}}
+									>
+										{topic}
+									</li>
+								))}
+							</ul>
+							
+							{hoveredModule === index && (
+								<div className={styles.moduleHoverEffect}>
+									<Sparkles size={20} />
+								</div>
+							)}
+						</div>
+					))}
+				</div>
+			</section>
 
-				<section
-					className={`${styles.projectsSection} ${styles.animateUp}`}
-					id='projects'
-				>
-					<header className={styles.sectionHeader}>
-						<h2 className={styles.sectionTitle}>Ваші майбутні проекти</h2>
-						<p className={styles.sectionSubtitle}>
-							Навчіться створювати реальні проекти, які можна додати до свого
-							першого портфоліо.
-						</p>
-					</header>
-					<div className={styles.projectsGrid}>
-						{projects.map((project, index) => (
-							<div key={index} className={styles.projectCard}>
-								<div className={styles.projectHeader}>
-									<div className={styles.projectIcon}>{project.icon}</div>
-								</div>
-								<h3 className={styles.projectTitle}>{project.name}</h3>
-								<div className={styles.difficultyBar}>
-									<span className={styles.difficultyLabel}>
-										{project.difficulty}
-									</span>
-									<div className={styles.difficultyProgress}>
-										<div
-											className={styles.difficultyFill}
-											style={{ width: `${(index + 1) * 25}%` }}
-										></div>
-									</div>
-								</div>
-								<p className={styles.projectDescription}>
-									{project.description}
-								</p>
-								<div className={styles.projectFooter}>
-									<div className={styles.projectTime}>
-										<Clock size={14} /> {project.time}
-									</div>
-									<button className={styles.selectButton}>Детальніше</button>
+			{/* Projects Section */}
+			<section className={styles.projectsSection} ref={projectsRef}>
+				<header className={styles.sectionHeader}>
+					<h2 className={styles.sectionTitle}>Твої майбутні проекти</h2>
+					<p className={styles.sectionSubtitle}>
+						Від простого до складного - створюй реальні проекти
+					</p>
+				</header>
+				
+				<div className={styles.projectsGrid}>
+					{projects.map((project, index) => (
+						<div 
+							key={index} 
+							className={styles.projectCard}
+							onMouseEnter={() => setHoveredProject(index)}
+							onMouseLeave={() => setHoveredProject(null)}
+						>
+							<div className={styles.projectIcon}>{project.icon}</div>
+							
+							<h3 className={styles.projectTitle}>{project.name}</h3>
+							
+							<div className={styles.difficultyBar}>
+								<span className={styles.difficultyLabel}>
+									Складність: {project.difficulty}%
+								</span>
+								<div className={styles.difficultyProgress}>
+									<div 
+										className={`${styles.difficultyFill} ${styles[project.fillClass]}`}
+										style={{ 
+											width: hoveredProject === index ? `${project.difficulty}%` : '0%',
+											transition: 'width 1s cubic-bezier(0.4, 0, 0.2, 1)'
+										}}
+									/>
 								</div>
 							</div>
-						))}
-					</div>
-				</section>
-
-				<section
-					className={`${styles.featuresSection} ${styles.animateUp}`}
-					id='features'
-				>
-					<header className={styles.sectionHeader}>
-						<h2 className={styles.sectionTitle}>Ключові навички</h2>
-						<p className={styles.sectionSubtitle}>
-							Що ви отримаєте, пройшовши цей курс.
-						</p>
-					</header>
-					<div className={styles.featuresGrid}>
-						{features.map((feature, index) => (
-							<div key={index} className={styles.featureCard}>
-								<div className={styles.featureIcon}>
-									<feature.Icon size={32} />
+							
+							<p className={styles.projectDescription}>{project.description}</p>
+							
+							<div className={styles.projectFooter}>
+								<div className={styles.projectTime}>
+									<Clock size={16} />
+									<span>{project.time}</span>
 								</div>
-								<h3 className={styles.featureTitle}>{feature.title}</h3>
-								<p className={styles.featureDescription}>{feature.desc}</p>
 							</div>
-						))}
-					</div>
-				</section>
+						</div>
+					))}
+				</div>
+			</section>
 
-				<section className={`${styles.ctaSection} ${styles.animateUp}`}>
-					<div className={styles.ctaContainer}>
-						<h2 className={styles.ctaTitle}>Готові почати кодити?</h2>
-						<p className={styles.ctaText}>
-							Зробіть перший крок до кар&apos;єри веб-розробника. Запишіться на
-							безкоштовний пробний урок!
-						</p>
-						
+			{/* Features Section */}
+			<section className={styles.featuresSection}>
+				<header className={styles.sectionHeader}>
+					<h2 className={styles.sectionTitle}>Що ти отримаєш</h2>
+					<p className={styles.sectionSubtitle}>
+						Навички, які зроблять тебе професіоналом
+					</p>
+				</header>
+				
+				<div className={styles.featuresGrid}>
+					{features.map((feature, index) => (
+						<div key={index} className={styles.featureCard}>
+							<div className={styles.featureEmoji}>{feature.emoji}</div>
+							<div className={styles.featureIcon}>
+								<feature.Icon size={32} />
+							</div>
+							<h3 className={styles.featureTitle}>{feature.title}</h3>
+							<p className={styles.featureDescription}>{feature.desc}</p>
+						</div>
+					))}
+				</div>
+			</section>
+
+			{/* CTA Section */}
+			<section className={styles.ctaSection}>
+				<div className={styles.ctaContainer}>
+					<div className={styles.ctaIcon}>
+						<Terminal size={64} />
 					</div>
-				</section>
-			</main>
+					<h2 className={styles.ctaTitle}>Готовий кодити майбутнє?</h2>
+					<p className={styles.ctaText}>
+						Приєднуйся до нас і створи свій перший проект вже сьогодні!
+					</p>
+					<div className={styles.ctaButtons}>
+						<button className={styles.ctaButton}>
+							<Sparkles size={20} />
+							Безкоштовний урок
+						</button>
+						<button className={styles.ctaButtonOutline}>
+							<Heart size={20} />
+							Дізнатись більше
+						</button>
+					</div>
+				</div>
+			</section>
 		</div>
 	)
 }

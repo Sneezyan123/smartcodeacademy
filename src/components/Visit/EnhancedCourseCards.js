@@ -49,12 +49,10 @@ const courses = [
 			'Data Science',
 		],
 		stats: {
-			duration: '6 міс',
-			age: '10-16',
+			age: '8-17',
 			students: '324+',
 			projects: '20+',
 		},
-		pricing: { price: '2800', discount: '25%', originalPrice: '3700' },
 		badge: 'Космічний хіт',
 		rating: 4.9,
 		theme: 'themePython',
@@ -66,7 +64,7 @@ const courses = [
 		subtitle: 'Створення власних ігор',
 		icon: '🎮',
 		description:
-			'Розробляй захоплюючі ігри від Unity до Scratch. Від простих 2D до складних 3D проектів.',
+			'Розробляй захоплюючі ігри на Unity. Від простих 2D до складних 3D проектів.',
 		features: ['Unity 3D', 'Scratch', 'Дизайн персонажів', 'Логіка геймплею'],
 		stats: {
 			duration: '8 міс',
@@ -74,8 +72,7 @@ const courses = [
 			students: '189+',
 			projects: '12+',
 		},
-		pricing: { price: '3200', discount: '15%', originalPrice: '3750' },
-		badge: 'Тренд 2024',
+		badge: 'Тренд 2025',
 		rating: 4.8,
 		theme: 'themeGamedev',
 		particleColors: ['#6ee7b7', '#5eead4', '#a7f3d0', '#34d399'],
@@ -89,12 +86,10 @@ const courses = [
 			'Створюй адаптивні сайти та веб-додатки з HTML, CSS, JavaScript та React, що вражають своєю швидкістю та дизайном.',
 		features: ['HTML/CSS', 'JavaScript', 'React', 'Node.js'],
 		stats: {
-			duration: '7 міс',
-			age: '12-18',
+			age: '10-17',
 			students: '156+',
 			projects: '10+',
 		},
-		pricing: { price: '3000', discount: '25%', originalPrice: '4000' },
 		badge: 'Новинка',
 		rating: 4.9,
 		theme: 'themeWebdev',
@@ -272,10 +267,6 @@ const EnhancedCourseCards = () => {
 								</div>
 								<div className={styles.statsGrid}>
 									<div className={styles.statItem}>
-										<Clock className={styles.statIcon} />
-										<span>{course.stats.duration}</span>
-									</div>
-									<div className={styles.statItem}>
 										<Users className={styles.statIcon} />
 										<span>{course.stats.age} років</span>
 									</div>
@@ -286,19 +277,6 @@ const EnhancedCourseCards = () => {
 									<div className={styles.statItem}>
 										<Target className={styles.statIcon} />
 										<span>{course.stats.projects} проектів</span>
-									</div>
-								</div>
-								<div className={styles.pricing}>
-									<span className={styles.discountBadge}>
-										-{course.pricing.discount}
-									</span>
-									<div>
-										<div className={styles.currentPrice}>
-											{course.pricing.price} грн/міс
-										</div>
-										<div className={styles.originalPrice}>
-											{course.pricing.originalPrice} грн
-										</div>
 									</div>
 								</div>
 								<button className={styles.actionButton}>

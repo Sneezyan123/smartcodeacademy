@@ -94,10 +94,9 @@ const ContactForm = () => {
                                 ))}
                             </div>
                             <div className={styles.contactInfo}>
-                                <a href="tel:+380671234567" className={styles.contactItem}><Phone size={16} />+38 (067) 123-45-67</a>
-                                <a href="mailto:info@smartcode-academy.com" className={styles.contactItem}><Mail size={16} />info@smartcode-academy.com</a>
+                                <a href="tel:+380966566243" className={styles.contactItem}><Phone size={16} />+380 96 656 62 43</a>
                                 <div className={styles.contactItem}><Clock size={16} />Пн-Нд: 9:00-21:00</div>
-                                <div className={styles.contactItem}><MapPin size={16} />Онлайн та офлайн</div>
+                                <div className={styles.contactItem}><MapPin size={16} />Онлайн</div>
                             </div>
                         </div>
                     </div>
@@ -121,7 +120,7 @@ const ContactForm = () => {
                                                 <Hash className={styles.inputIcon} size={18} />
                                                 <select name='age' value={formData.age} onChange={handleInputChange} className={styles.select}>
                                                     <option value=''>Вік дитини</option>
-                                                    {Array.from({ length: 10 }, (_, i) => i + 8).map(age => (
+                                                    {Array.from({ length: 12 }, (_, i) => i + 6).map(age => (
                                                         <option key={age} value={age}>{age} років</option>
                                                     ))}
                                                 </select>
@@ -131,10 +130,6 @@ const ContactForm = () => {
                                             <Phone className={styles.inputIcon} size={18} />
                                             <span className={styles.countryCode}>+380</span>
                                             <input type='tel' name='phone' value={formData.phone} onChange={handleInputChange} placeholder='_ _  _ _ _  _ _  _ _ *' className={`${styles.input} ${styles.phoneInput}`} required />
-                                        </div>
-                                        <div className={styles.inputWrapper}>
-                                            <Mail className={styles.inputIcon} size={18} />
-                                            <input type='email' name='email' value={formData.email} onChange={handleInputChange} placeholder='Ваш Email' className={styles.input} />
                                         </div>
                                         <div className={styles.inputWrapper}>
                                             <Briefcase className={styles.inputIcon} size={18} />
