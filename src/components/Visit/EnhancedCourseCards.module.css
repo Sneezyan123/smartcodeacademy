@@ -262,7 +262,6 @@
 }
 .statItem { display: flex; align-items: center; gap: 0.5rem; }
 .statIcon { width: 1rem; height: 1rem; }
-/* видалено невикористані класи: pricing, discountBadge, currentPrice, originalPrice */
 .actionButton {
     width: 100%;
     padding: 1rem 1.5rem;
@@ -279,6 +278,7 @@
     cursor: pointer;
     background-color: var(--button-bg);
     border-color: var(--button-border);
+    text-decoration: none;
 }
 .actionButton:hover {
     background-color: var(--button-hover-bg);
@@ -357,47 +357,178 @@
     .wrapper {
         height: auto;
         flex-direction: column;
-        overflow: visible;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+        padding: 1rem;
+        gap: 2rem;
     }
 
     .card {
         flex: unset;
-        min-height: 500px;
-        margin-bottom: 1rem;
-        border-radius: 12px;
+        min-height: 85vh;
+        aspect-ratio: 4/5;
+        border-radius: 16px;
+        transform: translateY(0) !important;
+        opacity: 1 !important;
+        margin: 0;
+        transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    /* Нівелюємо ефекти ховера на мобільних */
-    .cardExpanded { flex: unset; }
-    .cardShrunk { flex: unset; filter: none; }
+    /* На мобільних картки не shrink при розширенні іншої */
+    .cardExpanded { 
+        flex: unset; 
+        min-height: 95vh;
+        transform: scale(1.02) translateY(-10px);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    }
+    .cardShrunk { 
+        flex: unset; 
+        filter: none; 
+        opacity: 0.85;
+        transform: scale(0.98);
+    }
 
-    .hoverElements { display: none; }
-    .particleContainer { display: none; }
+    /* Показуємо hover ефекти на активній картці */
+    .hoverElements {
+        transition: opacity 0.7s ease;
+    }
+
+    /* Показуємо частинки на мобільних тільки для активної картки */
+    .particleContainer {
+        transition: opacity 0.7s ease;
+        opacity: 0.3;
+    }
+    
+    .cardExpanded .particleContainer {
+        opacity: 1;
+    }
 
     .topSection {
-        top: 1rem;
-        left: 1rem;
-        right: 1rem;
+        top: 1.5rem;
+        left: 1.5rem;
+        right: 1.5rem;
     }
 
-    .centerIcon { font-size: 3rem; }
+    .centerIcon { 
+        font-size: 5rem; 
+        transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .centerIconHovered {
+        transform: scale(1.3);
+    }
 
     .bottomContent {
-        padding: 1.25rem 1rem 1.5rem;
-        background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.6), transparent);
+        padding: 2.5rem 1.5rem 2rem;
+        background: linear-gradient(to top, rgba(0,0,0,0.92), rgba(0,0,0,0.65), rgba(0,0,0,0.3), transparent);
     }
 
-    .title { font-size: 1.75rem; }
-    .subtitle { font-size: 1rem; }
+    .title { 
+        font-size: 2.25rem; 
+        margin-bottom: 0.75rem;
+        line-height: 1.1;
+    }
+    .subtitle { 
+        font-size: 1.25rem; 
+        margin-bottom: 1.25rem;
+        line-height: 1.3;
+    }
 
-    .featuresGrid { grid-template-columns: 1fr; }
-    .statsGrid { grid-template-columns: 1fr; }
+    .featuresGrid { 
+        grid-template-columns: 1fr; 
+        gap: 0.75rem;
+    }
+    .statsGrid { 
+        grid-template-columns: 1fr 1fr 1fr; 
+        gap: 1rem;
+    }
 
-    /* Показуємо деталі завжди, бо на мобільних немає hover */
-    .details { max-height: none; opacity: 1; }
+    /* На мобільних деталі показуються тільки для активної картки */
+    .details { 
+        max-height: 0; 
+        opacity: 0; 
+        transition: max-height 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s ease;
+        margin-top: 0.5rem;
+    }
 
-    .actionButton { margin-top: 0.5rem; }
+    .detailsVisible {
+        max-height: 35rem;
+        opacity: 1;
+    }
 
-    /* Приховуємо бічну вертикальну назву, щоб не перекривала контент */
+    .description {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1.25rem;
+    }
+
+    .actionButton { 
+        margin-top: 1.5rem; 
+        padding: 1.375rem 1.75rem;
+        font-size: 1.05rem;
+        font-weight: 800;
+        border-radius: 2rem;
+    }
+
+    /* Приховуємо бічну вертикальну назву на мобільних */
     .sideLabel { display: none; }
+
+    /* Додаємо візуальний індикатор активної картки */
+    .cardExpanded::before {
+        content: '';
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        right: -3px;
+        bottom: -3px;
+        background: linear-gradient(45deg, 
+            rgba(255,255,255,0.4), 
+            rgba(255,255,255,0.1),
+            rgba(255,255,255,0.3),
+            rgba(255,255,255,0.05)
+        );
+        border-radius: 19px;
+        z-index: -1;
+        opacity: 0.9;
+        animation: card-glow 3s ease-in-out infinite alternate;
+    }
+
+    /* Додаткові медіа-запити для різних розмірів */
+    @media (max-width: 480px) {
+        .wrapper {
+            padding: 0.75rem;
+            gap: 1.5rem;
+        }
+
+        .card {
+            min-height: 90vh;
+        }
+
+        .cardExpanded {
+            min-height: 98vh;
+        }
+
+        .title {
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+        }
+
+        .centerIcon {
+            font-size: 4.5rem;
+        }
+    }
+
+    /* Smooth scroll для кращого UX */
+    html {
+        scroll-behavior: smooth;
+    }
+
+    /* Анімація для активної картки */
+    @keyframes card-glow {
+        0% { opacity: 0.7; }
+        100% { opacity: 1; }
+    }
 }

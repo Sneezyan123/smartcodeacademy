@@ -38,32 +38,26 @@ const Header = () => {
 		if (!dropdown) return
 
 		if (isCoursesOpen) {
-			// Блокуємо скрол body для dropdown
-			document.body.style.overflow = 'hidden'
-			
 			gsap
 				.timeline()
-				.set(dropdown, { display: 'flex' })
+				.set(dropdown, { display: 'block' })
 				.to(dropdown, { opacity: 1, duration: 0.3, ease: 'power2.out' })
 				.fromTo(
 					`.${styles.dropdownItem}`,
-					{ opacity: 0, y: 30 },
+					{ opacity: 0, y: 10 },
 					{
 						opacity: 1,
 						y: 0,
-						stagger: 0.1,
-						duration: 0.4,
+						stagger: 0.05,
+						duration: 0.3,
 						ease: 'power2.out',
 					},
 					'-=0.2'
 				)
 		} else {
-			// Розблоковуємо скрол body
-			document.body.style.overflow = 'unset'
-			
 			gsap.to(dropdown, {
 				opacity: 0,
-				duration: 0.25,
+				duration: 0.2,
 				ease: 'power2.in',
 				onComplete: () => gsap.set(dropdown, { display: 'none' }),
 			})
@@ -197,7 +191,7 @@ const Header = () => {
 	
 	const courses = [
 		{
-			icon: <Code size={28} />,
+			icon: <Code size={24} />,
 			title: 'Python',
 			description: 'Основи програмування на Python',
 			link: "/python",
@@ -206,7 +200,7 @@ const Header = () => {
 			popular: true,
 		},
 		{
-			icon: <Gamepad2 size={28} />,
+			icon: <Gamepad2 size={24} />,
 			title: 'Розробка ігор',
 			description: 'C# та Unity',
 			link: "/Unity",
@@ -214,7 +208,7 @@ const Header = () => {
 			theme: 'green',
 		},
 		{
-			icon: <Monitor size={28} />,
+			icon: <Monitor size={24} />,
 			title: 'Веб-розробка',
 			description: 'HTML, CSS, React, дизайн',
 			link: "/webDev",
@@ -269,15 +263,6 @@ const Header = () => {
 									</button>
 									<div className={styles.dropdown}>
 										<div className={styles.dropdownContent}>
-											{/* Кнопка закриття */}
-											<button 
-												className={styles.dropdownClose}
-												onClick={() => setIsCoursesOpen(false)}
-												aria-label="Закрити меню курсів"
-											>
-												<X size={16} />
-											</button>
-
 											<div className={styles.dropdownHeader}>
 												<h3 className={styles.dropdownTitle}>Наші курси</h3>
 												<p className={styles.dropdownSubtitle}>
@@ -307,7 +292,7 @@ const Header = () => {
 																</h4>
 																{course.popular && (
 																	<span className={styles.popularBadge}>
-																		<Star size={12} /> Популярний
+																		<Star size={10} /> Популярний
 																	</span>
 																)}
 															</div>
@@ -320,16 +305,6 @@ const Header = () => {
 														</div>
 													</Link>
 												))}
-											</div>
-
-											<div className={styles.dropdownFooter}>
-												<a 
-													href='/#courses' 
-													className={styles.dropdownLink}
-													onClick={() => setIsCoursesOpen(false)}
-												>
-													<Users size={16} /> Переглянути всі курси
-												</a>
 											</div>
 										</div>
 									</div>

@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import {
 	Star,
 	Users,
@@ -34,6 +34,24 @@ const generateParticles = colors => {
 			animationDuration: `${8 + Math.random() * 10}s`,
 		}))
 	)
+}
+
+// Хук для визначення чи це мобільний пристрій
+const useIsMobile = () => {
+	const [isMobile, setIsMobile] = useState(false)
+
+	useEffect(() => {
+		const checkIsMobile = () => {
+			setIsMobile(window.innerWidth <= 1024)
+		}
+
+		checkIsMobile()
+		window.addEventListener('resize', checkIsMobile)
+
+		return () => window.removeEventListener('resize', checkIsMobile)
+	}, [])
+
+	return isMobile
 }
 
 const courses = [
@@ -113,13 +131,11 @@ const ParticleBackground = ({ colors }) => {
 					key={p.id}
 					className={`${styles.particle} ${styles[p.type]}`}
 					style={{
-
 						'--particle-color': p.color,
 						left: `${p.left}%`,
 						top: `${p.top}%`,
 						animationDelay: p.animationDelay,
 						animationDuration: p.animationDuration,
-          
 					}}
 				/>
 			))}
@@ -129,44 +145,93 @@ const ParticleBackground = ({ colors }) => {
 
 const EnhancedCourseCards = () => {
 	const [hoveredCard, setHoveredCard] = useState(null)
+	const [activeCard, setActiveCard] = useState(null) // для мобільних
 	const [isVisible, setIsVisible] = useState(false)
-    const router = useRouter()
+	const router = useRouter()
+	const isMobile = useIsMobile()
+	const cardRefs = useRef([])
 
 	useEffect(() => {
 		const timer = setTimeout(() => setIsVisible(true), 100)
 		return () => clearTimeout(timer)
 	}, [])
 
+	// Intersection Observer для мобільних пристроїв
+	useEffect(() => {
+		if (!isMobile) return
+
+		const observerOptions = {
+			root: null,
+			rootMargin: '-15% 0px -15% 0px', // Спрацьовує коли картка на 70% видима
+			threshold: 0.7,
+		}
+
+		const observerCallback = (entries) => {
+			let mostVisibleCard = null
+			let maxRatio = 0
+
+			entries.forEach((entry) => {
+				if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+					maxRatio = entry.intersectionRatio
+					const cardIndex = cardRefs.current.indexOf(entry.target)
+					mostVisibleCard = cardIndex
+				}
+			})
+
+			if (mostVisibleCard !== null) {
+				setActiveCard(mostVisibleCard)
+			}
+		}
+
+		const observer = new IntersectionObserver(observerCallback, observerOptions)
+
+		cardRefs.current.forEach((card) => {
+			if (card) observer.observe(card)
+		})
+
+		return () => {
+			cardRefs.current.forEach((card) => {
+				if (card) observer.unobserve(card)
+			})
+		}
+	}, [isMobile])
+
+	const getExpandedCard = () => {
+		return isMobile ? activeCard : hoveredCard
+	}
+
 	return (
 		<div className={styles.wrapper}>
 			{courses.map((course, index) => {
-				const isHovered = hoveredCard === index
-				const isAnotherHovered = hoveredCard !== null && !isHovered
+				const expandedCard = getExpandedCard()
+				const isExpanded = expandedCard === index
+				const isOtherExpanded = expandedCard !== null && !isExpanded
 
 				const cardClasses = [
 					styles.card,
 					styles[course.theme],
 					isVisible ? styles.cardVisible : styles.cardHidden,
-					isHovered ? styles.cardExpanded : '',
-					isAnotherHovered ? styles.cardShrunk : '',
+					isExpanded ? styles.cardExpanded : '',
+					isOtherExpanded ? styles.cardShrunk : '',
 				].join(' ')
 
 				return (
-                    <div
+					<div
 						key={course.id}
+						ref={(el) => (cardRefs.current[index] = el)}
 						className={cardClasses}
 						style={{ transitionDelay: `${index * 100}ms` }}
-						onMouseEnter={() => setHoveredCard(index)}
-						onMouseLeave={() => setHoveredCard(null)}
-                        onClick={() => router.push(course.href)}
-                        role="link"
-                        tabIndex={0}
-                        onKeyDown={e => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault()
-                                router.push(course.href)
-                            }
-                        }}
+						onMouseEnter={() => !isMobile && setHoveredCard(index)}
+						onMouseLeave={() => !isMobile && setHoveredCard(null)}
+						onClick={() => router.push(course.href)}
+						role="link"
+						tabIndex={0}
+						onKeyDown={e => {
+							if (e.key === 'Enter' || e.key === ' ') {
+								e.preventDefault()
+								router.push(course.href)
+							}
+						}}
 					>
 						{/* --- ФОН ТА ЕФЕКТИ --- */}
 						<div className={styles.cardBackground}></div>
@@ -176,7 +241,7 @@ const EnhancedCourseCards = () => {
 						{/* --- ІНТЕРАКТИВНІ ЕЛЕМЕНТИ ПРИ НАВЕДЕННІ --- */}
 						<div
 							className={`${styles.hoverElements} ${
-								isHovered ? styles.hoverElementsVisible : ''
+								isExpanded ? styles.hoverElementsVisible : ''
 							}`}
 						>
 							{course.id === 'python' && (
@@ -243,7 +308,7 @@ const EnhancedCourseCards = () => {
 						<div className={styles.centerIconWrapper}>
 							<div
 								className={`${styles.centerIcon} ${
-									isHovered ? styles.centerIconHovered : ''
+									isExpanded ? styles.centerIconHovered : ''
 								}`}
 							>
 								{course.icon}
@@ -255,7 +320,7 @@ const EnhancedCourseCards = () => {
 							<div className={styles.titleWrapper}>
 								<h3
 									className={`${styles.title} ${
-										isHovered && course.id === 'python'
+										isExpanded && course.id === 'python'
 											? styles.titleCosmic
 											: ''
 									}`}
@@ -265,10 +330,10 @@ const EnhancedCourseCards = () => {
 								<p className={styles.subtitle}>{course.subtitle}</p>
 							</div>
 
-							{/* --- ДЕТАЛІ (з'являються при наведенні) --- */}
+							{/* --- ДЕТАЛІ (з'являються при наведенні/скролі) --- */}
 							<div
 								className={`${styles.details} ${
-									isHovered ? styles.detailsVisible : ''
+									isExpanded ? styles.detailsVisible : ''
 								}`}
 							>
 								<p className={styles.description}>{course.description}</p>
@@ -280,7 +345,7 @@ const EnhancedCourseCards = () => {
 										</div>
 									))}
 								</div>
-                                <div className={styles.statsGrid}>
+								<div className={styles.statsGrid}>
 									<div className={styles.statItem}>
 										<Users className={styles.statIcon} />
 										<span>{course.stats.age} років</span>
@@ -294,18 +359,18 @@ const EnhancedCourseCards = () => {
 										<span>{course.stats.projects} проектів</span>
 									</div>
 								</div>
-                                <Link href={course.href} className={styles.actionButton} onClick={e => e.stopPropagation()}>
-                                    <PlayCircle className={styles.buttonIcon} />
-                                    <span>Почати навчання</span>
-                                    <ArrowRight className={styles.buttonArrow} />
-                                </Link>
+								<Link href={course.href} className={styles.actionButton} onClick={e => e.stopPropagation()}>
+									<PlayCircle className={styles.buttonIcon} />
+									<span>Почати навчання</span>
+									<ArrowRight className={styles.buttonArrow} />
+								</Link>
 							</div>
 						</div>
 
 						{/* --- БІЧНА НАЗВА --- */}
 						<div
 							className={`${styles.sideLabel} ${
-								isHovered ? styles.sideLabelHovered : ''
+								isExpanded ? styles.sideLabelHovered : ''
 							}`}
 						>
 							<span className={styles.sideLabelText}>{course.title}</span>
