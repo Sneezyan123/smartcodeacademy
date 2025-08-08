@@ -28,24 +28,22 @@ const Footer = () => {
 	const courses = [
 		{ name: 'Python програмування', icon: Code, href: '/python' },
 		{ name: 'Веб-розробка', icon: Code, href: '/webDev' },
-		{ name: 'Розробка ігор', icon: Gamepad2, href: '/Unity' },
-		{ name: 'Frontend розробка', icon: Palette, href: '/webDev' },
+		{ name: 'Розробка ігор на Unity', icon: Gamepad2, href: '/Unity' },
 	]
 
 	const quickLinks = [
 		{ name: 'Про нас', href: '/#about' },
-		{ name: 'Відгуки батьків', href: '/#testimonials' },
+		{ name: 'Відгуки', href: '/#testimonials' },
 		{ name: 'Контакти', href: '/#Contactform' },
 	]
 
 	const supportLinks = [
 		{ name: 'Часті питання', href: '/#faq' },
-		{ name: 'Політика конфіденційності', href: '/privacy' },
 	]
 
 	const achievements = [
 		{ number: '500+', label: 'Випускників', icon: GraduationCap },
-		{ number: '95%', label: 'Працевлаштування', icon: Award },
+		{ number: '3+', label: 'Роки досвіду', icon: Award },
 		{ number: '4.9', label: 'Рейтинг', icon: Star },
 	]
 
@@ -56,21 +54,7 @@ const Footer = () => {
 			icon: Instagram,
 			href: 'https://instagram.com/smartcodeacademy',
 		},
-		{
-			name: 'Youtube',
-			icon: Youtube,
-			href: 'https://youtube.com/smartcodeacademy',
-		},
-		{
-			name: 'Facebook',
-			icon: Facebook,
-			href: 'https://facebook.com/smartcodeacademy',
-		},
-		{
-			name: 'Linkedin',
-			icon: Linkedin,
-			href: 'https://linkedin.com/company/smartcodeacademy',
-		},
+
 	]
 
 	return (
@@ -183,14 +167,6 @@ const Footer = () => {
 								<social.icon size={18} />
 							</a>
 						))}
-					</div>
-					<div className={styles.legalLinks}>
-						<Link href='/privacy' className={styles.legalLink}>
-							Політика конфіденційності
-						</Link>
-						<Link href='/terms' className={styles.legalLink}>
-							Умови використання
-						</Link>
 					</div>
 				</div>
 			</div>

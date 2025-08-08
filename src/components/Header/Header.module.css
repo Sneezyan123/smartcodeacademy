@@ -1,7 +1,6 @@
 /* Header.module.css */
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800;900&display=swap');
 
-
 /* --- ОСНОВНИЙ КОНТЕЙНЕР ХЕДЕРА --- */
 .header {
     position: sticky;
@@ -11,10 +10,10 @@
     z-index: 1000;
     margin: 0 1rem;
     border-radius: var(--radius-full);
-    background: rgba(255, 255, 255, 0.05); /* was 0.6, now almost fully transparent */
-    backdrop-filter: blur(2px) saturate(120%); /* less blur for more clarity */
-    border: 1px solid rgba(255, 255, 255, 0.15); /* lighter border */
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04); /* lighter shadow */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(2px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
     transition: all var(--transition-base);
     transform: translateY(0);
 }
@@ -99,72 +98,201 @@
     background: white;
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
+
+.navLink:focus {
+    outline: none;
+    color: var(--text-primary);
+    background: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
 .navItemDropdown { position: relative; }
 .chevron { transition: transform var(--transition-base); }
 .chevronRotated { transform: rotate(180deg); }
 
-/* --- ВИПАДАЮЧЕ МЕНЮ --- */
+/* --- ПОВНОЕКРАННЕ ВИПАДАЮЧЕ МЕНЮ --- */
 .dropdown {
-    position: absolute;
-    top: calc(100% + 0.5rem);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1001;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
     display: none;
     opacity: 0;
-    transform-origin: top center;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
 }
+
 .dropdownContent {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(20px);
-    border-radius: var(--radius-2xl);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    min-width: 400px;
+    width: 100%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
 }
+
+/* Кнопка закриття для desktop dropdown */
+.dropdownClose {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 36px;
+    height: 36px;
+    background: rgba(0, 0, 0, 0.1);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10000;
+}
+
+.dropdownClose:hover {
+    background: rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+}
+
 .dropdownHeader {
-    padding: 1.5rem;
+    padding: 2rem 2rem 1.5rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    text-align: center;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
 }
+
 .dropdownTitle {
-    font-size: 1.125rem;
-    font-weight: 700;
+    font-size: 2rem;
+    font-weight: 800;
     color: var(--text-primary);
+    margin-bottom: 0.5rem;
 }
-.dropdownSubtitle { font-size: 0.875rem; color: var(--text-secondary); }
+
+.dropdownSubtitle { 
+    font-size: 1.1rem; 
+    color: var(--text-secondary); 
+    margin: 0;
+}
+
+.dropdownGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+}
+
 .dropdownItem {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem 1.5rem;
+    gap: 1.5rem;
+    padding: 2rem;
     text-decoration: none;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    transition: all 0.3s ease;
+    border-radius: 16px;
+    border: 2px solid transparent;
+    background: rgba(248, 250, 252, 0.5);
 }
+
 .dropdownItem:hover {
-    background: rgba(37, 99, 235, 0.05);
-    transform: translateX(5px);
+    background: white;
+    border-color: var(--primary-blue);
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
 }
+
 .dropdownIcon {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     display: grid;
     place-items: center;
-    border-radius: var(--radius-lg);
+    border-radius: 16px;
     flex-shrink: 0;
     color: white;
 }
 .blue { background: var(--primary-blue); }
 .green { background: var(--primary-green); }
 .purple { background: var(--primary-purple); }
-.courseHeader { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; }
-.courseTitle { font-weight: 700; color: var(--text-primary); }
-.popularBadge { display: flex; align-items: center; gap: 0.25rem; background: #fffbe5; color: #ca8a04; font-size: 0.7rem; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: var(--radius-full); }
-.courseDescription { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.4; margin-bottom: 0.5rem; }
-.courseAge { font-size: 0.8rem; font-weight: 600; color: var(--primary-blue); }
-.dropdownFooter { padding: 1rem 1.5rem; border-top: 1px solid rgba(0, 0, 0, 0.05); background: #f8fafc; }
-.dropdownLink { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--primary-blue); text-decoration: none; transition: transform 0.2s ease; }
-.dropdownLink:hover { transform: translateX(4px); }
+
+.courseHeader { 
+    display: flex; 
+    align-items: center; 
+    gap: 0.75rem; 
+    margin-bottom: 0.75rem; 
+}
+
+.courseTitle { 
+    font-weight: 800; 
+    color: var(--text-primary); 
+    font-size: 1.5rem;
+}
+
+.popularBadge { 
+    display: flex; 
+    align-items: center; 
+    gap: 0.4rem; 
+    background: #fbbf24; 
+    color: #92400e; 
+    font-size: 0.8rem; 
+    font-weight: 700; 
+    padding: 0.4rem 0.8rem; 
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.courseDescription { 
+    font-size: 1rem; 
+    color: var(--text-secondary); 
+    line-height: 1.5; 
+    margin-bottom: 1rem; 
+}
+
+.courseAge { 
+    font-size: 0.9rem; 
+    font-weight: 600; 
+    color: var(--primary-blue);
+    background: rgba(59, 130, 246, 0.1);
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.dropdownFooter { 
+    padding: 1.5rem 2rem; 
+    border-top: 1px solid rgba(0, 0, 0, 0.05); 
+    background: #f8fafc;
+    text-align: center;
+}
+
+.dropdownLink { 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 0.75rem; 
+    font-weight: 700; 
+    color: var(--primary-blue); 
+    text-decoration: none; 
+    transition: all 0.2s ease;
+    font-size: 1.1rem;
+    background: rgba(59, 130, 246, 0.1);
+    padding: 1rem 2rem;
+    border-radius: 12px;
+}
+
+.dropdownLink:hover { 
+    background: var(--primary-blue);
+    color: white;
+    transform: translateY(-2px);
+}
 
 /* --- ПРАВА ЧАСТИНА ХЕДЕРА --- */
 .headerRight { display: flex; align-items: center; gap: 1rem; }
@@ -183,12 +311,16 @@
 @media (min-width: 1280px) { .contactText { display: block; } }
 
 .ctaButton {
-	
-	border-radius:50px;
+    border-radius: 50px;
     background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
     color: white;
     padding: 0.475rem 1.5rem;
     font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all var(--transition-base);
     box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
 }
 .ctaButton:hover {
@@ -212,111 +344,346 @@
 @media (min-width: 1024px) { .mobileMenuButton { display: none; } }
 .mobileMenuButton:hover { background: rgba(0, 0, 0, 0.05); }
 
+/* ПОВНОЕКРАННЕ МОБІЛЬНЕ МЕНЮ */
 .mobileMenu {
     position: fixed;
     top: 0;
+    left: 0;
     right: 0;
     bottom: 0;
-    width: 100%;
-    max-width: 400px;
-    background: #f8fafc;
-    z-index: 999;
-    transform: translateX(100%);
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    z-index: 9999;
     display: none;
     opacity: 0;
-    box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+    /* Full-screen overlay without inner gaps so content can use full height */
+    justify-content: stretch;
+    align-items: stretch;
+    padding: 0;
 }
-.mobileMenuContent { padding: 6rem 1.5rem 2rem; display: flex; flex-direction: column; gap: 2rem; height: 100%; overflow-y: auto; }
-.mobileNavSection { display: flex; flex-direction: column; gap: 0.5rem; }
-.mobileNavTitle {
+
+.mobileMenuClose {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10000;
+}
+
+.mobileMenuClose:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.mobileMenuContent { 
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    text-align: left;
+    padding: calc(env(safe-area-inset-top) + 4rem) 1rem calc(env(safe-area-inset-bottom) + 1rem);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Subtle scrollbar for long menus */
+.mobileMenuContent::-webkit-scrollbar { width: 6px; }
+.mobileMenuContent::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 6px; }
+
+.mobileMenuHeader { margin-bottom: 1rem; }
+
+.mobileMenuLogo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    color: white;
+}
+
+.mobileMenuLogo .logoTitle {
+    color: white;
+    font-size: 2rem;
+}
+
+.mobileMenuLogo .logoSubtitle {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.mobileMenuNav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1.25rem;
+    width: 100%;
+}
+
+.mobileMenuSection {
+    width: 100%;
+}
+
+.mobileMenuSectionTitle {
+    font-size: 1rem;
     font-weight: 700;
-    color: var(--text-secondary);
-    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 0 1rem;
-    margin-bottom: 0.5rem;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
 }
-.mobileNavLink {
-    color: var(--text-primary);
-    text-decoration: none;
-    font-size: 1.125rem;
-    font-weight: 700;
-    padding: 0.75rem 1rem;
-    border-radius: var(--radius-lg);
-    transition: all 0.2s ease;
+
+.mobileMenuItem {
+    display: block;
+    opacity: 0;
+    transform: translateY(20px);
 }
-.mobileNavLink:hover { background: rgba(0, 0, 0, 0.03); }
-.mobileCourseLink {
+
+/* Стилі для курсів */
+.mobileCourseItem {
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 0.75rem;
-    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
     text-decoration: none;
-    transition: all 0.2s ease;
-    position: relative;
+    color: white;
+    transition: all 0.3s ease;
+    text-align: left;
 }
-.mobileCourseLink:hover { background: rgba(0, 0, 0, 0.03); }
+
+.mobileCourseItem:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
 .mobileCourseIcon {
-    width: 40px;
-    height: 40px;
-    display: grid;
-    place-items: center;
-    border-radius: var(--radius-lg);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
     flex-shrink: 0;
     color: white;
 }
-.mobileCourseTitle { font-weight: 700; color: var(--text-primary); }
-.mobileCourseAge { font-size: 0.875rem; color: var(--text-secondary); }
-.mobilePopularBadge {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    background: #fffbe5;
-    color: #ca8a04;
-    font-size: 0.6rem;
-    font-weight: 600;
-    padding: 0.2rem 0.4rem;
-    border-radius: var(--radius-full);
+
+.mobileCourseInfo {
+    flex: 1;
 }
-.mobileFooter {
-    margin-top: auto;
+
+.mobileCourseTitle {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mobileCourseDescription {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 0.25rem;
+}
+
+.mobileCourseAge {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+}
+
+.mobilePopularBadge {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: #fbbf24;
+    color: #92400e;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    white-space: nowrap;
+}
+
+/* Стилі для навігаційних пунктів */
+.mobileNavItem {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    padding: 0.9rem 1.25rem;
+    margin-bottom: 0.75rem;
+    text-decoration: none;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.mobileNavItem:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.mobileMenuFooter {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #e2e8f0;
+    gap: 0.75rem;
+    width: 100%;
+    margin-top: 1rem;
 }
+
 .mobileContact {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.6rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    padding: 0.9rem 1.25rem;
     text-decoration: none;
-    font-weight: 600;
-    color: var(--text-secondary);
-    padding: 0.75rem;
-    border-radius: var(--radius-lg);
-    transition: all 0.2s ease;
-}
-.mobileContact:hover { background: rgba(0, 0, 0, 0.03); }
-.mobileCtaButton {
-    background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
     color: white;
-    padding: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.mobileContact:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.mobileCtaButton {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    padding: 1rem 1.25rem;
     font-weight: 700;
-    border-radius: var(--radius-full);
+    border-radius: 14px;
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+    gap: 0.6rem;
+    text-decoration: none;
+    font-size: 1rem;
+    box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+    transition: all 0.3s ease;
+}
+
+.mobileCtaButton:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(245, 158, 11, 0.5);
+}
+
+/* Медіа-запити для мобільного меню */
+@media (max-width: 480px) {
+    .mobileMenuClose {
+        top: 1rem;
+        right: 1rem;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .mobileCourseItem {
+        gap: 0.75rem;
+    }
+    
+    .mobileCourseTitle { justify-content: center; }
+}
+
+@media (max-height: 700px) {
+    .mobileMenuContent { padding-top: calc(env(safe-area-inset-top) + 3.5rem); }
+    .mobileMenuNav { gap: 1rem; }
+    .mobileMenuHeader { margin-bottom: 1rem; }
+    .mobileMenuFooter { margin-top: 1rem; }
 }
 
 /* --- КЛЮЧОВІ КАДРИ АНІМАЦІЙ --- */
 @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
+}
+
+/* Медіа-запити для повноекранного dropdown */
+@media (max-width: 1024px) {
+    .dropdown { padding: 0; }
+    .dropdownContent {
+        width: 100vw;
+        height: 100vh;
+        max-width: none;
+        max-height: none;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        display: flex;
+        flex-direction: column;
+    }
+    .dropdownHeader {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+    .dropdownGrid {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem;
+    }
+    .dropdownFooter {
+        position: sticky;
+        bottom: 0;
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+        background: #f8fafc;
+    }
+    .dropdownGrid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .dropdownContent {
+        max-width: none;
+        max-height: none;
+    }
+    
+    .dropdownHeader {
+        padding: 1rem 1rem 0.75rem;
+    }
+    
+    .dropdownTitle {
+        font-size: 1.5rem;
+    }
+    
+    .dropdownItem {
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .dropdownIcon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .courseTitle {
+        font-size: 1.2rem;
+    }
 }

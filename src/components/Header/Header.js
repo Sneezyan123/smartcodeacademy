@@ -22,7 +22,6 @@ const Header = () => {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 	const [isScrolled, setIsScrolled] = useState(false)
 	const headerRef = useRef(null)
-	const dropdownTimerRef = useRef(null)
 
 	// Відстеження прокрутки для зміни стилю хедера
 	useEffect(() => {
@@ -33,88 +32,161 @@ const Header = () => {
 		return () => window.removeEventListener('scroll', handleScroll)
 	}, [])
 
-	// Анімація появи хедера
-	// useEffect(() => {
-	// 	gsap.fromTo(
-	// 		headerRef.current,
-	// 		{ y: -80, opacity: 0 },
-	// 		{ y: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.2 }
-	// 	)
-	// }, [])
-
 	// Анімація випадаючого меню
 	useEffect(() => {
 		const dropdown = headerRef.current?.querySelector(`.${styles.dropdown}`)
 		if (!dropdown) return
 
 		if (isCoursesOpen) {
+			// Блокуємо скрол body для dropdown
+			document.body.style.overflow = 'hidden'
+			
 			gsap
 				.timeline()
-				.set(dropdown, { display: 'block' })
-				.to(dropdown, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' })
+				.set(dropdown, { display: 'flex' })
+				.to(dropdown, { opacity: 1, duration: 0.3, ease: 'power2.out' })
 				.fromTo(
 					`.${styles.dropdownItem}`,
-					{ opacity: 0, x: -15 },
+					{ opacity: 0, y: 30 },
 					{
 						opacity: 1,
-						x: 0,
-						stagger: 0.05,
-						duration: 0.3,
+						y: 0,
+						stagger: 0.1,
+						duration: 0.4,
 						ease: 'power2.out',
 					},
 					'-=0.2'
 				)
 		} else {
+			// Розблоковуємо скрол body
+			document.body.style.overflow = 'unset'
+			
 			gsap.to(dropdown, {
 				opacity: 0,
-				y: -10,
-				duration: 0.2,
+				duration: 0.25,
 				ease: 'power2.in',
 				onComplete: () => gsap.set(dropdown, { display: 'none' }),
 			})
 		}
 	}, [isCoursesOpen])
 
-	// Анімація мобільного меню
+	// ПОВНОЕКРАННА анімація мобільного меню
 	useEffect(() => {
 		const mobileMenu = headerRef.current?.querySelector(`.${styles.mobileMenu}`)
 		if (!mobileMenu) return
 
 		if (isMobileMenuOpen) {
-			gsap
-				.timeline()
-				.set(mobileMenu, { display: 'block' })
-				.to(mobileMenu, { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out' })
-				.fromTo(
-					`.${styles.mobileNavLink}, .${styles.mobileCourseLink}`,
-					{ opacity: 0, y: 20 },
-					{
-						opacity: 1,
-						y: 0,
-						stagger: 0.07,
-						duration: 0.4,
-						ease: 'power2.out',
-					},
-					'-=0.3'
-				)
+			// Блокуємо скрол body
+			document.body.style.overflow = 'hidden'
+			
+			// Показуємо меню
+			gsap.set(mobileMenu, { 
+				display: 'flex', 
+				opacity: 0,
+				scale: 0.95
+			})
+			
+			// Анімація входу (fade + scale)
+			gsap.to(mobileMenu, { 
+				opacity: 1,
+				scale: 1,
+				duration: 0.3, 
+				ease: 'power2.out' 
+			})
+			
+			// Анімація контенту всередині
+			gsap.fromTo(
+				mobileMenu.querySelectorAll(`.${styles.mobileMenuItem}`),
+				{ 
+					opacity: 0, 
+					y: 20
+				},
+				{
+					opacity: 1,
+					y: 0,
+					stagger: 0.1,
+					duration: 0.4,
+					ease: 'power2.out',
+					delay: 0.2
+				}
+			)
 		} else {
+			// Розблоковуємо скрол body
+			document.body.style.overflow = 'unset'
+			
+			// Анімація виходу
 			gsap.to(mobileMenu, {
 				opacity: 0,
-				x: '100%',
-				duration: 0.4,
-				ease: 'power3.in',
-				onComplete: () => gsap.set(mobileMenu, { display: 'none' }),
+				scale: 0.95,
+				duration: 0.25,
+				ease: 'power2.in',
+				onComplete: () => {
+					gsap.set(mobileMenu, { display: 'none' })
+				}
 			})
+		}
+
+		// Cleanup функція
+		return () => {
+			if (!isMobileMenuOpen) {
+				document.body.style.overflow = 'unset'
+			}
 		}
 	}, [isMobileMenuOpen])
 
-	// Логіка для плавного відкриття/закриття випадаючого меню
-	const handleDropdownMouseEnter = () => {
-		clearTimeout(dropdownTimerRef.current)
-		setIsCoursesOpen(true)
+	// Закриття dropdown по ESC або кліку поза меню
+	useEffect(() => {
+		const handleEscape = (e) => {
+			if (e.key === 'Escape') {
+				setIsCoursesOpen(false)
+			}
+		}
+
+		const handleClickOutside = (e) => {
+			if (isCoursesOpen && !e.target.closest(`.${styles.dropdown}`) && !e.target.closest(`.${styles.navItemDropdown}`)) {
+				setIsCoursesOpen(false)
+			}
+		}
+
+		if (isCoursesOpen) {
+			document.addEventListener('keydown', handleEscape)
+			document.addEventListener('mousedown', handleClickOutside)
+		}
+
+		return () => {
+			document.removeEventListener('keydown', handleEscape)
+			document.removeEventListener('mousedown', handleClickOutside)
+		}
+	}, [isCoursesOpen])
+
+	// Закриття мобільного меню по ESC
+	useEffect(() => {
+		const handleEscape = (e) => {
+			if (e.key === 'Escape') {
+				setIsMobileMenuOpen(false)
+			}
+		}
+
+		if (isMobileMenuOpen) {
+			document.addEventListener('keydown', handleEscape)
+		}
+
+		return () => {
+			document.removeEventListener('keydown', handleEscape)
+		}
+	}, [isMobileMenuOpen])
+
+	// Логіка для dropdown меню (тільки клік, без hover)
+	const handleDropdownToggle = () => {
+		setIsCoursesOpen(!isCoursesOpen)
 	}
-	const handleDropdownMouseLeave = () => {
-		dropdownTimerRef.current = setTimeout(() => setIsCoursesOpen(false), 200)
+
+	const handleMobileMenuToggle = () => {
+		setIsMobileMenuOpen(!isMobileMenuOpen)
+	}
+
+	const handleMobileMenuClose = () => {
+		setIsMobileMenuOpen(false)
 	}
 
 	const navItems = [
@@ -122,18 +194,19 @@ const Header = () => {
 		{ label: 'Відгуки', href: '/#testimonials' },
 		{ label: 'Контакти', href: '/#Contactform' },
 	]
+	
 	const courses = [
 		{
-			icon: <Code size={24} />,
+			icon: <Code size={28} />,
 			title: 'Python',
 			description: 'Основи програмування на Python',
-			link:"/python",
+			link: "/python",
 			age: '10-16 років',
 			theme: 'blue',
 			popular: true,
 		},
 		{
-			icon: <Gamepad2 size={24} />,
+			icon: <Gamepad2 size={28} />,
 			title: 'Розробка ігор',
 			description: 'C# та Unity',
 			link: "/Unity",
@@ -141,7 +214,7 @@ const Header = () => {
 			theme: 'green',
 		},
 		{
-			icon: <Monitor size={24} />,
+			icon: <Monitor size={28} />,
 			title: 'Веб-розробка',
 			description: 'HTML, CSS, React, дизайн',
 			link: "/webDev",
@@ -181,10 +254,11 @@ const Header = () => {
 								<div
 									key={index}
 									className={styles.navItemDropdown}
-									onMouseEnter={handleDropdownMouseEnter}
-									onMouseLeave={handleDropdownMouseLeave}
 								>
-									<button className={styles.navLink}>
+									<button 
+										className={styles.navLink}
+										onClick={handleDropdownToggle}
+									>
 										{item.label}
 										<ChevronDown
 											size={16}
@@ -195,135 +269,196 @@ const Header = () => {
 									</button>
 									<div className={styles.dropdown}>
 										<div className={styles.dropdownContent}>
+											{/* Кнопка закриття */}
+											<button 
+												className={styles.dropdownClose}
+												onClick={() => setIsCoursesOpen(false)}
+												aria-label="Закрити меню курсів"
+											>
+												<X size={16} />
+											</button>
+
 											<div className={styles.dropdownHeader}>
 												<h3 className={styles.dropdownTitle}>Наші курси</h3>
 												<p className={styles.dropdownSubtitle}>
 													Обери свій шлях у програмуванні
 												</p>
 											</div>
-							{courses.map((course, courseIndex) => (
-								<Link
-									key={courseIndex}
-									href={course.link}
-									className={styles.dropdownItem}
-								>
-													<div
-														className={`${styles.dropdownIcon} ${
-															styles[course.theme]
-														}`}
+
+											<div className={styles.dropdownGrid}>
+												{courses.map((course, courseIndex) => (
+													<Link
+														key={courseIndex}
+														href={course.link}
+														className={styles.dropdownItem}
+														onClick={() => setIsCoursesOpen(false)}
 													>
-														{course.icon}
-													</div>
-													<div className={styles.dropdownInfo}>
-														<div className={styles.courseHeader}>
-															<h4 className={styles.courseTitle}>
-																{course.title}
-															</h4>
-															{course.popular && (
-																<span className={styles.popularBadge}>
-																	<Star size={10} /> Популярний
-																</span>
-															)}
+														<div
+															className={`${styles.dropdownIcon} ${
+																styles[course.theme]
+															}`}
+														>
+															{course.icon}
 														</div>
-														<p className={styles.courseDescription}>
-															{course.description}
-														</p>
-														<span className={styles.courseAge}>
-															{course.age}
-														</span>
-													</div>
-								</Link>
-											))}
+														<div className={styles.dropdownInfo}>
+															<div className={styles.courseHeader}>
+																<h4 className={styles.courseTitle}>
+																	{course.title}
+																</h4>
+																{course.popular && (
+																	<span className={styles.popularBadge}>
+																		<Star size={12} /> Популярний
+																	</span>
+																)}
+															</div>
+															<p className={styles.courseDescription}>
+																{course.description}
+															</p>
+															<span className={styles.courseAge}>
+																{course.age}
+															</span>
+														</div>
+													</Link>
+												))}
+											</div>
+
 											<div className={styles.dropdownFooter}>
-								<a href='/#courses' className={styles.dropdownLink}>
-													<Users size={14} /> Переглянути всі курси
+												<a 
+													href='/#courses' 
+													className={styles.dropdownLink}
+													onClick={() => setIsCoursesOpen(false)}
+												>
+													<Users size={16} /> Переглянути всі курси
 												</a>
 											</div>
 										</div>
 									</div>
 								</div>
-						) : (
-							<Link key={index} href={item.href} className={styles.navLink}>
-								{item.label}
-							</Link>
-						)
+							) : (
+								<Link key={index} href={item.href} className={styles.navLink}>
+									{item.label}
+								</Link>
+							)
 						)}
 					</nav>
 
 					{/* Права частина хедера */}
-                    <div className={styles.headerRight}>
+					<div className={styles.headerRight}>
 						<a href='tel:+380966566243' className={styles.contactInfo}>
 							<Phone size={18} />
 							<span className={styles.contactText}>+380 96 656 62 43</span>
 						</a>
-                        <Link href="/#Contactform" className={styles.ctaButton}>
-                            <Sparkles size={18} />
-                            Безкоштовний урок
-                        </Link>
+						<Link href="/#Contactform" className={styles.ctaButton}>
+							<Sparkles size={18} />
+							Безкоштовний урок
+						</Link>
 						<button
 							className={styles.mobileMenuButton}
-							onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+							onClick={handleMobileMenuToggle}
 							aria-label='Меню'
 						>
-							{isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+							<Menu size={24} />
 						</button>
 					</div>
 				</div>
 			</div>
 
-			{/* Мобільне меню */}
+			{/* Повноекранне мобільне меню */}
 			<div className={styles.mobileMenu}>
+				{/* Кнопка закриття зверху справа */}
+				<button 
+					className={styles.mobileMenuClose}
+					onClick={handleMobileMenuClose}
+					aria-label="Закрити меню"
+				>
+					<X size={24} />
+				</button>
+
 				<div className={styles.mobileMenuContent}>
-					<div className={styles.mobileNavSection}>
-						<h3 className={styles.mobileNavTitle}>Меню</h3>
-						{navItems
-							.filter(item => !item.dropdown)
-							.map((item, index) => (
+					{/* Логотип в меню */}
+					<div className={styles.mobileMenuHeader}>
+						<div className={styles.mobileMenuLogo}>
+							<div className={styles.logoIconWrapper}>
+								<Image
+									src="/logo.jpg"
+									alt="SmartCode Academy Logo"
+									className={styles.logoImage}
+									width={48}
+									height={48}
+								/>
+							</div>
+							<div className={styles.logoText}>
+								<span className={styles.logoTitle}>SmartCode</span>
+								<span className={styles.logoSubtitle}>Academy</span>
+							</div>
+						</div>
+					</div>
+
+					{/* Меню пунктів */}
+					<div className={styles.mobileMenuNav}>
+						{/* Курси */}
+						<div className={styles.mobileMenuSection}>
+							<h3 className={styles.mobileMenuSectionTitle}>Курси</h3>
+							{courses.map((course, index) => (
 								<Link
 									key={index}
-									href={item.href}
-									className={styles.mobileNavLink}
-									onClick={() => setIsMobileMenuOpen(false)}
+									href={course.link}
+									className={`${styles.mobileMenuItem} ${styles.mobileCourseItem}`}
+									onClick={handleMobileMenuClose}
 								>
-									{item.label}
+									<div className={`${styles.mobileCourseIcon} ${styles[course.theme]}`}>
+										{course.icon}
+									</div>
+									<div className={styles.mobileCourseInfo}>
+										<div className={styles.mobileCourseTitle}>
+											{course.title}
+											{course.popular && (
+												<span className={styles.mobilePopularBadge}>
+													<Star size={10} /> Топ
+												</span>
+											)}
+										</div>
+										<div className={styles.mobileCourseDescription}>
+											{course.description}
+										</div>
+										<div className={styles.mobileCourseAge}>{course.age}</div>
+									</div>
 								</Link>
 							))}
+						</div>
+
+						{/* Навігація */}
+						<div className={styles.mobileMenuSection}>
+							<h3 className={styles.mobileMenuSectionTitle}>Сторінки</h3>
+							{navItems
+								.filter(item => !item.dropdown)
+								.map((item, index) => (
+									<Link
+										key={index}
+										href={item.href}
+										className={`${styles.mobileMenuItem} ${styles.mobileNavItem}`}
+										onClick={handleMobileMenuClose}
+									>
+										{item.label}
+									</Link>
+								))}
+						</div>
 					</div>
-					<div className={styles.mobileNavSection}>
-						<h3 className={styles.mobileNavTitle}>Курси</h3>
-						{courses.map((course, index) => (
-							<Link
-								key={index}
-								href={course.link}
-								className={styles.mobileCourseLink}
-								onClick={() => setIsMobileMenuOpen(false)}
-							>
-								<div
-									className={`${styles.mobileCourseIcon} ${
-										styles[course.theme]
-									}`}
-								>
-									{course.icon}
-								</div>
-								<div>
-									<div className={styles.mobileCourseTitle}>{course.title}</div>
-									<div className={styles.mobileCourseAge}>{course.age}</div>
-								</div>
-								{course.popular && (
-									<span className={styles.mobilePopularBadge}>Топ</span>
-								)}
-							</Link>
-						))}
-					</div>
-					<div className={styles.mobileFooter}>
-						<a href='tel:+380671234567' className={styles.mobileContact}>
-							<Phone size={18} />
-							<span>+38 (067) 123-45-67</span>
+
+					{/* Контакти та CTA */}
+					<div className={styles.mobileMenuFooter}>
+						<a href='tel:+380966566243' className={`${styles.mobileMenuItem} ${styles.mobileContact}`}>
+							<Phone size={20} />
+							<span>+38 (096) 656-62-43</span>
 						</a>
-                        <Link href="/#Contactform" className={styles.mobileCtaButton} onClick={() => setIsMobileMenuOpen(false)}>
-                            <Sparkles size={20} />
-                            Безкоштовний урок
-                        </Link>
+						<Link 
+							href="/#Contactform" 
+							className={`${styles.mobileMenuItem} ${styles.mobileCtaButton}`}
+							onClick={handleMobileMenuClose}
+						>
+							<Sparkles size={20} />
+							Безкоштовний урок
+						</Link>
 					</div>
 				</div>
 			</div>
