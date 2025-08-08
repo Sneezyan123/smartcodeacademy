@@ -138,8 +138,8 @@ const FAQ = () => {
 		setOpenItemId(openItemId === id ? null : id)
 	}
 
-	return (
-		<section className={styles.faqSection} ref={sectionRef}>
+    return (
+        <section id="faq" className={styles.faqSection} ref={sectionRef}>
 			<div className={styles.backgroundElements}>
 				<div className={`${styles.floatingElement} ${styles.element1}`}></div>
 				<div className={`${styles.floatingElement} ${styles.element2}`}></div>

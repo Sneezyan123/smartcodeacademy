@@ -257,8 +257,8 @@ const Testimonials = () => {
 
 	const currentTheme = getColorClasses(currentData.color)
 
-	return (
-		<section ref={sectionRef} className={styles.testimonialsSection}>
+    return (
+        <section ref={sectionRef} id="testimonials" className={styles.testimonialsSection}>
 			<div className={styles.container}>
 				<div className={styles.header}>
 					<div className={`gsap-fade-up ${styles.badge} ${currentTheme.badge}`}>

@@ -3,6 +3,8 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle, Star, Users, Award, User, Hash, Briefcase, MessageSquare } from 'lucide-react'
 import styles from './ContactForm.module.css'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+gsap.registerPlugin(ScrollTrigger)
 
 const ContactForm = () => {
     const [formData, setFormData] = useState({
@@ -16,16 +18,28 @@ const ContactForm = () => {
     const [isSubmitted, setIsSubmitted] = useState(false)
     const formRef = useRef(null);
 
-    // GSAP анімація появи
+    // GSAP анімація появи з активованим ScrollTrigger
     useEffect(() => {
-        const formElement = formRef.current;
-        if (formElement) {
-            gsap.fromTo(formElement,
+        const formElement = formRef.current
+        if (!formElement) return
+        const ctx = gsap.context(() => {
+            gsap.fromTo(
+                formElement,
                 { opacity: 0, y: 50 },
-                { opacity: 1, y: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: formElement, start: 'top 85%' } }
-            );
-        }
-    }, []);
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: formElement,
+                        start: 'top 85%'
+                    }
+                }
+            )
+        })
+        return () => ctx.revert()
+    }, [])
 
     const courses = [
         'Python для початківців',
@@ -59,7 +73,7 @@ const ContactForm = () => {
     };
 
     return (
-        <section className={styles.contactSection} ref={formRef}>
+        <section id='Contactform' className={styles.contactSection} ref={formRef}>
             <div className={styles.backgroundElements}>
                 <div className={`${styles.floatingElement} ${styles.element1}`}></div>
                 <div className={`${styles.floatingElement} ${styles.element2}`}></div>

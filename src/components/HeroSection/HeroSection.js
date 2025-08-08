@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { gsap } from 'gsap'
 import styles from './HeroSection.module.css'
+import Link from 'next/link'
 
 // Оновлені дані для слайдів з новою палітрою
 const slides = [
@@ -192,18 +193,19 @@ const HeroSection = () => {
 							))}
 						</ul>
 
-						<div className={`${styles.actions} anim-element`}>
-							<button
-								className={styles.primaryButton}
-								style={{ '--accent-color': accentColor }}
-							>
-								<Play size={18} />
-								Спробувати безкоштовно
-							</button>
-							<button className={styles.secondaryButton}>
-								Дізнатись більше
-							</button>
-						</div>
+                        <div className={`${styles.actions} anim-element`}>
+                            <Link
+                                href="/#Contactform"
+                                className={styles.primaryButton}
+                                style={{ '--accent-color': accentColor }}
+                            >
+                                <Play size={18} />
+                                Спробувати безкоштовно
+                            </Link>
+                            <button className={styles.secondaryButton}>
+                                Дізнатись більше
+                            </button>
+                        </div>
 					</div>
 
 					{/* Права частина - візуальний мокап */}

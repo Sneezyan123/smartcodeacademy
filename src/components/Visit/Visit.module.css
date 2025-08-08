@@ -218,30 +218,7 @@
 }
 .statCardActive .statLabel { color: rgba(255, 255, 255, 0.8); }
 
-/* --- СЕКЦІЯ КУРСІВ --- */
-.coursesSection { padding: 3rem 0; }
-.sectionHeader {
-    text-align: center;
-    margin-bottom: 4rem;
-}
-.sectionTitle {
-    font-size: clamp(2.25rem, 5vw, 3.5rem);
-    font-weight: 800;
-    color: var(--text-primary);
-    margin-bottom: 1rem;
-}
-.sectionSubtitle {
-    font-size: 1.25rem;
-    color: var(--text-secondary);
-    max-width: 65ch;
-    margin: 0 auto;
-    line-height: 1.6;
-}
-.coursesGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 2rem;
-}
+/* видалено застарілі класи секції курсів (заміщено компонентом EnhancedCourseCards) */
 
 /* --- КАРТКИ КУРСІВ --- */
 .courseCard {

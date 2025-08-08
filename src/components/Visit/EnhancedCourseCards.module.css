@@ -262,22 +262,7 @@
 }
 .statItem { display: flex; align-items: center; gap: 0.5rem; }
 .statIcon { width: 1rem; height: 1rem; }
-.pricing {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-.discountBadge {
-    background: #ef4444;
-    color: white;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 9999px;
-    font-weight: 700;
-}
-.currentPrice { color: #4ade80; font-weight: 700; font-size: 1.25rem; }
-.originalPrice { color: rgba(255,255,255,0.5); text-decoration: line-through; font-size: 0.875rem; }
+/* видалено невикористані класи: pricing, discountBadge, currentPrice, originalPrice */
 .actionButton {
     width: 100%;
     padding: 1rem 1.5rem;
@@ -365,4 +350,54 @@
 @keyframes starOrbit {
     from { transform: rotate(0deg) translateX(40px) rotate(0deg); }
     to { transform: rotate(360deg) translateX(40px) rotate(-360deg); }
+}
+
+/* --- АДАПТИВНІСТЬ ДЛЯ МОБІЛЬНИХ --- */
+@media (max-width: 1024px) {
+    .wrapper {
+        height: auto;
+        flex-direction: column;
+        overflow: visible;
+    }
+
+    .card {
+        flex: unset;
+        min-height: 500px;
+        margin-bottom: 1rem;
+        border-radius: 12px;
+    }
+
+    /* Нівелюємо ефекти ховера на мобільних */
+    .cardExpanded { flex: unset; }
+    .cardShrunk { flex: unset; filter: none; }
+
+    .hoverElements { display: none; }
+    .particleContainer { display: none; }
+
+    .topSection {
+        top: 1rem;
+        left: 1rem;
+        right: 1rem;
+    }
+
+    .centerIcon { font-size: 3rem; }
+
+    .bottomContent {
+        padding: 1.25rem 1rem 1.5rem;
+        background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.6), transparent);
+    }
+
+    .title { font-size: 1.75rem; }
+    .subtitle { font-size: 1rem; }
+
+    .featuresGrid { grid-template-columns: 1fr; }
+    .statsGrid { grid-template-columns: 1fr; }
+
+    /* Показуємо деталі завжди, бо на мобільних немає hover */
+    .details { max-height: none; opacity: 1; }
+
+    .actionButton { margin-top: 0.5rem; }
+
+    /* Приховуємо бічну вертикальну назву, щоб не перекривала контент */
+    .sideLabel { display: none; }
 }

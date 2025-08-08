@@ -41,6 +41,7 @@ const UnityCoursePage = () => {
 	const [pacmanPosition, setPacmanPosition] = useState({ x: 50, y: 50 })
 	const [isVideoModalOpen, setIsVideoModalOpen] = useState(false)
 	const [currentVideo, setCurrentVideo] = useState(null)
+	const [isMobile, setIsMobile] = useState(false)
 	const videoRef = useRef(null)
 	
 	// Bigger pixelated ghosts with collision detection
@@ -111,6 +112,18 @@ const UnityCoursePage = () => {
 		}
 	}
 
+	// Detect mobile viewport to tune animations and sizes
+	useEffect(() => {
+		const updateIsMobile = () => {
+			try {
+				setIsMobile(window.innerWidth <= 768)
+			} catch {}
+		}
+		updateIsMobile()
+		window.addEventListener('resize', updateIsMobile, { passive: true })
+		return () => window.removeEventListener('resize', updateIsMobile)
+	}, [])
+
 	// Handle escape key to close modal
 	useEffect(() => {
 		const handleEscapeKey = (event) => {
@@ -152,10 +165,20 @@ const UnityCoursePage = () => {
 	useEffect(() => {
 		setIsLoaded(true)
 
+		// On mobile, normalize ghost sizes/speeds to match CSS and reduce jank
+		if (isMobile) {
+			setGhostPositions(prev => prev.slice(0, 3).map(ghost => ({
+				...ghost,
+				size: 45,
+				speed: Math.max(2.5, (ghost.speed || 4) - 1.5),
+			})))
+		}
+
 		// Generate coins with bigger size for collision
 		const generateCoins = () => {
 			const newCoins = []
-			for (let i = 0; i < 25; i++) {
+			const coinCount = isMobile ? 10 : 25
+			for (let i = 0; i < coinCount; i++) {
 				const position = respawnItem()
 				newCoins.push({
 					id: i,
@@ -173,7 +196,8 @@ const UnityCoursePage = () => {
 		// Generate power-ups with bigger size for collision
 		const generatePowerUps = () => {
 			const newPowerUps = []
-			for (let i = 0; i < 8; i++) {
+			const powerUpCount = isMobile ? 3 : 8
+			for (let i = 0; i < powerUpCount; i++) {
 				const position = respawnItem()
 				newPowerUps.push({
 					id: i,
@@ -398,7 +422,7 @@ const UnityCoursePage = () => {
 		}
 
 		// Ghost movement with improved timing
-		const ghostInterval = setInterval(moveGhosts, 40) // 25 FPS for pixelated movement
+		const ghostInterval = setInterval(moveGhosts, isMobile ? 60 : 40) // Lower FPS on mobile
 
 		// Score animation
 		const scoreInterval = setInterval(() => {
@@ -413,7 +437,7 @@ const UnityCoursePage = () => {
 			clearInterval(ghostInterval)
 			clearInterval(scoreInterval)
 		}
-	}, [])
+	}, [isMobile])
 
 	const modules = [
 		{

@@ -11,6 +11,8 @@ import {
 	Eye,
 } from 'lucide-react'
 import styles from './EnhancedCourseCards.module.css'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 // Функція для генерації частинок з урахуванням теми
 const generateParticles = colors => {
@@ -57,15 +59,16 @@ const courses = [
 		rating: 4.9,
 		theme: 'themePython',
 		particleColors: ['#c084fc', '#93c5fd', '#f9a8d4', '#fcd34d'],
+        href: '/python',
 	},
 	{
 		id: 'gamedev',
 		title: 'ГЕЙМДЕВ',
-		subtitle: 'Створення власних ігор',
+		subtitle: 'Створення власних ігор за допомогою Unity',
 		icon: '🎮',
 		description:
 			'Розробляй захоплюючі ігри на Unity. Від простих 2D до складних 3D проектів.',
-		features: ['Unity 3D', 'Scratch', 'Дизайн персонажів', 'Логіка геймплею'],
+		features: ['C#', 'Unity 3D', 'Дизайн персонажів', 'Логіка геймплею'],
 		stats: {
 			duration: '8 міс',
 			age: '8-17',
@@ -76,6 +79,7 @@ const courses = [
 		rating: 4.8,
 		theme: 'themeGamedev',
 		particleColors: ['#6ee7b7', '#5eead4', '#a7f3d0', '#34d399'],
+        href: '/Unity',
 	},
 	{
 		id: 'webdev',
@@ -94,6 +98,7 @@ const courses = [
 		rating: 4.9,
 		theme: 'themeWebdev',
 		particleColors: ['#7dd3fc', '#67e8f9', '#a5f3fc', '#38bdf8'],
+        href: '/webDev',
 	},
 ]
 
@@ -125,6 +130,7 @@ const ParticleBackground = ({ colors }) => {
 const EnhancedCourseCards = () => {
 	const [hoveredCard, setHoveredCard] = useState(null)
 	const [isVisible, setIsVisible] = useState(false)
+    const router = useRouter()
 
 	useEffect(() => {
 		const timer = setTimeout(() => setIsVisible(true), 100)
@@ -146,12 +152,21 @@ const EnhancedCourseCards = () => {
 				].join(' ')
 
 				return (
-					<div
+                    <div
 						key={course.id}
 						className={cardClasses}
 						style={{ transitionDelay: `${index * 100}ms` }}
 						onMouseEnter={() => setHoveredCard(index)}
 						onMouseLeave={() => setHoveredCard(null)}
+                        onClick={() => router.push(course.href)}
+                        role="link"
+                        tabIndex={0}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault()
+                                router.push(course.href)
+                            }
+                        }}
 					>
 						{/* --- ФОН ТА ЕФЕКТИ --- */}
 						<div className={styles.cardBackground}></div>
@@ -265,7 +280,7 @@ const EnhancedCourseCards = () => {
 										</div>
 									))}
 								</div>
-								<div className={styles.statsGrid}>
+                                <div className={styles.statsGrid}>
 									<div className={styles.statItem}>
 										<Users className={styles.statIcon} />
 										<span>{course.stats.age} років</span>
@@ -279,11 +294,11 @@ const EnhancedCourseCards = () => {
 										<span>{course.stats.projects} проектів</span>
 									</div>
 								</div>
-								<button className={styles.actionButton}>
-									<PlayCircle className={styles.buttonIcon} />
-									<span>Почати навчання</span>
-									<ArrowRight className={styles.buttonArrow} />
-								</button>
+                                <Link href={course.href} className={styles.actionButton} onClick={e => e.stopPropagation()}>
+                                    <PlayCircle className={styles.buttonIcon} />
+                                    <span>Почати навчання</span>
+                                    <ArrowRight className={styles.buttonArrow} />
+                                </Link>
 							</div>
 						</div>
 

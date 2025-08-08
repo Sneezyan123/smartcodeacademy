@@ -22,6 +22,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import styles from './Visit.module.css'
 import EnhancedCourseCards from './EnhancedCourseCards'
+import Link from 'next/link'
 // Реєструємо ScrollTrigger
 gsap.registerPlugin(ScrollTrigger)
 
@@ -156,12 +157,12 @@ const Visit = () => {
 							</div>
 						</div>
 
-						<div className={styles.ctaButtons}>
-							<button className={styles.primaryButton}>
-								<Play className={styles.buttonIcon} />
-								Почати навчання безкоштовно
-							</button>
-						</div>
+                        <div className={styles.ctaButtons}>
+                            <Link href="/#Contactform" className={styles.primaryButton}>
+                                <Play className={styles.buttonIcon} />
+                                Почати навчання безкоштовно
+                            </Link>
+                        </div>
 					</div>
 
 					{/* Statistics */}

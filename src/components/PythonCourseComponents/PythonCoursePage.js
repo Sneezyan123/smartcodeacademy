@@ -238,7 +238,7 @@ const PythonCoursePage = () => {
   const features = [
     { 
       icon: <Users className="w-8 h-8" />, 
-      title: "Групи до 8 учнів", 
+      title: "Індивідуальне навчання", 
       desc: "Персональний підхід",
       color: "from-blue-400 to-purple-600"
     },
@@ -264,14 +264,6 @@ const PythonCoursePage = () => {
 
   return (
     <div className={styles.container}>
-      {/* Back Button */}
-      <Link 
-        href="/"
-        className={styles.backButton}
-      >
-        <ArrowLeft className="w-5 h-5" />
-        <span className="hidden sm:inline">Назад на головну</span>
-      </Link>
 
       {/* Animated Background */}
       <div className={styles.animatedBackground}>
@@ -371,14 +363,14 @@ const PythonCoursePage = () => {
 
             {/* CTA Buttons */}
             <div className={styles.ctaButtons}>
-              <button className={styles.primaryButton}>
+              <Link href="/#Contactform" className={styles.primaryButton}>
                 <div className={styles.buttonOverlay}></div>
                 <span className={styles.buttonContent}>
                   <Rocket className="w-6 h-6" />
                   Почати навчання
                   <ChevronRight className={styles.buttonArrow} />
                 </span>
-              </button>
+              </Link>
               
               <button className={styles.secondaryButton}>
                 <span className={styles.buttonContent}>
@@ -391,9 +383,9 @@ const PythonCoursePage = () => {
             {/* Stats */}
             <div className={styles.stats}>
               {[
-                { number: "1000+", label: "Випускників" },
-                { number: "95%", label: "Працевлаштування" },
-                { number: "24", label: "Тижні навчання" },
+                { number: "300+", label: "Випускників" },
+                { number: "200+", label: "Годин кодингу" },
+                { number: "4.9", label: "Середня оцінка" },
                 { number: "50+", label: "Проектів" }
               ].map((stat, index) => (
                 <div key={index} className={styles.statItem}>
@@ -451,9 +443,7 @@ const PythonCoursePage = () => {
                     {module.icon}
                   </div>
                   
-                  <h3 className={styles.moduleTitle}>{module.title}</h3>
-                  <p className={styles.moduleDuration}>{module.duration}</p>
-                  
+                  <h3 className={styles.moduleTitle}>{module.title}</h3>                  
                   <ul className={styles.moduleTopics}>
                     {module.topics.map((topic, i) => (
                       <li key={i} className={styles.moduleTopic}>
@@ -567,20 +557,14 @@ const PythonCoursePage = () => {
             </p>
             
             <div className={styles.ctaButtons}>
-              <button className={styles.primaryButton}>
+              <Link href="/#Contactform" className={styles.primaryButton}>
                 <div className={styles.buttonOverlay}></div>
                 <span className={styles.buttonContent}>
                   <Zap className="w-6 h-6" />
                   Безкоштовний урок
                 </span>
-              </button>
-              
-              <button className={styles.secondaryButton}>
-                <span className={styles.buttonContent}>
-                  <Download className="w-6 h-6" />
-                  Програма курсу
-                </span>
-              </button>
+              </Link>
+            
             </div>
           </div>
         </section>

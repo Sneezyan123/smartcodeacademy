@@ -360,12 +360,12 @@ const WebCoursePage = () => {
 							Навчись створювати сайти, які вражають та надихають!
 						</p>
 						
-						<div className={styles.ctaButtons}>
-							<button className={styles.primaryButton}>
-								<Play size={20} />
-								Почати навчання
-							</button>
-						</div>
+                        <div className={styles.ctaButtons}>
+                            <Link href="/#Contactform" className={styles.primaryButton}>
+                                <Play size={20} />
+                                Почати навчання
+                            </Link>
+                        </div>
 						
 					</div>
 					
@@ -524,16 +524,12 @@ const WebCoursePage = () => {
 					<p className={styles.ctaText}>
 						Приєднуйся до нас і створи свій перший проект вже сьогодні!
 					</p>
-					<div className={styles.ctaButtons}>
-						<button className={styles.ctaButton}>
-							<Sparkles size={20} />
-							Безкоштовний урок
-						</button>
-						<button className={styles.ctaButtonOutline}>
-							<Heart size={20} />
-							Дізнатись більше
-						</button>
-					</div>
+                        <div className={styles.ctaButtons}>
+                            <Link href="/#Contactform" className={styles.ctaButton}>
+                                <Sparkles size={20} />
+                                Безкоштовний урок
+                            </Link>
+                        </div>
 				</div>
 			</section>
 		</div>

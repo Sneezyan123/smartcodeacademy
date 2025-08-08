@@ -26,25 +26,21 @@ const Footer = () => {
 	const currentYear = new Date().getFullYear()
 
 	const courses = [
-		{ name: 'Python програмування', icon: Code, href: '/courses/python' },
-		{ name: 'Веб-розробка', icon: Code, href: '/courses/javascript' },
-		{ name: 'Розробка ігор', icon: Gamepad2, href: '/courses/games' },
-		{ name: 'Frontend розробка', icon: Palette, href: '/courses/frontend' },
+		{ name: 'Python програмування', icon: Code, href: '/python' },
+		{ name: 'Веб-розробка', icon: Code, href: '/webDev' },
+		{ name: 'Розробка ігор', icon: Gamepad2, href: '/Unity' },
+		{ name: 'Frontend розробка', icon: Palette, href: '/webDev' },
 	]
 
 	const quickLinks = [
-		{ name: 'Про нас', href: '/about' },
-		{ name: 'Наші ментори', href: '/mentors' },
-		{ name: 'Відгуки батьків', href: '/testimonials' },
-		{ name: 'Блог', href: '/blog' },
-		{ name: "Кар'єра", href: '/careers' },
+		{ name: 'Про нас', href: '/#about' },
+		{ name: 'Відгуки батьків', href: '/#testimonials' },
+		{ name: 'Контакти', href: '/#Contactform' },
 	]
 
 	const supportLinks = [
-		{ name: 'Часті питання', href: '/faq' },
-		{ name: 'Технічна підтримка', href: '/support' },
-		{ name: 'Контакти', href: '/contact' },
-		{ name: 'Партнери', href: '/partners' },
+		{ name: 'Часті питання', href: '/#faq' },
+		{ name: 'Політика конфіденційності', href: '/privacy' },
 	]
 
 	const achievements = [

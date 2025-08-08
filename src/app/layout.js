@@ -82,8 +82,6 @@ export const metadata = {
 export const viewport = {
 	width: 'device-width',
 	initialScale: 1,
-	maximumScale: 1,
-	userScalable: false,
 	themeColor: [
 		{ media: '(prefers-color-scheme: light)', color: '#2563eb' },
 		{ media: '(prefers-color-scheme: dark)', color: '#1d4ed8' },
@@ -102,16 +100,7 @@ export default function RootLayout({ children }) {
 				<meta name='apple-mobile-web-app-capable' content='yes' />
 				<meta name='apple-mobile-web-app-status-bar-style' content='default' />
 				<meta name='mobile-web-app-capable' content='yes' />
-				<link rel='preconnect' href='https://fonts.googleapis.com' />
-				<link
-					rel='preconnect'
-					href='https://fonts.gstatic.com'
-					crossOrigin='anonymous'
-				/>
-				<link rel='icon' href='/favicon.ico' sizes='any' />
-				<link rel='icon' href='/icon.svg' type='image/svg+xml' />
-				<link rel='apple-touch-icon' href='/apple-touch-icon.png' />
-				<link rel='manifest' href='/manifest.json' />
+				<link rel='icon' href='/logo.jpg' />
 			</head>
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased`}

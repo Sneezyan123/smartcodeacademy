@@ -1384,6 +1384,16 @@
 
 /* === RESPONSIVE === */
 @media (max-width: 768px) {
+  /* Reduce background animation intensity on mobile */
+  .gridPattern {
+    animation-duration: 14s;
+    opacity: 0.4;
+  }
+
+  .mazePath {
+    animation-duration: 8s;
+    opacity: 0.25;
+  }
   .scoreBoard {
     flex-direction: row;
     top: auto;
@@ -1419,6 +1429,7 @@
   .ghost {
     width: 45px;
     height: 53px;
+    animation: ghostFloat 2.6s ease-in-out infinite;
   }
   
   .ghost::before {
@@ -1461,6 +1472,12 @@
   
   .powerUp {
     font-size: 1.5rem;
+    animation-duration: 3s;
+  }
+
+  .projectIcon {
+    font-size: 2.5rem;
+    animation-duration: 4s;
   }
 }
 

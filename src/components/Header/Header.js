@@ -117,18 +117,17 @@ const Header = () => {
 		dropdownTimerRef.current = setTimeout(() => setIsCoursesOpen(false), 200)
 	}
 
-	// Дані для навігації та курсів
 	const navItems = [
 		{ label: 'Курси', dropdown: true },
-		{ label: 'Про нас', href: '#about' },
-		{ label: 'Відгуки', href: '#testimonials' },
-		{ label: 'Контакти', href: '#contacts' },
+		{ label: 'Відгуки', href: '/#testimonials' },
+		{ label: 'Контакти', href: '/#Contactform' },
 	]
 	const courses = [
 		{
 			icon: <Code size={24} />,
-			title: 'Python & JavaScript',
-			description: 'Основи програмування та алгоритми',
+			title: 'Python',
+			description: 'Основи програмування на Python',
+			link:"/python",
 			age: '10-16 років',
 			theme: 'blue',
 			popular: true,
@@ -136,7 +135,8 @@ const Header = () => {
 		{
 			icon: <Gamepad2 size={24} />,
 			title: 'Розробка ігор',
-			description: 'Unity, Roblox Studio, Scratch',
+			description: 'C# та Unity',
+			link: "/Unity",
 			age: '8-17 років',
 			theme: 'green',
 		},
@@ -144,6 +144,7 @@ const Header = () => {
 			icon: <Monitor size={24} />,
 			title: 'Веб-розробка',
 			description: 'HTML, CSS, React, дизайн',
+			link: "/webDev",
 			age: '12-18 років',
 			theme: 'purple',
 		},
@@ -200,12 +201,12 @@ const Header = () => {
 													Обери свій шлях у програмуванні
 												</p>
 											</div>
-											{courses.map((course, courseIndex) => (
-												<a
-													key={courseIndex}
-													href={`#course-${courseIndex}`}
-													className={styles.dropdownItem}
-												>
+							{courses.map((course, courseIndex) => (
+								<Link
+									key={courseIndex}
+									href={course.link}
+									className={styles.dropdownItem}
+								>
 													<div
 														className={`${styles.dropdownIcon} ${
 															styles[course.theme]
@@ -231,34 +232,34 @@ const Header = () => {
 															{course.age}
 														</span>
 													</div>
-												</a>
+								</Link>
 											))}
 											<div className={styles.dropdownFooter}>
-												<a href='#all-courses' className={styles.dropdownLink}>
+								<a href='/#courses' className={styles.dropdownLink}>
 													<Users size={14} /> Переглянути всі курси
 												</a>
 											</div>
 										</div>
 									</div>
 								</div>
-							) : (
-								<a key={index} href={item.href} className={styles.navLink}>
-									{item.label}
-								</a>
-							)
+						) : (
+							<Link key={index} href={item.href} className={styles.navLink}>
+								{item.label}
+							</Link>
+						)
 						)}
 					</nav>
 
 					{/* Права частина хедера */}
-					<div className={styles.headerRight}>
+                    <div className={styles.headerRight}>
 						<a href='tel:+380966566243' className={styles.contactInfo}>
 							<Phone size={18} />
 							<span className={styles.contactText}>+380 96 656 62 43</span>
 						</a>
-						<button className={styles.ctaButton}>
-							<Sparkles size={18} />
-							Безкоштовний урок
-						</button>
+                        <Link href="/#Contactform" className={styles.ctaButton}>
+                            <Sparkles size={18} />
+                            Безкоштовний урок
+                        </Link>
 						<button
 							className={styles.mobileMenuButton}
 							onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -275,23 +276,25 @@ const Header = () => {
 				<div className={styles.mobileMenuContent}>
 					<div className={styles.mobileNavSection}>
 						<h3 className={styles.mobileNavTitle}>Меню</h3>
-						{navItems.map((item, index) => (
-							<a
-								key={index}
-								href={item.href}
-								className={styles.mobileNavLink}
-								onClick={() => setIsMobileMenuOpen(false)}
-							>
-								{item.label}
-							</a>
-						))}
+						{navItems
+							.filter(item => !item.dropdown)
+							.map((item, index) => (
+								<Link
+									key={index}
+									href={item.href}
+									className={styles.mobileNavLink}
+									onClick={() => setIsMobileMenuOpen(false)}
+								>
+									{item.label}
+								</Link>
+							))}
 					</div>
 					<div className={styles.mobileNavSection}>
 						<h3 className={styles.mobileNavTitle}>Курси</h3>
 						{courses.map((course, index) => (
-							<a
+							<Link
 								key={index}
-								href={`#course-${index}`}
+								href={course.link}
 								className={styles.mobileCourseLink}
 								onClick={() => setIsMobileMenuOpen(false)}
 							>
@@ -309,7 +312,7 @@ const Header = () => {
 								{course.popular && (
 									<span className={styles.mobilePopularBadge}>Топ</span>
 								)}
-							</a>
+							</Link>
 						))}
 					</div>
 					<div className={styles.mobileFooter}>
@@ -317,10 +320,10 @@ const Header = () => {
 							<Phone size={18} />
 							<span>+38 (067) 123-45-67</span>
 						</a>
-						<button className={styles.mobileCtaButton}>
-							<Sparkles size={20} />
-							Безкоштовний урок
-						</button>
+                        <Link href="/#Contactform" className={styles.mobileCtaButton} onClick={() => setIsMobileMenuOpen(false)}>
+                            <Sparkles size={20} />
+                            Безкоштовний урок
+                        </Link>
 					</div>
 				</div>
 			</div>
