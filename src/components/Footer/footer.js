@@ -33,11 +33,11 @@ const Footer = () => {
 		{ name: 'Roblox Studio', icon: Box, href: '/Roblox' },
 	]
 
-	const quickLinks = [
-		{ name: 'Про нас', href: '/#about' },
-		{ name: 'Відгуки', href: '/#testimonials' },
-		{ name: 'Контакти', href: '/#Contactform' },
-	]
+    const quickLinks = [
+        { name: 'Про нас', href: '/#about' },
+        { name: 'Відгуки', href: '/#testimonials' },
+        { name: 'Контакти', href: '/#Contactform', openModal: true },
+    ]
 
 	const supportLinks = [
 		{ name: 'Часті питання', href: '/#faq' },
@@ -123,13 +123,18 @@ const Footer = () => {
 					<div className={styles.section}>
 						<h4 className={styles.sectionTitle}>Навігація</h4>
 						<ul className={styles.linksList}>
-							{quickLinks.map((link, index) => (
-								<li key={index}>
-									<Link href={link.href} className={styles.link}>
-										{link.name}
-									</Link>
-								</li>
-							))}
+                            {quickLinks.map((link, index) => (
+                                <li key={index}>
+                                    <Link 
+                                        href={link.href} 
+                                        className={styles.link}
+                                        onClick={link.openModal ? (e)=>{ e.preventDefault(); window.dispatchEvent(new Event('openContactModal')) } : undefined}
+                                        scroll={link.openModal ? false : undefined}
+                                    >
+                                        {link.name}
+                                    </Link>
+                                </li>
+                            ))}
 						</ul>
 					</div>
 

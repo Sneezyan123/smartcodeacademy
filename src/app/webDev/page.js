@@ -199,16 +199,7 @@ const WebCoursePage = () => {
 
     const handleCtaClick = (e) => {
         e.preventDefault()
-        if (pathname === '/') {
-            const target = document.getElementById('Contactform')
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            } else {
-                window.location.hash = '#Contactform'
-            }
-        } else {
-            router.push('/#Contactform')
-        }
+        window.dispatchEvent(new Event('openContactModal'))
     }
 
 	const modules = [

@@ -152,8 +152,8 @@ const HeroSection = () => {
 	const { icon, superTitle, title, subtitle, features, accentColor } =
 		slides[currentSlide]
 
-	return (
-		<section className={styles.heroSection} ref={containerRef}>
+    return (
+        <section id="learning-experience" className={styles.heroSection} ref={containerRef}>
 			<div className={styles.backgroundElements}>
 				<div className={styles.element1}></div>
 				<div className={styles.element2}></div>
@@ -198,6 +198,8 @@ const HeroSection = () => {
                                 href="/#Contactform"
                                 className={styles.primaryButton}
                                 style={{ '--accent-color': accentColor }}
+                                onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('openContactModal')) }}
+                                scroll={false}
                             >
                                 <Play size={18} />
                                 Спробувати безкоштовно
@@ -234,7 +236,7 @@ const HeroSection = () => {
 										</div>
 										<div className={styles.statItem}>
 											<ShieldCheck size={16} />
-											<span>Рівень: Senior</span>
+											<span>Рівень: Junior+</span>
 										</div>
 									</div>
 									<div className={`${styles.mockupProgressBar} slide-content`}>

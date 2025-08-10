@@ -728,7 +728,7 @@ const UnityCoursePage = () => {
 
 						{/* CTA Buttons */}
 						<div className={styles.ctaButtons}>
-							<Link href='/#Contactform' className={styles.startButton}>
+                            <Link href='/#Contactform' className={styles.startButton} onClick={(e)=>{e.preventDefault(); window.dispatchEvent(new Event('openContactModal'))}} scroll={false}>
 								<span className={styles.buttonPixel}>
 									<Play className='w-6 h-6' />
 									ПОЧАТИ КУРС
@@ -925,7 +925,7 @@ const UnityCoursePage = () => {
 							<div className={styles.countdown}>💻</div>
 
                             <div className={styles.ctaButtons}>
-                                <Link href='/#Contactform' className={styles.continueButton}>
+                                <Link href='/#Contactform' className={styles.continueButton} onClick={(e)=>{e.preventDefault(); window.dispatchEvent(new Event('openContactModal'))}} scroll={false}>
                                     <span className={styles.buttonPixel}>
                                         <Rocket className='w-6 h-6' />
                                         ЗАПИСАТИСЯ

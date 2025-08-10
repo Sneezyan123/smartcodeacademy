@@ -24,11 +24,11 @@ export async function POST(request) {
     }
 
     const body = await request.json().catch(() => ({}))
-    const { name, phone, email, age, course, message } = body || {}
+    const { phone, course, message } = body || {}
 
-    if (!name || !phone) {
+    if (!phone) {
       return NextResponse.json(
-        { ok: false, error: 'Required fields: name, phone' },
+        { ok: false, error: 'Required field: phone' },
         { status: 400 }
       )
     }
@@ -39,10 +39,7 @@ export async function POST(request) {
     const lines = [
       '<b>Нова заявка зі сайту SmartCode Academy</b>',
       '',
-      `<b>Імʼя дитини:</b> ${escapeHtml(name)}`,
       `<b>Телефон:</b> ${escapeHtml(normalizedPhone)}`,
-      email ? `<b>Email:</b> ${escapeHtml(email)}` : null,
-      age ? `<b>Вік:</b> ${escapeHtml(age)}` : null,
       course ? `<b>Курс:</b> ${escapeHtml(course)}` : null,
       message ? `<b>Повідомлення:</b>\n${escapeHtml(message)}` : null,
       '',

@@ -1,59 +1,71 @@
-'use client'
+"use client"
 
 import dynamic from 'next/dynamic'
 import { useEffect } from 'react'
 
-const Visit = dynamic(() => import('@/components/Visit/Visit'), { ssr: false })
-const HeroSection = dynamic(() => import('@/components/HeroSection/HeroSection'), { ssr: false })
-const ContactForm = dynamic(() => import('@/components/ContactForm/ContactForm'), { ssr: false })
-const Testimonials = dynamic(() => import('@/components/Testimonials/Testimonials'), { ssr: false })
-const FAQ = dynamic(() => import('@/components/FAQ/FAQ'), { ssr: false })
+// Lightweight skeletons to keep layout stable while chunks load
+const SectionSkeleton = ({ height = '60vh' }) => (
+  <div style={{ minHeight: height, width: '100%' }} />
+)
+const HeroSkeleton = () => <SectionSkeleton height='75vh' />
+
+// Enable SSR (default) and provide client-side loading fallbacks.
+// Removing ssr:false prevents the server from sending an empty <main>,
+// which previously let the footer appear first.
+const HeroSection = dynamic(() => import('@/components/HeroSection/HeroSection'), {
+  loading: () => <HeroSkeleton />,
+})
+const Visit = dynamic(() => import('@/components/Visit/Visit'), {
+  loading: () => <SectionSkeleton height='1200px' />,
+})
+const Testimonials = dynamic(() => import('@/components/Testimonials/Testimonials'), {
+  loading: () => <SectionSkeleton height='800px' />,
+})
+const FAQ = dynamic(() => import('@/components/FAQ/FAQ'), {
+  loading: () => <SectionSkeleton height='800px' />,
+})
 
 export default function HomeClient() {
+  // Прибрали поведінку з hash, щоб уникнути гонок відкриття модалки
+
   useEffect(() => {
-    // Smooth-scroll to hash target once components are mounted (handles dynamically loaded sections)
-    const attemptScrollToHash = () => {
-      const hash = typeof window !== 'undefined' ? window.location.hash : ''
-      const id = hash ? hash.substring(1) : ''
-      if (!id) return
+    // Авто-відкриття модалки, коли користувач дійшов до середини сторінки (одноразово за сесію)
+    try {
+      if (typeof window !== 'undefined' && sessionStorage.getItem('contactModalShownMid') === '1') {
+        return
+      }
+    } catch {}
 
-      let attempts = 0
-      const maxAttempts = 12
-      const intervalMs = 150
-
-      const intervalId = setInterval(() => {
-        attempts += 1
-        const target = document.getElementById(id)
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-          clearInterval(intervalId)
-        } else if (attempts >= maxAttempts) {
-          clearInterval(intervalId)
-        }
-      }, intervalMs)
+    let triggered = false
+    const onScroll = () => {
+      const doc = document.documentElement
+      const scrollTop = window.scrollY || doc.scrollTop || 0
+      const docHeight = doc.scrollHeight
+      const winHeight = window.innerHeight || doc.clientHeight
+      const maxScrollable = Math.max(1, docHeight - winHeight)
+      const ratio = scrollTop / maxScrollable
+      if (!triggered && ratio >= 0.5) {
+        triggered = true
+        window.dispatchEvent(new Event('openContactModal'))
+        try { sessionStorage.setItem('contactModalShownMid', '1') } catch {}
+        window.removeEventListener('scroll', onScroll)
+      }
     }
-
-    // Initial attempt on mount
-    attemptScrollToHash()
-
-    // Also respond to hash changes while on the page
-    const onHashChange = () => attemptScrollToHash()
-    window.addEventListener('hashchange', onHashChange, { passive: true })
-    return () => window.removeEventListener('hashchange', onHashChange)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    // Перевірка відразу після завантаження (раптом вже внизу)
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
     <div>
       <div className='overflow-x-hidden'>
+        {/* Place hero first to ensure above-the-fold content renders immediately */}
+        <HeroSection />
         <Visit />
         <Testimonials />
-        <HeroSection />
-        <ContactForm />
         <FAQ />
       </div>
     </div>
   )
 }
-
-
-

@@ -158,7 +158,7 @@ const Visit = () => {
 						</div>
 
                         <div className={styles.ctaButtons}>
-                            <Link href="/#Contactform" className={styles.primaryButton}>
+                            <Link href="/#Contactform" className={styles.primaryButton} onClick={(e) => { e.preventDefault(); window.dispatchEvent(new Event('openContactModal')) }} scroll={false}>
                                 <Play className={styles.buttonIcon} />
                                 Почати навчання безкоштовно
                             </Link>

@@ -363,7 +363,12 @@ const PythonCoursePage = () => {
 
             {/* CTA Buttons */}
             <div className={styles.ctaButtons}>
-              <Link href="/#Contactform" className={styles.primaryButton}>
+              <Link 
+                href="/#Contactform" 
+                className={styles.primaryButton}
+                onClick={(e)=>{e.preventDefault(); window.dispatchEvent(new Event('openContactModal'))}}
+                scroll={false}
+              >
                 <div className={styles.buttonOverlay}></div>
                 <span className={styles.buttonContent}>
                   <Rocket className="w-6 h-6" />
@@ -550,7 +555,12 @@ const PythonCoursePage = () => {
             </p>
             
             <div className={styles.ctaButtons}>
-              <Link href="/#Contactform" className={styles.primaryButton}>
+              <Link 
+                href="/#Contactform" 
+                className={styles.primaryButton}
+                onClick={(e)=>{e.preventDefault(); window.dispatchEvent(new Event('openContactModal'))}}
+                scroll={false}
+              >
                 <div className={styles.buttonOverlay}></div>
                 <span className={styles.buttonContent}>
                   <Zap className="w-6 h-6" />

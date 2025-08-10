@@ -205,16 +205,8 @@ const Header = () => {
 
     const handleCtaClick = (e) => {
         e.preventDefault()
-        if (pathname === '/') {
-            const target = document.getElementById('Contactform')
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            } else {
-                // fallback to hash – HomeClient will handle deferred scrolling
-                window.location.hash = '#Contactform'
-            }
-        } else {
-            router.push('/#Contactform')
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new Event('openContactModal'))
         }
         setIsMobileMenuOpen(false)
     }
@@ -287,7 +279,7 @@ const Header = () => {
 
 					{/* Навігація для десктопу */}
 					<nav className={styles.nav}>
-						{navItems.map((item, index) =>
+                        {navItems.map((item, index) =>
 							item.dropdown ? (
 								<div
 									key={index}
@@ -353,11 +345,17 @@ const Header = () => {
 										</div>
 									</div>
 								</div>
-							) : (
-								<Link key={index} href={item.href} className={styles.navLink}>
-									{item.label}
-								</Link>
-							)
+                            ) : (
+                                <Link 
+                                    key={index} 
+                                    href={item.href} 
+                                    className={styles.navLink}
+                                    onClick={item.label === 'Контакти' ? handleCtaClick : undefined}
+                                    scroll={item.label === 'Контакти' ? false : undefined}
+                                >
+                                    {item.label}
+                                </Link>
+                            )
 						)}
 					</nav>
 
@@ -453,16 +451,17 @@ const Header = () => {
 							<h3 className={styles.mobileMenuSectionTitle}>Сторінки</h3>
 							{navItems
 								.filter(item => !item.dropdown)
-								.map((item, index) => (
-									<Link
-										key={index}
-										href={item.href}
-										className={`${styles.mobileMenuItem} ${styles.mobileNavItem}`}
-										onClick={handleMobileMenuClose}
-									>
-										{item.label}
-									</Link>
-								))}
+                                .map((item, index) => (
+                                    <Link
+                                        key={index}
+                                        href={item.href}
+                                        className={`${styles.mobileMenuItem} ${styles.mobileNavItem}`}
+                                        onClick={item.label === 'Контакти' ? handleCtaClick : handleMobileMenuClose}
+                                        scroll={item.label === 'Контакти' ? false : undefined}
+                                    >
+                                        {item.label}
+                                    </Link>
+                                ))}
 						</div>
 					</div>
 

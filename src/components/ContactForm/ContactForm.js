@@ -1,45 +1,74 @@
 "use client"
 import React, { useState, useRef, useEffect } from 'react'
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle, Star, Users, Award, User, Hash, Briefcase, MessageSquare } from 'lucide-react'
+import { Phone, Send, CheckCircle, Briefcase, MessageSquare, X } from 'lucide-react'
 import styles from './ContactForm.module.css'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-gsap.registerPlugin(ScrollTrigger)
 
 const ContactForm = () => {
-    const [formData, setFormData] = useState({
-        name: '',
-        phone: '',
-        email: '',
-        age: '',
-        course: '',
-        message: ''
-    })
+    const [isOpen, setIsOpen] = useState(false)
+    const [formData, setFormData] = useState({ phone: '', course: '', message: '' })
+    const [phoneError, setPhoneError] = useState('')
     const [isSubmitted, setIsSubmitted] = useState(false)
-    const formRef = useRef(null);
+    const dialogRef = useRef(null)
+    const overlayRef = useRef(null)
+    const openedAtRef = useRef(0)
 
-    // GSAP анімація появи з активованим ScrollTrigger
+    // Відкриття/закриття через глобальні події (запобігаємо дублюванню)
     useEffect(() => {
-        const formElement = formRef.current
-        if (!formElement) return
-        const ctx = gsap.context(() => {
-            gsap.fromTo(
-                formElement,
-                { opacity: 0, y: 50 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 1,
-                    ease: 'power3.out',
-                    scrollTrigger: {
-                        trigger: formElement,
-                        start: 'top 85%'
-                    }
-                }
-            )
-        })
-        return () => ctx.revert()
+        let rafId = null
+        const open = () => {
+            openedAtRef.current = Date.now()
+            if (rafId) cancelAnimationFrame(rafId)
+            rafId = requestAnimationFrame(() => setIsOpen(true))
+        }
+        const close = () => {
+            if (rafId) cancelAnimationFrame(rafId)
+            rafId = requestAnimationFrame(() => setIsOpen(false))
+        }
+        window.addEventListener('openContactModal', open)
+        window.addEventListener('closeContactModal', close)
+        return () => {
+            window.removeEventListener('openContactModal', open)
+            window.removeEventListener('closeContactModal', close)
+            if (rafId) cancelAnimationFrame(rafId)
+        }
     }, [])
+
+    const handleOverlayClick = () => {
+        if (Date.now() - (openedAtRef.current || 0) < 250) return
+        setIsOpen(false)
+    }
+
+    // CSS-анімація обробляє появу, JS не потрібен
+
+    // Scroll lock для body, коли модалка відкрита, та закриття по ESC
+    useEffect(() => {
+        if (!isOpen) return
+
+        const scrollY = window.scrollY || window.pageYOffset || 0
+        document.body.style.position = 'fixed'
+        document.body.style.top = `-${scrollY}px`
+        document.body.style.left = '0'
+        document.body.style.right = '0'
+        document.body.style.width = '100%'
+
+        const onKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setIsOpen(false)
+            }
+        }
+        document.addEventListener('keydown', onKeyDown)
+
+        return () => {
+            document.body.style.position = ''
+            const y = Math.abs(parseInt(document.body.style.top || '0', 10)) || 0
+            document.body.style.top = ''
+            document.body.style.left = ''
+            document.body.style.right = ''
+            document.body.style.width = ''
+            window.scrollTo(0, y)
+            document.removeEventListener('keydown', onKeyDown)
+        }
+    }, [isOpen])
 
     const courses = [
         'Roblox Studio',
@@ -49,20 +78,26 @@ const ContactForm = () => {
         'Не впевнений(а), потрібна консультація'
     ];
 
-    const benefits = [
-        { icon: <CheckCircle />, title: 'Безкоштовний пробний урок', description: 'Спробуйте наш підхід до навчання без зобов\'язань' },
-        { icon: <Users />, title: 'Персональний підхід', description: 'Індивідуальна програма для кожного студента' },
-        { icon: <Award />, title: 'Досвідчені ментори', description: 'Навчання від практикуючих розробників' },
-        { icon: <Star />, title: 'Гарантія результату', description: '95% студентів успішно завершують навчання' }
-    ];
-
     const handleInputChange = e => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const { name, value } = e.target
+        if (name === 'phone') {
+            const digits = value.replace(/\D/g, '').slice(0, 9)
+            setFormData(prev => ({ ...prev, phone: digits }))
+            if (digits.length === 0) setPhoneError('Введіть номер телефону')
+            else if (digits.length !== 9) setPhoneError('Номер має містити 9 цифр')
+            else setPhoneError('')
+            return
+        }
+        setFormData(prev => ({ ...prev, [name]: value }))
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const isPhoneValid = /^\d{9}$/.test(formData.phone || '')
+        if (!isPhoneValid) {
+            setPhoneError('Введіть коректний номер (9 цифр)')
+            return
+        }
         try {
             const response = await fetch('/api/telegram', {
                 method: 'POST',
@@ -75,92 +110,60 @@ const ContactForm = () => {
                 alert('На жаль, сталася помилка при відправці. Спробуйте ще раз або напишіть нам у Telegram.')
                 return
             }
-            setIsSubmitted(true)
-            setTimeout(() => {
-                setIsSubmitted(false)
-                setFormData({ name: '', phone: '', email: '', age: '', course: '', message: '' })
-            }, 4000)
+            // Успіх: закриваємо модальне вікно і скидаємо форму
+            setIsSubmitted(false)
+            setFormData({ phone: '', course: '', message: '' })
+            setPhoneError('')
+            setIsOpen(false)
         } catch (err) {
             console.error(err)
             alert('Сталася помилка мережі. Перевірте підключення та спробуйте ще раз.')
         }
     }
 
-    return (
-        <section id='Contactform' className={styles.contactSection} ref={formRef}>
-            <div className={styles.backgroundElements}>
-                <div className={`${styles.floatingElement} ${styles.element1}`}></div>
-                <div className={`${styles.floatingElement} ${styles.element2}`}></div>
-                <div className={`${styles.floatingElement} ${styles.element3}`}></div>
-                <div className={`${styles.floatingElement} ${styles.element4}`}></div>
-            </div>
-            <div className={styles.container}>
-                <div className={styles.contactCard}>
-                    {/* Ліва секція з інформацією */}
-                    <div className={styles.leftSection}>
-                        <div className={styles.content}>
-                            <div className={styles.badge}>
-                                <Send size={16} />
-                                Зв&apos;яжіться з нами
-                            </div>
-                            <h2 className={styles.title}>
-                                Почніть навчання
-                                <span className={styles.titleAccent}>вже сьогодні</span>
-                            </h2>
-                            <p className={styles.subtitle}>
-                                Заповніть форму і отримайте персональну консультацію. Ми допоможемо обрати ідеальний курс для вашої дитини.
-                            </p>
-                            <div className={styles.benefitsList}>
-                                {benefits.map((benefit, index) => (
-                                    <div key={index} className={styles.benefitItem}>
-                                        <div className={styles.benefitIconContainer}>{React.cloneElement(benefit.icon, { className: styles.benefitIcon })}</div>
-                                        <div>
-                                            <h4 className={styles.benefitTitle}>{benefit.title}</h4>
-                                            <p className={styles.benefitDescription}>{benefit.description}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className={styles.contactInfo}>
-                                <div className={styles.contactItem}><Clock size={16} />Пн-Нд: 9:00-21:00</div>
-                                <div className={styles.contactItem}><MapPin size={16} />Онлайн</div>
-                            </div>
-                        </div>
-                    </div>
+    if (!isOpen) return null
 
-                    {/* Права секція з формою */}
+    return (
+        <div className={styles.modalOverlay} ref={overlayRef} onClick={handleOverlayClick}>
+            <div className={styles.modalContainer} onClick={(e) => e.stopPropagation()}>
+                <div className={styles.backgroundElements}>
+                    <div className={`${styles.floatingElement} ${styles.element1}`}></div>
+                    <div className={`${styles.floatingElement} ${styles.element2}`}></div>
+                    <div className={`${styles.floatingElement} ${styles.element3}`}></div>
+                    <div className={`${styles.floatingElement} ${styles.element4}`}></div>
+                </div>
+                <div className={styles.container} ref={dialogRef}>
+                    <div className={`${styles.contactCard} ${styles.compact}`}>
+                        <button className={styles.modalClose} onClick={() => setIsOpen(false)} aria-label='Закрити форму'>
+                            <X size={20} />
+                        </button>
+                    {/* Мінімалістична форма */}
                     <div className={styles.rightSection}>
                         <div className={styles.formContainer}>
                             {!isSubmitted ? (
                                 <>
                                     <div className={styles.formHeader}>
-                                        <h3 className={styles.formTitle}>Записатися на консультацію</h3>
-                                        <p className={styles.formSubtitle}>Ми зв&apos;яжемося з вами протягом 15 хвилин</p>
+                                        <h3 className={styles.formTitle}>Залишіть номер — ми зв’яжемося</h3>
                                     </div>
                                     <form onSubmit={handleSubmit} className={styles.form}>
-                                        <div className={styles.formRow}>
-                                            <div className={styles.inputWrapper}>
-                                                <User className={styles.inputIcon} size={18} />
-                                                <input type='text' name='name' value={formData.name} onChange={handleInputChange} placeholder="Ім'я дитини *" className={styles.input} required />
-                                            </div>
-                                            <div className={styles.inputWrapper}>
-                                                <Hash className={styles.inputIcon} size={18} />
-                                                <select name='age' value={formData.age} onChange={handleInputChange} className={styles.select} required>
-                                                    <option value=''>Вік дитини</option>
-                                                    {Array.from({ length: 12 }, (_, i) => i + 6).map(age => (
-                                                        <option key={age} value={age}>{age} років</option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                        </div>
                                         <div className={styles.inputWrapper}>
                                             <Phone className={styles.inputIcon} size={18} />
                                             <span className={styles.countryCode}>+380</span>
-                                            <input type='tel' name='phone' value={formData.phone} onChange={handleInputChange} placeholder='_ _  _ _ _  _ _  _ _ *' className={`${styles.input} ${styles.phoneInput}`} required />
+                                            <input 
+                                                type='tel'
+                                                name='phone'
+                                                value={formData.phone}
+                                                onChange={handleInputChange}
+                                                placeholder='__ ___ __ __'
+                                                className={`${styles.input} ${styles.phoneInput}`}
+                                                inputMode='numeric'
+                                                required
+                                            />
+                                            {phoneError && <div className={styles.errorText}>{phoneError}</div>}
                                         </div>
                                         <div className={styles.inputWrapper}>
                                             <Briefcase className={styles.inputIcon} size={18} />
-                                            <select name='course' value={formData.course} onChange={handleInputChange} className={styles.select}>
+                                            <select name='course' value={formData.course} onChange={handleInputChange} className={styles.select} required>
                                                 <option value=''>Оберіть цікавий напрямок</option>
                                                 {courses.map((course, index) => (
                                                     <option key={index} value={course}>{course}</option>
@@ -171,7 +174,7 @@ const ContactForm = () => {
                                             <MessageSquare className={`${styles.inputIcon} ${styles.textareaIcon}`} size={18} />
                                             <textarea name='message' value={formData.message} onChange={handleInputChange} placeholder="Ваше повідомлення... (необов'язково)" className={styles.textarea} rows={3}></textarea>
                                         </div>
-                                        <button type='submit' className={styles.submitBtn}>
+                                        <button type='submit' className={styles.submitBtn} disabled={!!phoneError || !(formData.phone && formData.course)}>
                                             <Send size={20} />
                                             Отримати консультацію
                                         </button>
@@ -190,9 +193,10 @@ const ContactForm = () => {
                             )}
                         </div>
                     </div>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
     )
 }
 

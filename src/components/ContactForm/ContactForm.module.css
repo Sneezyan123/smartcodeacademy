@@ -10,6 +10,52 @@
     overflow: hidden;
     font-family: 'Manrope', sans-serif;
 }
+
+/* --- МОДАЛЬНЕ ВІКНО --- */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 24, 39, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    overflow-y: auto;
+    animation: overlayFadeIn 180ms ease-out;
+}
+
+.modalContainer {
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+    max-height: 92vh;
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+    animation: modalPopIn 260ms 60ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.modalClose {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 5;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 0.5rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: #111827;
+    transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+.modalClose:hover { background: white; transform: scale(1.05); }
+.modalClose:active { transform: scale(0.98); }
 .backgroundElements {
     position: absolute;
     inset: 0;
@@ -29,11 +75,14 @@
 .element4 { bottom: 25%; right: 25%; width: 280px; height: 280px; background: var(--primary-purple); animation: float 11s ease-in-out infinite reverse; }
 
 .container {
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
     padding: 0 1rem;
     position: relative;
     z-index: 2;
+    max-height: 92vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 .contactCard {
     background: rgba(255, 255, 255, 0.7);
@@ -44,6 +93,12 @@
     display: grid;
     grid-template-columns: 1fr 1.1fr;
     border: 1px solid rgba(255, 255, 255, 0.5);
+    max-height: 100%;
+    position: relative;
+}
+
+.compact {
+    grid-template-columns: 1fr;
 }
 
 /* --- ЛІВА СЕКЦІЯ (ІНФОРМАЦІЯ) --- */
@@ -142,6 +197,7 @@
 .select { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 1rem center; background-repeat: no-repeat; background-size: 1.25em; padding-right: 3rem; }
 .countryCode { position: absolute; top: 50%; left: 3rem; transform: translateY(-50%); font-weight: 500; color: var(--text-secondary); pointer-events: none; }
 .phoneInput { padding-left: 6.5rem; }
+.errorText { color: #ef4444; font-size: 0.8rem; margin-top: 0.35rem; }
 .textarea { resize: vertical; min-height: 90px; padding-top: 0.875rem; }
 .textareaIcon { top: 1.25rem; transform: translateY(0); }
 .submitBtn {
@@ -190,8 +246,28 @@
 }
 @media (max-width: 768px) {
     .contactSection { padding: 4rem 0; }
-    .container { padding: 0 1rem; }
+    .container { padding: 0 0.5rem; }
     .formRow { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+    .leftSection, .rightSection { padding: 1.25rem; }
+    .formContainer { max-width: 100%; }
+}
+
+/* Адаптація по висоті екрана */
+@media (max-height: 900px) {
+    .leftSection, .rightSection { padding: 2rem; }
+}
+@media (max-height: 750px) {
+    .leftSection, .rightSection { padding: 1.25rem; }
+    .benefitsList { gap: 1rem; }
+    .subtitle { margin-bottom: 1.25rem; }
+}
+@media (max-height: 680px) {
+    .contactCard { grid-template-columns: 1fr; }
+    .formHeader { margin-bottom: 1rem; }
+    .backgroundElements { display: none; }
 }
 
 /* --- КЛЮЧОВІ КАДРИ АНІМАЦІЙ --- */
@@ -201,3 +277,13 @@
 }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes popIn { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+
+/* Нові ключові кадри для модалки */
+@keyframes overlayFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes modalPopIn {
+    0% { opacity: 0; transform: translateY(16px) scale(0.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}

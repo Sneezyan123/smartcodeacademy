@@ -127,7 +127,7 @@ const courses = [
             'Поринь у світ геймдизайну та скриптингу з Roblox Studio і Lua. Створюй свої світи, механіки та публікуй ігри.',
         features: ['Roblox Studio', 'Lua', 'Геймдизайн', 'Публікація ігор'],
         stats: {
-            age: '8-14',
+            age: '6-17',
             students: '140+',
             projects: '8+',
         },
@@ -163,8 +163,7 @@ const ParticleBackground = ({ colors }) => {
 }
 
 const EnhancedCourseCards = () => {
-	const [hoveredCard, setHoveredCard] = useState(null)
-	const [activeCard, setActiveCard] = useState(null) // для мобільних
+    const [hoveredCard, setHoveredCard] = useState(null)
 	const [isVisible, setIsVisible] = useState(false)
 	const router = useRouter()
 	const isMobile = useIsMobile()
@@ -175,56 +174,9 @@ const EnhancedCourseCards = () => {
 		return () => clearTimeout(timer)
 	}, [])
 
-    // Активуємо картку на мобільних, коли вона в полі зору (скрол) і ховаємо, коли проскролили
-    useEffect(() => {
-        if (!isMobile) return
+    // На мобільних картки не розгортаються; клік веде одразу на сторінку курсу.
 
-        let ticking = false
-
-        const updateActiveByVisibility = () => {
-            const viewportHeight = window.innerHeight || document.documentElement.clientHeight
-            let bestIndex = null
-            let bestRatio = 0
-
-            cardRefs.current.forEach((card, i) => {
-                if (!card) return
-                const rect = card.getBoundingClientRect()
-                const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0)
-                const ratio = Math.max(0, Math.min(visibleHeight, rect.height)) / (rect.height || 1)
-                if (ratio > bestRatio) {
-                    bestRatio = ratio
-                    bestIndex = i
-                }
-            })
-
-            if (bestRatio > 0.35) {
-                setActiveCard(bestIndex)
-            } else {
-                setActiveCard(null)
-            }
-            ticking = false
-        }
-
-        const onScroll = () => {
-            if (!ticking) {
-                window.requestAnimationFrame(updateActiveByVisibility)
-                ticking = true
-            }
-        }
-
-        updateActiveByVisibility()
-        window.addEventListener('scroll', onScroll, { passive: true })
-        window.addEventListener('resize', onScroll)
-
-        return () => {
-            window.removeEventListener('scroll', onScroll)
-            window.removeEventListener('resize', onScroll)
-        }
-    }, [isMobile])
-
-	const getExpandedCard = () => {
-		return isMobile ? activeCard : hoveredCard
-	}
+    const getExpandedCard = () => (isMobile ? null : hoveredCard)
 
 	return (
 		<div className={styles.wrapper}>
@@ -233,7 +185,7 @@ const EnhancedCourseCards = () => {
 				const isExpanded = expandedCard === index
 				const isOtherExpanded = expandedCard !== null && !isExpanded
 
-				const cardClasses = [
+                const cardClasses = [
 					styles.card,
 					styles[course.theme],
 					isVisible ? styles.cardVisible : styles.cardHidden,
@@ -250,24 +202,25 @@ const EnhancedCourseCards = () => {
                         onMouseEnter={() => !isMobile && setHoveredCard(index)}
                         onMouseLeave={() => !isMobile && setHoveredCard(null)}
                         onClick={() => {
-                            if (!isMobile) router.push(course.href)
+                            router.push(course.href)
                         }}
-                        role={isMobile ? 'region' : 'link'}
+                        role={'link'}
 						tabIndex={0}
 						onKeyDown={e => {
-                            if (e.key === 'Enter' || e.key === ' ') {
+                            if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
                                 e.preventDefault()
-                                if (!isMobile) router.push(course.href)
+                                router.push(course.href)
                             }
 						}}
 					>
-						{/* --- ФОН ТА ЕФЕКТИ --- */}
-						<div className={styles.cardBackground}></div>
-						<div className={styles.cardEffects}></div>
-						<ParticleBackground colors={course.particleColors} />
+                        {/* --- ФОН ТА ЕФЕКТИ --- */}
+                        <div className={styles.cardBackground}></div>
+                        {!isMobile && <div className={styles.cardEffects}></div>}
+                        {!isMobile && <ParticleBackground colors={course.particleColors} />}
 
 						{/* --- ІНТЕРАКТИВНІ ЕЛЕМЕНТИ ПРИ НАВЕДЕННІ --- */}
-						<div
+                        {!isMobile && (
+                        <div
 							className={`${styles.hoverElements} ${
 								isExpanded ? styles.hoverElementsVisible : ''
 							}`}
@@ -330,7 +283,8 @@ const EnhancedCourseCards = () => {
                                     </div>
                                 </>
                             )}
-						</div>
+                        </div>
+                        )}
 
 						{/* --- ВЕРХНЯ ЧАСТИНА (БЕЙДЖ, РЕЙТИНГ) --- */}
 						<div className={styles.topSection}>
@@ -371,6 +325,18 @@ const EnhancedCourseCards = () => {
 								<p className={styles.subtitle}>{course.subtitle}</p>
 							</div>
 
+                            {/* Постійна кнопка переходу */}
+                            <div className={styles.ctaRow}>
+                                <Link
+                                    href={course.href}
+                                    className={styles.ctaButton}
+                                    onClick={e => e.stopPropagation()}
+                                >
+                                    <span>Перейти</span>
+                                    <ArrowRight className={styles.buttonArrow} />
+                                </Link>
+                            </div>
+
 							{/* --- ДЕТАЛІ (з'являються при наведенні/скролі) --- */}
 							<div
 								className={`${styles.details} ${
@@ -400,7 +366,16 @@ const EnhancedCourseCards = () => {
 										<span>{course.stats.projects} проектів</span>
 									</div>
 								</div>
-								<Link href={course.href} className={styles.actionButton} onClick={e => e.stopPropagation()}>
+                                <Link 
+                                    href={course.href} 
+                                    className={styles.actionButton}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        window.dispatchEvent(new Event('openContactModal'))
+                                    }}
+                                    scroll={false}
+                                >
 									<PlayCircle className={styles.buttonIcon} />
 									<span>Почати навчання</span>
 									<ArrowRight className={styles.buttonArrow} />
