@@ -25,6 +25,38 @@
   to { transform: rotate(360deg); }
 }
 
+/* New: shine sweep across module cards */
+@keyframes shineSweep {
+  0% { transform: translateX(-150%) skewX(-15deg); opacity: 0; }
+  10% { opacity: 0.4; }
+  50% { opacity: 0.6; }
+  100% { transform: translateX(150%) skewX(-15deg); opacity: 0; }
+}
+
+/* New: soft highlight pulse for border/glow */
+@keyframes highlightPulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(255, 204, 0, 0); }
+  50% { box-shadow: 0 0 24px rgba(255, 204, 0, 0.35); }
+}
+
+/* New: replace spinning rectangle with a gentle tilt wobble */
+@keyframes tiltWobble {
+  0% { transform: rotate(-3deg) translateY(0); }
+  50% { transform: rotate(3deg) translateY(-2px); }
+  100% { transform: rotate(-3deg) translateY(0); }
+}
+
+@keyframes neonPulseBox {
+  0%, 100% { box-shadow: 0 0 12px var(--neon-yellow); }
+  50% { box-shadow: 0 0 24px var(--neon-yellow); }
+}
+
+/* New: click ripple feedback */
+@keyframes ripplePulse {
+  0% { opacity: 0.6; transform: scale(0.95); }
+  100% { opacity: 0; transform: scale(1.1); }
+}
+
 @keyframes chomp {
   0%, 100% { clip-path: polygon(100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 0%); }
   50% { clip-path: polygon(100% 0%, 100% 25%, 100% 75%, 100% 100%, 0% 100%, 0% 0%); }
@@ -335,12 +367,14 @@
   width: 30px;
   height: 40px;
   animation: ghostFloat 2s ease-in-out infinite;
-  transition: all 0.2s ease;
+  /* Limit transitions to visual effects only; avoid animating layout properties */
+  transition: filter 0.2s ease, transform 0.2s ease;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   filter: drop-shadow(0 0 12px currentColor);
+  will-change: transform, left, top;
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
@@ -892,22 +926,63 @@
   overflow: hidden;
 }
 
+/* Click ripple layer */
+.moduleCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--neon-yellow);
+  opacity: 0;
+  pointer-events: none;
+}
+
 .moduleCard.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
+/* New hover: subtle tilt, glow, and shine sweep */
+.moduleCard::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: -20%;
+  width: 40%;
+  background: linear-gradient(120deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.25) 45%,
+    rgba(255,255,255,0.6) 50%,
+    rgba(255,255,255,0.25) 55%,
+    rgba(255,255,255,0) 100%);
+  transform: translateX(-150%) skewX(-15deg);
+  pointer-events: none;
+  opacity: 0;
+}
+
 .moduleCard:hover {
-  transform: translateY(-10px) scale(1.05);
+  transform: translateY(-6px) rotate(-0.75deg);
   border-color: var(--neon-yellow);
-  box-shadow: 
-    0 20px 40px rgba(255, 204, 0, 0.3),
-    0 0 30px rgba(255, 204, 0, 0.5);
+  filter: drop-shadow(0 0 10px rgba(255, 204, 0, 0.35));
+}
+
+.moduleCard:hover::after {
+  animation: shineSweep 900ms ease;
 }
 
 .moduleCard.active {
   border-color: var(--neon-pink);
   box-shadow: 0 0 30px var(--neon-pink);
+}
+
+/* On click (press) feedback */
+.moduleCard:active {
+  transform: translateY(-2px) scale(0.99);
+}
+
+.moduleCard:active::before,
+.moduleCard.active::before {
+  animation: ripplePulse 550ms ease-out;
 }
 
 .levelBadge {
@@ -937,12 +1012,19 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
-  animation: rotate 10s linear infinite;
-  box-shadow: 0 0 20px var(--neon-yellow);
+  /* Replaced spinning with a soft wobble + neon pulse */
+  animation: tiltWobble 2.2s ease-in-out infinite, neonPulseBox 2s ease-in-out infinite;
+  box-shadow: 0 0 12px var(--neon-yellow);
+  will-change: transform, box-shadow;
 }
 
 .moduleIcon svg {
   color: var(--dark-bg);
+}
+
+/* Slight emphasis on hover without spinning */
+.moduleCard:hover .moduleIcon {
+  filter: brightness(1.1);
 }
 
 .moduleTitle {
@@ -992,8 +1074,14 @@
 }
 
 .moduleCard:hover .moduleGlow {
-  opacity: 0.5;
-  animation: rotate 2s linear infinite;
+  opacity: 0.35;
+  animation: rotate 3s linear infinite;
+}
+
+/* Disable rainbow spinning glow when active (clicked) */
+.moduleCard.active .moduleGlow {
+  opacity: 0;
+  animation: none;
 }
 
 .pixelBorder {
@@ -1007,10 +1095,21 @@
   border-image: repeating-linear-gradient(
     45deg,
     var(--neon-yellow),
-    var(--neon-yellow) 10px,
-    transparent 10px,
-    transparent 20px
+    var(--neon-yellow) 8px,
+    transparent 8px,
+    transparent 16px
   ) 3;
+}
+
+/* Auto-play hover-like highlight when scrolled into view on mobile */
+.moduleCard.playOnScroll {
+  border-color: var(--neon-yellow);
+  transform: translateY(-4px);
+}
+
+.moduleCard.playOnScroll::after {
+  animation: shineSweep 1s ease both;
+  animation-delay: var(--anim-delay, 0s);
 }
 
 /* === PROJECTS === */
@@ -1429,7 +1528,10 @@
   .ghost {
     width: 45px;
     height: 53px;
-    animation: ghostFloat 2.6s ease-in-out infinite;
+    /* Slow down subtle float on mobile to reduce jank */
+    animation: ghostFloat 3.2s ease-in-out infinite;
+    /* Disable transitions for frequently updated properties on mobile */
+    transition: none;
   }
   
   .ghost::before {
@@ -1473,6 +1575,11 @@
   .powerUp {
     font-size: 1.5rem;
     animation-duration: 3s;
+  }
+
+  /* Reduce pixel jitter animation on mobile for smoother movement */
+  .ghost.pixelated {
+    animation: ghostFloat 3.2s ease-in-out infinite;
   }
 
   .projectIcon {

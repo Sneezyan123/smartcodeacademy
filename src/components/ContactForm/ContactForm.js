@@ -108,7 +108,6 @@ const ContactForm = () => {
                                 ))}
                             </div>
                             <div className={styles.contactInfo}>
-                                <a href="tel:+380966566243" className={styles.contactItem}><Phone size={16} />+380 96 656 62 43</a>
                                 <div className={styles.contactItem}><Clock size={16} />Пн-Нд: 9:00-21:00</div>
                                 <div className={styles.contactItem}><MapPin size={16} />Онлайн</div>
                             </div>
@@ -162,9 +161,6 @@ const ContactForm = () => {
                                             <Send size={20} />
                                             Отримати консультацію
                                         </button>
-                                        <p className={styles.disclaimer}>
-                                            Натискаючи кнопку, ви погоджуєтеся з <a href='#' className={styles.link}>Політикою конфіденційності</a>.
-                                        </p>
                                     </form>
                                 </>
                             ) : (

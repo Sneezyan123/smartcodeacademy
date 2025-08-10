@@ -175,7 +175,7 @@ const UnityCoursePage = () => {
 		}
 
 		// Generate coins with bigger size for collision
-		const generateCoins = () => {
+        const generateCoins = () => {
 			const newCoins = []
 			const coinCount = isMobile ? 10 : 25
 			for (let i = 0; i < coinCount; i++) {
@@ -185,7 +185,8 @@ const UnityCoursePage = () => {
 					x: position.x,
 					y: position.y,
 					collected: false,
-					size: 12,
+                    size: 12,
+                    delay: Math.random() * 5,
 				})
 			}
 			setCoins(newCoins)
@@ -194,7 +195,7 @@ const UnityCoursePage = () => {
 		generateCoins()
 
 		// Generate power-ups with bigger size for collision
-		const generatePowerUps = () => {
+        const generatePowerUps = () => {
 			const newPowerUps = []
 			const powerUpCount = isMobile ? 3 : 8
 			for (let i = 0; i < powerUpCount; i++) {
@@ -206,6 +207,7 @@ const UnityCoursePage = () => {
 					type: ['cherry', 'strawberry', 'orange', 'apple', 'melon', 'cherry', 'strawberry', 'orange'][i],
 					collected: false,
 					size: 24,
+                    delay: Math.random() * 3,
 				})
 			}
 			setPowerUps(newPowerUps)
@@ -228,14 +230,18 @@ const UnityCoursePage = () => {
 		const sections = document.querySelectorAll('[data-scroll-section]')
 		sections.forEach(section => observer.observe(section))
 
-		// Enhanced ghost movement with collision detection
-		const moveGhosts = () => {
+        // Enhanced ghost movement with collision detection (fixed-step timing)
+        const baseTickMs = isMobile ? 60 : 40
+        const stepMs = isMobile ? 33 : 20 // ~30 FPS mobile, ~50 FPS desktop
+        const baseFrameMs = 16.6667
+
+        const moveGhosts = () => {
 			setGhostPositions(prev => {
 				const newGhostPositions = prev.map(ghost => {
 					let newX = ghost.x
 					let newY = ghost.y
 					let newDirection = ghost.direction
-					let newLastDirectionChange = ghost.lastDirectionChange + 1
+                    let newLastDirectionChange = ghost.lastDirectionChange + stepMs
 
 					// Get viewport dimensions with margins
 					const margin = 80 // Bigger margin for bigger ghosts
@@ -244,15 +250,16 @@ const UnityCoursePage = () => {
 					const ghostSize = ghost.size
 
 					// Each ghost has different behavior patterns - more frequent changes
-					const ghostBehaviors = {
-						blinky: { speed: 4, changeFrequency: 60 }, // Changes every 1.8 seconds
-						pinky: { speed: 3.5, changeFrequency: 80 }, // Changes every 2.4 seconds
-						inky: { speed: 5, changeFrequency: 45 }, // Changes every 1.4 seconds
-						clyde: { speed: 4.2, changeFrequency: 70 } // Changes every 2.1 seconds
-					}
+                    const ghostBehaviors = {
+                        blinky: { speed: 4, changeFrequency: 60 },
+                        pinky: { speed: 3.5, changeFrequency: 80 },
+                        inky: { speed: 5, changeFrequency: 45 },
+                        clyde: { speed: 4.2, changeFrequency: 70 },
+                    }
 
-					const behavior = ghostBehaviors[ghost.color]
-					const speed = behavior.speed
+                    const behavior = ghostBehaviors[ghost.color]
+                    // Scale speed to preserve perceived velocity across step sizes
+                    const speed = behavior.speed * (stepMs / baseTickMs)
 
 					// Move ghost in current direction
 					switch (ghost.direction) {
@@ -279,9 +286,10 @@ const UnityCoursePage = () => {
 					const hitBoundary = hitLeftBoundary || hitRightBoundary || hitTopBoundary || hitBottomBoundary
 
 					// Check if it's time for random direction change (with some randomness)
-					const baseFrequency = behavior.changeFrequency
-					const randomVariation = Math.random() * 30 - 15 // ±15 frames variation
-					const timeForRandomChange = newLastDirectionChange > (baseFrequency + randomVariation)
+                    const baseFrequencyFrames = behavior.changeFrequency
+                    const baseFrequencyMs = baseFrequencyFrames * baseFrameMs
+                    const randomVariationMs = (Math.random() * 30 - 15) * baseFrameMs // ±15 frames in ms
+                    const timeForRandomChange = newLastDirectionChange > (baseFrequencyMs + randomVariationMs)
 
 					if (hitBoundary || timeForRandomChange) {
 						// Determine valid directions based on position
@@ -347,8 +355,8 @@ const UnityCoursePage = () => {
 							newDirection = directionsToUse[Math.floor(Math.random() * directionsToUse.length)]
 						}
 
-						// Reset direction change timer
-						newLastDirectionChange = 0
+                        // Reset direction change timer
+                        newLastDirectionChange = 0
 
 						// Correct position if outside boundaries
 						if (hitLeftBoundary) newX = margin + 1
@@ -367,62 +375,76 @@ const UnityCoursePage = () => {
 				})
 
 				// Check collisions after movement
-				// Check coin collisions
-				setCoins(prevCoins => 
-					prevCoins.map(coin => {
-						if (coin.collected) return coin
-						
-						// Check collision with any ghost
-						const collision = newGhostPositions.some(ghost => 
-							checkCollision(ghost, coin, ghost.size, coin.size)
-						)
-						
-						if (collision) {
-							// Respawn coin at new location
-							const newPosition = respawnItem()
-							return {
-								...coin,
-								x: newPosition.x,
-								y: newPosition.y,
-								collected: false
-							}
-						}
-						
-						return coin
-					})
-				)
+                // Check coin collisions with minimal state churn
+                setCoins(prevCoins => {
+                    let anyChanged = false
+                    for (let i = 0; i < prevCoins.length; i++) {
+                        const coin = prevCoins[i]
+                        if (coin.collected) continue
+                        const collision = newGhostPositions.some(ghost =>
+                            checkCollision(ghost, coin, ghost.size, coin.size)
+                        )
+                        if (collision) { anyChanged = true; break }
+                    }
+                    if (!anyChanged) return prevCoins
+                    return prevCoins.map(coin => {
+                        if (coin.collected) return coin
+                        const collision = newGhostPositions.some(ghost =>
+                            checkCollision(ghost, coin, ghost.size, coin.size)
+                        )
+                        if (collision) {
+                            const newPosition = respawnItem()
+                            return { ...coin, x: newPosition.x, y: newPosition.y }
+                        }
+                        return coin
+                    })
+                })
 
 				// Check power-up collisions
-				setPowerUps(prevPowerUps => 
-					prevPowerUps.map(powerUp => {
-						if (powerUp.collected) return powerUp
-						
-						// Check collision with any ghost
-						const collision = newGhostPositions.some(ghost => 
-							checkCollision(ghost, powerUp, ghost.size, powerUp.size)
-						)
-						
-						if (collision) {
-							// Respawn power-up at new location
-							const newPosition = respawnItem()
-							return {
-								...powerUp,
-								x: newPosition.x,
-								y: newPosition.y,
-								collected: false
-							}
-						}
-						
-						return powerUp
-					})
-				)
+                setPowerUps(prevPowerUps => {
+                    let anyChanged = false
+                    for (let i = 0; i < prevPowerUps.length; i++) {
+                        const p = prevPowerUps[i]
+                        if (p.collected) continue
+                        const collision = newGhostPositions.some(ghost =>
+                            checkCollision(ghost, p, ghost.size, p.size)
+                        )
+                        if (collision) { anyChanged = true; break }
+                    }
+                    if (!anyChanged) return prevPowerUps
+                    return prevPowerUps.map(powerUp => {
+                        if (powerUp.collected) return powerUp
+                        const collision = newGhostPositions.some(ghost =>
+                            checkCollision(ghost, powerUp, ghost.size, powerUp.size)
+                        )
+                        if (collision) {
+                            const newPosition = respawnItem()
+                            return { ...powerUp, x: newPosition.x, y: newPosition.y }
+                        }
+                        return powerUp
+                    })
+                })
 
 				return newGhostPositions
 			})
 		}
 
-		// Ghost movement with improved timing
-		const ghostInterval = setInterval(moveGhosts, isMobile ? 60 : 40) // Lower FPS on mobile
+        // Ghost movement with requestAnimationFrame and fixed steps
+        let rafId
+        let lastTs = performance.now()
+        let accumulator = 0
+
+        const loop = ts => {
+            const delta = ts - lastTs
+            lastTs = ts
+            accumulator += delta
+            while (accumulator >= stepMs) {
+                moveGhosts()
+                accumulator -= stepMs
+            }
+            rafId = requestAnimationFrame(loop)
+        }
+        rafId = requestAnimationFrame(loop)
 
 		// Score animation
 		const scoreInterval = setInterval(() => {
@@ -434,7 +456,7 @@ const UnityCoursePage = () => {
 
 		return () => {
 			observer.disconnect()
-			clearInterval(ghostInterval)
+            if (rafId) cancelAnimationFrame(rafId)
 			clearInterval(scoreInterval)
 		}
 	}, [isMobile])
@@ -706,20 +728,13 @@ const UnityCoursePage = () => {
 
 						{/* CTA Buttons */}
 						<div className={styles.ctaButtons}>
-							<button className={styles.startButton}>
+							<Link href='/#Contactform' className={styles.startButton}>
 								<span className={styles.buttonPixel}>
 									<Play className='w-6 h-6' />
 									ПОЧАТИ КУРС
 									<ChevronRight className={styles.buttonArrow} />
 								</span>
-							</button>
-
-							<button className={styles.coinButton}>
-								<span className={styles.buttonPixel}>
-									<BookOpen className='w-6 h-6' />
-									ПРОГРАМА
-								</span>
-							</button>
+							</Link>
 						</div>
 					</div>
 				</section>
@@ -739,20 +754,24 @@ const UnityCoursePage = () => {
 							<span className={styles.pixelText}>МОДУЛІ КУРСУ</span>
 						</h2>
 
-						<div className={styles.modulesGrid}>
-							{modules.map((module, index) => (
-								<div
-									key={module.id}
-									className={`${styles.moduleCard} ${
-										activeModule === index ? styles.active : ''
-									} ${
-										visibleSections.includes('modules') ? styles.visible : ''
-									}`}
-									style={{
-										animationDelay: `${index * 100}ms`,
-									}}
-									onMouseEnter={() => setActiveModule(index)}
-								>
+                        <div className={styles.modulesGrid}>
+                            {modules.map((module, index) => (
+                                <div
+                                    key={module.id}
+                                    className={`${styles.moduleCard} ${
+                                        activeModule === index ? styles.active : ''
+                                    } ${
+                                        visibleSections.includes('modules') ? styles.visible : ''
+                                    } ${
+                                        isMobile && visibleSections.includes('modules') ? styles.playOnScroll : ''
+                                    }`}
+                                    style={{
+                                        animationDelay: `${index * 100}ms`,
+                                        // Stagger shine on mobile sequentially
+                                        '--anim-delay': isMobile && visibleSections.includes('modules') ? `${index * 180}ms` : '0ms'
+                                    }}
+                                    onMouseEnter={() => setActiveModule(index)}
+                                >
 									{/* Level Badge */}
 									<div className={styles.levelBadge}>МОДУЛЬ {index + 1}</div>
 
@@ -905,14 +924,14 @@ const UnityCoursePage = () => {
 							<p className={styles.continueText}>ЗАПИСАТИСЯ НА КУРС</p>
 							<div className={styles.countdown}>💻</div>
 
-							<div className={styles.ctaButtons}>
-								<button className={styles.continueButton}>
-									<span className={styles.buttonPixel}>
-										<Rocket className='w-6 h-6' />
-										ЗАПИСАТИСЯ
-									</span>
-								</button>
-							</div>
+                            <div className={styles.ctaButtons}>
+                                <Link href='/#Contactform' className={styles.continueButton}>
+                                    <span className={styles.buttonPixel}>
+                                        <Rocket className='w-6 h-6' />
+                                        ЗАПИСАТИСЯ
+                                    </span>
+                                </Link>
+                            </div>
 						</div>
 					</div>
 				</section>

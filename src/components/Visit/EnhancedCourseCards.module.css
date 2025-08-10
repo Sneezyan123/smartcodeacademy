@@ -447,13 +447,15 @@
     .details { 
         max-height: 0; 
         opacity: 0; 
-        transition: max-height 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s ease;
+        transition: max-height 0.6s ease, opacity 0.4s ease;
         margin-top: 0.5rem;
+        pointer-events: none;
     }
 
     .detailsVisible {
-        max-height: 35rem;
+        max-height: 60rem; /* більше місця для мобільних */
         opacity: 1;
+        pointer-events: auto;
     }
 
     .description {
@@ -494,7 +496,7 @@
     }
 
     /* Додаткові медіа-запити для різних розмірів */
-    @media (max-width: 480px) {
+        @media (max-width: 430px) {
         .wrapper {
             padding: 0.75rem;
             gap: 1.5rem;

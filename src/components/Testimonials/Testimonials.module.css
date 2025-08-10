@@ -358,3 +358,53 @@
 .statCardBlue { background-image: linear-gradient(to bottom right, #eff6ff, #cffafe); color: #1e40af; }
 .statCardYellow { background-image: linear-gradient(to bottom right, #fefce8, #fef3c7); color: #a16207; }
 .statCardRed { background-image: linear-gradient(to bottom right, #fee2e2, #ffe4e6); color: #991b1b; }
+
+/* --- Мобільна адаптація --- */
+@media (max-width: 639px) {
+    /* Менші відступи та кращий потоковий макет для картки */
+    .testimonialCard {
+        padding: 1rem 1rem 1.25rem;
+    }
+
+    /* Кнопки навігації не перекривають контент, розміщуються знизу */
+    .cardNavigation {
+        position: static;
+        right: auto;
+        bottom: auto;
+        margin-top: 1rem;
+        justify-content: center;
+        width: 100%;
+    }
+
+    /* Збільшуємо таргет для натискання на телефонах */
+    .navButton {
+        width: 2.75rem;
+        height: 2.75rem;
+    }
+
+    .testimonialBody { margin-bottom: 1rem; }
+    .quoteIcon { top: -0.5rem; left: -0.5rem; }
+
+    /* Статистика не стискається занадто сильно, дозволяємо перенос */
+    .statsGrid {
+        flex-wrap: wrap;
+        overflow-x: visible;
+    }
+
+    .statCard {
+        flex: 1 1 calc(50% - 0.5rem);
+        min-width: 9.5rem;
+    }
+
+    /* Трохи більші індикатори та компактніші аватарки */
+    .indicator {
+        width: 0.75rem;
+        height: 0.75rem;
+    }
+
+    .avatarButton {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.25rem;
+    }
+}

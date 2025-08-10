@@ -358,7 +358,7 @@ const PythonCoursePage = () => {
             </h2>
             <p className={styles.description}>
               Відкрий космос можливостей з найпопулярнішою мовою програмування світу. 
-              Створюй ІІ, веб-додатки, аналізуй дані та будуй майбутнє разом з нами.
+              Створюй веб-додатки, аналізуй дані та будуй майбутнє разом з нами.
             </p>
 
             {/* CTA Buttons */}
@@ -370,21 +370,14 @@ const PythonCoursePage = () => {
                   Почати навчання
                   <ChevronRight className={styles.buttonArrow} />
                 </span>
-              </Link>
-              
-              <button className={styles.secondaryButton}>
-                <span className={styles.buttonContent}>
-                  <Play className="w-6 h-6" />
-                  Дивитися демо
-                </span>
-              </button>
+              </Link> 
             </div>
 
             {/* Stats */}
             <div className={styles.stats}>
               {[
-                { number: "300+", label: "Випускників" },
-                { number: "200+", label: "Годин кодингу" },
+                { number: "200+", label: "Випускників" },
+                { number: "300+", label: "Годин кодингу" },
                 { number: "4.9", label: "Середня оцінка" },
                 { number: "50+", label: "Проектів" }
               ].map((stat, index) => (

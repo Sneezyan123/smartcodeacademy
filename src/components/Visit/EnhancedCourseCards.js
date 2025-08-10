@@ -156,45 +156,52 @@ const EnhancedCourseCards = () => {
 		return () => clearTimeout(timer)
 	}, [])
 
-	// Intersection Observer для мобільних пристроїв
-	useEffect(() => {
-		if (!isMobile) return
+    // Активуємо картку на мобільних, коли вона в полі зору (скрол) і ховаємо, коли проскролили
+    useEffect(() => {
+        if (!isMobile) return
 
-		const observerOptions = {
-			root: null,
-			rootMargin: '-15% 0px -15% 0px', // Спрацьовує коли картка на 70% видима
-			threshold: 0.7,
-		}
+        let ticking = false
 
-		const observerCallback = (entries) => {
-			let mostVisibleCard = null
-			let maxRatio = 0
+        const updateActiveByVisibility = () => {
+            const viewportHeight = window.innerHeight || document.documentElement.clientHeight
+            let bestIndex = null
+            let bestRatio = 0
 
-			entries.forEach((entry) => {
-				if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
-					maxRatio = entry.intersectionRatio
-					const cardIndex = cardRefs.current.indexOf(entry.target)
-					mostVisibleCard = cardIndex
-				}
-			})
+            cardRefs.current.forEach((card, i) => {
+                if (!card) return
+                const rect = card.getBoundingClientRect()
+                const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0)
+                const ratio = Math.max(0, Math.min(visibleHeight, rect.height)) / (rect.height || 1)
+                if (ratio > bestRatio) {
+                    bestRatio = ratio
+                    bestIndex = i
+                }
+            })
 
-			if (mostVisibleCard !== null) {
-				setActiveCard(mostVisibleCard)
-			}
-		}
+            if (bestRatio > 0.35) {
+                setActiveCard(bestIndex)
+            } else {
+                setActiveCard(null)
+            }
+            ticking = false
+        }
 
-		const observer = new IntersectionObserver(observerCallback, observerOptions)
+        const onScroll = () => {
+            if (!ticking) {
+                window.requestAnimationFrame(updateActiveByVisibility)
+                ticking = true
+            }
+        }
 
-		cardRefs.current.forEach((card) => {
-			if (card) observer.observe(card)
-		})
+        updateActiveByVisibility()
+        window.addEventListener('scroll', onScroll, { passive: true })
+        window.addEventListener('resize', onScroll)
 
-		return () => {
-			cardRefs.current.forEach((card) => {
-				if (card) observer.unobserve(card)
-			})
-		}
-	}, [isMobile])
+        return () => {
+            window.removeEventListener('scroll', onScroll)
+            window.removeEventListener('resize', onScroll)
+        }
+    }, [isMobile])
 
 	const getExpandedCard = () => {
 		return isMobile ? activeCard : hoveredCard
@@ -215,22 +222,24 @@ const EnhancedCourseCards = () => {
 					isOtherExpanded ? styles.cardShrunk : '',
 				].join(' ')
 
-				return (
+                return (
 					<div
 						key={course.id}
 						ref={(el) => (cardRefs.current[index] = el)}
 						className={cardClasses}
 						style={{ transitionDelay: `${index * 100}ms` }}
-						onMouseEnter={() => !isMobile && setHoveredCard(index)}
-						onMouseLeave={() => !isMobile && setHoveredCard(null)}
-						onClick={() => router.push(course.href)}
-						role="link"
+                        onMouseEnter={() => !isMobile && setHoveredCard(index)}
+                        onMouseLeave={() => !isMobile && setHoveredCard(null)}
+                        onClick={() => {
+                            if (!isMobile) router.push(course.href)
+                        }}
+                        role={isMobile ? 'region' : 'link'}
 						tabIndex={0}
 						onKeyDown={e => {
-							if (e.key === 'Enter' || e.key === ' ') {
-								e.preventDefault()
-								router.push(course.href)
-							}
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault()
+                                if (!isMobile) router.push(course.href)
+                            }
 						}}
 					>
 						{/* --- ФОН ТА ЕФЕКТИ --- */}

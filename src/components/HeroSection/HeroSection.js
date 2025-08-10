@@ -202,9 +202,6 @@ const HeroSection = () => {
                                 <Play size={18} />
                                 Спробувати безкоштовно
                             </Link>
-                            <button className={styles.secondaryButton}>
-                                Дізнатись більше
-                            </button>
                         </div>
 					</div>
 
@@ -237,7 +234,7 @@ const HeroSection = () => {
 										</div>
 										<div className={styles.statItem}>
 											<ShieldCheck size={16} />
-											<span>Рівень: Junior+</span>
+											<span>Рівень: Senior</span>
 										</div>
 									</div>
 									<div className={`${styles.mockupProgressBar} slide-content`}>

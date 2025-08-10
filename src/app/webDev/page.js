@@ -24,6 +24,7 @@ import {
 	Heart,
 } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter, usePathname } from 'next/navigation'
 import styles from './WebCoursePage.module.css'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -39,7 +40,9 @@ const WebCoursePage = () => {
 	const [typedText, setTypedText] = useState('')
 	const [hoveredModule, setHoveredModule] = useState(null)
 	const [hoveredProject, setHoveredProject] = useState(null)
-	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+    const router = useRouter()
+    const pathname = usePathname()
 	
 	const mainRef = useRef(null)
 	const heroRef = useRef(null)
@@ -110,7 +113,7 @@ const WebCoursePage = () => {
 		return () => timers.forEach(timer => clearInterval(timer))
 	}, [])
 
-	// GSAP ScrollTrigger animations
+    // GSAP ScrollTrigger animations
 	useEffect(() => {
 		const ctx = gsap.context(() => {
 			// Hero section animations
@@ -192,7 +195,21 @@ const WebCoursePage = () => {
 		}, mainRef)
 
 		return () => ctx.revert()
-	}, [])
+    }, [])
+
+    const handleCtaClick = (e) => {
+        e.preventDefault()
+        if (pathname === '/') {
+            const target = document.getElementById('Contactform')
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            } else {
+                window.location.hash = '#Contactform'
+            }
+        } else {
+            router.push('/#Contactform')
+        }
+    }
 
 	const modules = [
 		{
@@ -361,7 +378,7 @@ const WebCoursePage = () => {
 						</p>
 						
                         <div className={styles.ctaButtons}>
-                            <Link href="/#Contactform" className={styles.primaryButton}>
+                            <Link href="/#Contactform" className={styles.primaryButton} onClick={handleCtaClick} scroll={false}>
                                 <Play size={20} />
                                 Почати навчання
                             </Link>
@@ -525,7 +542,7 @@ const WebCoursePage = () => {
 						Приєднуйся до нас і створи свій перший проект вже сьогодні!
 					</p>
                         <div className={styles.ctaButtons}>
-                            <Link href="/#Contactform" className={styles.ctaButton}>
+                            <Link href="/#Contactform" className={styles.ctaButton} onClick={handleCtaClick} scroll={false}>
                                 <Sparkles size={20} />
                                 Безкоштовний урок
                             </Link>

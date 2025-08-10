@@ -147,7 +147,7 @@ const Visit = () => {
 								<div className={styles.featureIcon}>
 									<Monitor className={styles.icon} />
 								</div>
-								<span>Онлайн і офлайн</span>
+								<span>Онлайн заняття</span>
 							</div>
 							<div className={styles.feature}>
 								<div className={styles.featureIcon}>

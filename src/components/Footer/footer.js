@@ -48,7 +48,6 @@ const Footer = () => {
 	]
 
 	const socialLinks = [
-		{ name: 'Telegram', icon: Send, href: 'https://t.me/smartcodeacademy' },
 		{
 			name: 'Instagram',
 			icon: Instagram,

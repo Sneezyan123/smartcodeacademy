@@ -15,6 +15,7 @@ import {
 import styles from './Header.module.css'
 import gsap from 'gsap'
 import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 const Header = () => {
@@ -22,6 +23,9 @@ const Header = () => {
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 	const [isScrolled, setIsScrolled] = useState(false)
 	const headerRef = useRef(null)
+    const router = useRouter()
+    const pathname = usePathname()
+    const scrollLockYRef = useRef(0)
 
 	// Відстеження прокрутки для зміни стилю хедера
 	useEffect(() => {
@@ -64,14 +68,19 @@ const Header = () => {
 		}
 	}, [isCoursesOpen])
 
-	// ПОВНОЕКРАННА анімація мобільного меню
+    // ПОВНОЕКРАННА анімація мобільного меню + Scroll Lock як у модального вікна
 	useEffect(() => {
 		const mobileMenu = headerRef.current?.querySelector(`.${styles.mobileMenu}`)
 		if (!mobileMenu) return
 
 		if (isMobileMenuOpen) {
-			// Блокуємо скрол body
-			document.body.style.overflow = 'hidden'
+            // Блокуємо скрол сторінки (навіть на iOS)
+            scrollLockYRef.current = window.scrollY || window.pageYOffset || 0
+            document.body.style.position = 'fixed'
+            document.body.style.top = `-${scrollLockYRef.current}px`
+            document.body.style.left = '0'
+            document.body.style.right = '0'
+            document.body.style.width = '100%'
 			
 			// Показуємо меню
 			gsap.set(mobileMenu, { 
@@ -105,8 +114,13 @@ const Header = () => {
 				}
 			)
 		} else {
-			// Розблоковуємо скрол body
-			document.body.style.overflow = 'unset'
+            // Розблоковуємо скрол і відновлюємо позицію
+            const y = Math.abs(parseInt(document.body.style.top || '0', 10)) || 0
+            document.body.style.position = ''
+            document.body.style.top = ''
+            document.body.style.left = ''
+            document.body.style.right = ''
+            document.body.style.width = ''
 			
 			// Анімація виходу
 			gsap.to(mobileMenu, {
@@ -116,16 +130,21 @@ const Header = () => {
 				ease: 'power2.in',
 				onComplete: () => {
 					gsap.set(mobileMenu, { display: 'none' })
+                    window.scrollTo(0, y)
 				}
 			})
 		}
 
 		// Cleanup функція
-		return () => {
-			if (!isMobileMenuOpen) {
-				document.body.style.overflow = 'unset'
-			}
-		}
+        return () => {
+            if (!isMobileMenuOpen) {
+                document.body.style.position = ''
+                document.body.style.top = ''
+                document.body.style.left = ''
+                document.body.style.right = ''
+                document.body.style.width = ''
+            }
+        }
 	}, [isMobileMenuOpen])
 
 	// Закриття dropdown по ESC або кліку поза меню
@@ -182,6 +201,22 @@ const Header = () => {
 	const handleMobileMenuClose = () => {
 		setIsMobileMenuOpen(false)
 	}
+
+    const handleCtaClick = (e) => {
+        e.preventDefault()
+        if (pathname === '/') {
+            const target = document.getElementById('Contactform')
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            } else {
+                // fallback to hash – HomeClient will handle deferred scrolling
+                window.location.hash = '#Contactform'
+            }
+        } else {
+            router.push('/#Contactform')
+        }
+        setIsMobileMenuOpen(false)
+    }
 
 	const navItems = [
 		{ label: 'Курси', dropdown: true },
@@ -318,12 +353,8 @@ const Header = () => {
 					</nav>
 
 					{/* Права частина хедера */}
-					<div className={styles.headerRight}>
-						<a href='tel:+380966566243' className={styles.contactInfo}>
-							<Phone size={18} />
-							<span className={styles.contactText}>+380 96 656 62 43</span>
-						</a>
-						<Link href="/#Contactform" className={styles.ctaButton}>
+                    <div className={styles.headerRight}>
+                        <Link href="/#Contactform" className={styles.ctaButton} onClick={handleCtaClick} scroll={false}>
 							<Sparkles size={18} />
 							Безкоштовний урок
 						</Link>
@@ -339,7 +370,13 @@ const Header = () => {
 			</div>
 
 			{/* Повноекранне мобільне меню */}
-			<div className={styles.mobileMenu}>
+            <div 
+                className={styles.mobileMenu}
+                role="dialog" 
+                aria-modal="true" 
+                aria-hidden={!isMobileMenuOpen}
+                onClick={handleMobileMenuClose}
+            >
 				{/* Кнопка закриття зверху справа */}
 				<button 
 					className={styles.mobileMenuClose}
@@ -349,7 +386,7 @@ const Header = () => {
 					<X size={24} />
 				</button>
 
-				<div className={styles.mobileMenuContent}>
+                <div className={styles.mobileMenuContent} onClick={(e) => e.stopPropagation()}>
 					{/* Логотип в меню */}
 					<div className={styles.mobileMenuHeader}>
 						<div className={styles.mobileMenuLogo}>
@@ -422,15 +459,12 @@ const Header = () => {
 
 					{/* Контакти та CTA */}
 					<div className={styles.mobileMenuFooter}>
-						<a href='tel:+380966566243' className={`${styles.mobileMenuItem} ${styles.mobileContact}`}>
-							<Phone size={20} />
-							<span>+38 (096) 656-62-43</span>
-						</a>
-						<Link 
-							href="/#Contactform" 
-							className={`${styles.mobileMenuItem} ${styles.mobileCtaButton}`}
-							onClick={handleMobileMenuClose}
-						>
+                        <Link 
+                            href="/#Contactform" 
+                            className={`${styles.mobileMenuItem} ${styles.mobileCtaButton}`}
+                            onClick={handleCtaClick}
+                            scroll={false}
+                        >
 							<Sparkles size={20} />
 							Безкоштовний урок
 						</Link>
