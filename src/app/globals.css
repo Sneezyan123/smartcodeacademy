@@ -78,6 +78,10 @@
   /* Pixel Art / Grid Style */
   --grid-color: rgba(0, 204, 255, 0.1);
   --pixel-size: 8px;
+  --gradient-pink-purple: linear-gradient(135deg, #ec4899, #a855f7);
+  --gradient-purple-blue: linear-gradient(135deg, #a855f7, #3b82f6);
+  --gradient-blue-cyan: linear-gradient(135deg, #3b82f6, #06b6d4);
+  --gradient-multicolor: linear-gradient(135deg, #ec4899, #a855f7, #3b82f6, #06b6d4);
 }
 
 

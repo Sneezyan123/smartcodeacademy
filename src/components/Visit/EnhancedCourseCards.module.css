@@ -523,11 +523,6 @@
         }
     }
 
-    /* Smooth scroll для кращого UX */
-    html {
-        scroll-behavior: smooth;
-    }
-
     /* Анімація для активної картки */
     @keyframes card-glow {
         0% { opacity: 0.7; }
