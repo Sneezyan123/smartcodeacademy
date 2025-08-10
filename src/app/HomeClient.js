@@ -60,10 +60,9 @@ export default function HomeClient() {
   return (
     <div>
       <div className='overflow-x-hidden'>
-        {/* Place hero first to ensure above-the-fold content renders immediately */}
-        <HeroSection />
         <Visit />
         <Testimonials />
+        <HeroSection />
         <FAQ />
       </div>
     </div>
