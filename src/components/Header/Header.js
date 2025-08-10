@@ -11,6 +11,7 @@ import {
 	Sparkles,
 	Star,
 	Users,
+	Box,
 } from 'lucide-react'
 import styles from './Header.module.css'
 import gsap from 'gsap'
@@ -243,10 +244,18 @@ const Header = () => {
 			theme: 'green',
 		},
 		{
+			icon: <Box size={24} />,
+			title: 'Roblox Studio',
+			description: 'Створення ігор у Roblox Studio',
+			link: "/Roblox",
+			age: '8-16 років',
+			theme: 'green',
+		},
+		{
 			icon: <Monitor size={24} />,
 			title: 'Веб-розробка',
 			description: 'HTML, CSS, React, дизайн',
-			link: "/webDev",
+			link: "/webDev",	
 			age: '12-18 років',
 			theme: 'purple',
 		},

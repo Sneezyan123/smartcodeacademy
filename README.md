@@ -34,3 +34,22 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Telegram bot integration for lead notifications
+
+The site can send contact form submissions to Telegram.
+
+1. Create a Telegram bot via BotFather and get the bot token.
+2. Add the bot to a group or channel (optional) and obtain the `chat_id`.
+   - For a private chat with your bot, `chat_id` is your user id.
+   - For a group, add the bot to the group and send any message, then call `https://api.telegram.org/bot<token>/getUpdates` to find the `chat.id`.
+3. Create a `.env.local` file and set:
+
+```
+TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_CHAT_ID=your_chat_id_here
+```
+
+4. Restart the dev server: `npm run dev`.
+
+Form submits to `/api/telegram` and posts a formatted message to the configured chat.

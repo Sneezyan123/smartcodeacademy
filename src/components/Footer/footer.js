@@ -19,6 +19,7 @@ import {
 	Youtube,
 	Facebook,
 	Linkedin,
+	Box,
 } from 'lucide-react'
 import Image from 'next/image'
 
@@ -29,6 +30,7 @@ const Footer = () => {
 		{ name: 'Python програмування', icon: Code, href: '/python' },
 		{ name: 'Веб-розробка', icon: Code, href: '/webDev' },
 		{ name: 'Розробка ігор на Unity', icon: Gamepad2, href: '/Unity' },
+		{ name: 'Roblox Studio', icon: Box, href: '/Roblox' },
 	]
 
 	const quickLinks = [

@@ -42,11 +42,10 @@ const ContactForm = () => {
     }, [])
 
     const courses = [
-        'Python для початківців',
+        'Roblox Studio',
+        'Python',
         'JavaScript та веб-розробка',
-        'Розробка ігор (Unity/Roblox)',
-        'Frontend розробка (React)',
-        'Мобільна розробка',
+        'Розробка ігор на Unity',
         'Не впевнений(а), потрібна консультація'
     ];
 
@@ -62,15 +61,30 @@ const ContactForm = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
-        setIsSubmitted(true);
-        setTimeout(() => {
-            setIsSubmitted(false);
-            setFormData({ name: '', phone: '', email: '', age: '', course: '', message: '' });
-        }, 4000);
-    };
+        try {
+            const response = await fetch('/api/telegram', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            })
+            const data = await response.json().catch(() => ({}))
+            if (!response.ok || !data?.ok) {
+                console.error('Failed to send telegram message', data)
+                alert('На жаль, сталася помилка при відправці. Спробуйте ще раз або напишіть нам у Telegram.')
+                return
+            }
+            setIsSubmitted(true)
+            setTimeout(() => {
+                setIsSubmitted(false)
+                setFormData({ name: '', phone: '', email: '', age: '', course: '', message: '' })
+            }, 4000)
+        } catch (err) {
+            console.error(err)
+            alert('Сталася помилка мережі. Перевірте підключення та спробуйте ще раз.')
+        }
+    }
 
     return (
         <section id='Contactform' className={styles.contactSection} ref={formRef}>
@@ -131,7 +145,7 @@ const ContactForm = () => {
                                             </div>
                                             <div className={styles.inputWrapper}>
                                                 <Hash className={styles.inputIcon} size={18} />
-                                                <select name='age' value={formData.age} onChange={handleInputChange} className={styles.select}>
+                                                <select name='age' value={formData.age} onChange={handleInputChange} className={styles.select} required>
                                                     <option value=''>Вік дитини</option>
                                                     {Array.from({ length: 12 }, (_, i) => i + 6).map(age => (
                                                         <option key={age} value={age}>{age} років</option>
@@ -155,7 +169,7 @@ const ContactForm = () => {
                                         </div>
                                         <div className={styles.inputWrapper}>
                                             <MessageSquare className={`${styles.inputIcon} ${styles.textareaIcon}`} size={18} />
-                                            <textarea name='message' value={formData.message} onChange={handleInputChange} placeholder='Ваше повідомлення...' className={styles.textarea} rows={3}></textarea>
+                                            <textarea name='message' value={formData.message} onChange={handleInputChange} placeholder="Ваше повідомлення... (необов'язково)" className={styles.textarea} rows={3}></textarea>
                                         </div>
                                         <button type='submit' className={styles.submitBtn}>
                                             <Send size={20} />

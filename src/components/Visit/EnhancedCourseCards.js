@@ -118,6 +118,25 @@ const courses = [
 		particleColors: ['#7dd3fc', '#67e8f9', '#a5f3fc', '#38bdf8'],
         href: '/webDev',
 	},
+    {
+        id: 'roblox',
+        title: 'ROBLOX',
+        subtitle: 'Створюй ігри у Roblox Studio',
+        icon: '🟥',
+        description:
+            'Поринь у світ геймдизайну та скриптингу з Roblox Studio і Lua. Створюй свої світи, механіки та публікуй ігри.',
+        features: ['Roblox Studio', 'Lua', 'Геймдизайн', 'Публікація ігор'],
+        stats: {
+            age: '8-14',
+            students: '140+',
+            projects: '8+',
+        },
+        badge: 'Популярно',
+        rating: 4.8,
+        theme: 'themeRoblox',
+        particleColors: ['#fecaca', '#fca5a5', '#fb7185', '#f87171'],
+        href: '/Roblox',
+    },
 ]
 
 // Окремий компонент для частинок, щоб оптимізувати рендеринг
@@ -298,6 +317,19 @@ const EnhancedCourseCards = () => {
 									</div>
 								</>
 							)}
+                            {course.id === 'roblox' && (
+                                <>
+                                    <div className={`${styles.hoverElement} ${styles.robloxEl1}`}>
+                                        🧱
+                                    </div>
+                                    <div className={`${styles.hoverElement} ${styles.robloxEl2}`}>
+                                        🎮
+                                    </div>
+                                    <div className={`${styles.hoverElement} ${styles.robloxEl3}`}>
+                                        🛠️
+                                    </div>
+                                </>
+                            )}
 						</div>
 
 						{/* --- ВЕРХНЯ ЧАСТИНА (БЕЙДЖ, РЕЙТИНГ) --- */}

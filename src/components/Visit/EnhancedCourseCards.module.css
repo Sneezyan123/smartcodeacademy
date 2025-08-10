@@ -78,6 +78,20 @@
     --button-hover-bg: rgba(125, 211, 252, 0.3);
 }
 
+.themeRoblox {
+    --gradient: linear-gradient(135deg, #7f1d1d, #dc2626, #ef4444);
+    --particle-color-1: #fecaca;
+    --particle-color-2: #fca5a5;
+    --particle-color-3: #fb7185;
+    --particle-color-4: #f87171;
+    --badge-gradient: linear-gradient(135deg, #fb7185, #f97316);
+    --subtitle-color: #fecaca;
+    --details-text-color: #fee2e2;
+    --button-bg: rgba(248, 113, 113, 0.18);
+    --button-border: rgba(248, 113, 113, 0.4);
+    --button-hover-bg: rgba(248, 113, 113, 0.28);
+}
+
 /* --- ФОН ТА ЕФЕКТИ --- */
 .cardBackground {
     border-top-right-radius:10px;
@@ -135,6 +149,10 @@
 .webdevEl1 { top: 25%; left: 25%; font-size: 0.875rem; font-family: monospace; color: #a5f3fc; animation-name: pulse; animation-duration: 4s; background: rgba(0,0,0,0.2); padding: 0.25rem; border-radius: 4px; }
 .webdevEl2 { bottom: 33%; left: 33%; font-size: 0.875rem; font-family: monospace; color: #a7f3d0; animation-name: bounce; animation-duration: 3s; background: rgba(0,0,0,0.2); padding: 0.25rem; border-radius: 4px; }
 .webdevEl3 { top: 50%; left: 50%; font-size: 1.5rem; animation-name: pulse; animation-duration: 2s; animation-delay: 0.4s; }
+
+.robloxEl1 { top: 25%; left: 20%; font-size: 1.75rem; color: #fecaca; animation-name: bounce; animation-duration: 1.8s; }
+.robloxEl2 { top: 35%; right: 22%; font-size: 1.6rem; color: #fde047; animation-name: pulse; animation-duration: 2.2s; animation-delay: 0.2s; }
+.robloxEl3 { bottom: 22%; left: 45%; font-size: 1.75rem; color: #fca5a5; animation-name: spin-slow; animation-duration: 6s; animation-delay: 0.4s; }
 
 /* --- ВЕРХНЯ ЧАСТИНА --- */
 .topSection {
