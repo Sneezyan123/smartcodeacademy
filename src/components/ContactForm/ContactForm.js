@@ -7,6 +7,7 @@ const ContactForm = () => {
     const [isOpen, setIsOpen] = useState(false)
     const [formData, setFormData] = useState({ phone: '', course: '', message: '' })
     const [phoneError, setPhoneError] = useState('')
+    const [touched, setTouched] = useState({ phone: false, course: false })
     const [isSubmitted, setIsSubmitted] = useState(false)
     const dialogRef = useRef(null)
     const overlayRef = useRef(null)
@@ -93,9 +94,16 @@ const ContactForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // позначаємо поля як торкнуті, щоб показати стилі помилок
+        setTouched(prev => ({ ...prev, phone: true, course: true }))
+
         const isPhoneValid = /^\d{9}$/.test(formData.phone || '')
+        const isCourseSelected = !!formData.course
         if (!isPhoneValid) {
             setPhoneError('Введіть коректний номер (9 цифр)')
+            return
+        }
+        if (!isCourseSelected) {
             return
         }
         try {
@@ -114,6 +122,7 @@ const ContactForm = () => {
             setIsSubmitted(false)
             setFormData({ phone: '', course: '', message: '' })
             setPhoneError('')
+            setTouched({ phone: false, course: false })
             setIsOpen(false)
         } catch (err) {
             console.error(err)
@@ -146,7 +155,7 @@ const ContactForm = () => {
                                         <h3 className={styles.formTitle}>Залишіть номер — ми зв’яжемося</h3>
                                     </div>
                                     <form onSubmit={handleSubmit} className={styles.form}>
-                                        <div className={styles.inputWrapper}>
+                                        <div className={`${styles.inputWrapper} ${(phoneError || (touched.phone && !formData.phone)) ? styles.hasError : ''}`}>
                                             <Phone className={styles.inputIcon} size={18} />
                                             <span className={styles.countryCode}>+380</span>
                                             <input 
@@ -154,21 +163,34 @@ const ContactForm = () => {
                                                 name='phone'
                                                 value={formData.phone}
                                                 onChange={handleInputChange}
+                                                onBlur={() => setTouched(prev => ({ ...prev, phone: true }))}
                                                 placeholder='__ ___ __ __'
                                                 className={`${styles.input} ${styles.phoneInput}`}
                                                 inputMode='numeric'
                                                 required
+                                                aria-invalid={!!(phoneError || (touched.phone && !formData.phone))}
                                             />
                                             {phoneError && <div className={styles.errorText}>{phoneError}</div>}
                                         </div>
-                                        <div className={styles.inputWrapper}>
+                                        <div className={`${styles.inputWrapper} ${(touched.course && !formData.course) ? styles.hasError : ''}`}>
                                             <Briefcase className={styles.inputIcon} size={18} />
-                                            <select name='course' value={formData.course} onChange={handleInputChange} className={styles.select} required>
+                                            <select 
+                                                name='course' 
+                                                value={formData.course} 
+                                                onChange={handleInputChange} 
+                                                onBlur={() => setTouched(prev => ({ ...prev, course: true }))}
+                                                className={styles.select} 
+                                                required
+                                                aria-invalid={!!(touched.course && !formData.course)}
+                                            >
                                                 <option value=''>Оберіть цікавий напрямок</option>
                                                 {courses.map((course, index) => (
                                                     <option key={index} value={course}>{course}</option>
                                                 ))}
                                             </select>
+                                            {(touched.course && !formData.course) && (
+                                                <div className={styles.errorText}>Оберіть напрямок</div>
+                                            )}
                                         </div>
                                         <div className={styles.inputWrapper}>
                                             <MessageSquare className={`${styles.inputIcon} ${styles.textareaIcon}`} size={18} />

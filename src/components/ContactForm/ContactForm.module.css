@@ -194,10 +194,22 @@
     background: white;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
+
+/* --- СТИЛІ ПОМИЛОК --- */
+.hasError .input,
+.hasError .select,
+.hasError .textarea,
+.inputError {
+    border-color: #ef4444;
+    background: #fff7f7;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+.hasError .inputIcon { color: #ef4444; }
+.errorText { color: #ef4444; font-size: 0.8rem; margin-top: 0.35rem; }
+
 .select { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 1rem center; background-repeat: no-repeat; background-size: 1.25em; padding-right: 3rem; }
 .countryCode { position: absolute; top: 50%; left: 3rem; transform: translateY(-50%); font-weight: 500; color: var(--text-secondary); pointer-events: none; }
 .phoneInput { padding-left: 6.5rem; }
-.errorText { color: #ef4444; font-size: 0.8rem; margin-top: 0.35rem; }
 .textarea { resize: vertical; min-height: 90px; padding-top: 0.875rem; }
 .textareaIcon { top: 1.25rem; transform: translateY(0); }
 .submitBtn {

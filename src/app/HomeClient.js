@@ -29,6 +29,30 @@ export default function HomeClient() {
   // Прибрали поведінку з hash, щоб уникнути гонок відкриття модалки
 
   useEffect(() => {
+    // Fire-and-forget visit log (client-side session guard)
+    try {
+      if (typeof window !== 'undefined') {
+        if (sessionStorage.getItem('sc_visit_logged') !== '1') {
+          fetch('/api/visit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              path: window.location.pathname,
+              referrer: document.referrer,
+              userAgent: navigator.userAgent,
+              screen: { w: window.screen?.width, h: window.screen?.height },
+              locale: navigator.language,
+            }),
+            keepalive: true,
+          })
+            .then(() => {
+              try { sessionStorage.setItem('sc_visit_logged', '1') } catch {}
+            })
+            .catch(() => {})
+        }
+      }
+    } catch {}
+
     // Авто-відкриття модалки, коли користувач дійшов до середини сторінки (одноразово за сесію)
     try {
       if (typeof window !== 'undefined' && sessionStorage.getItem('contactModalShownMid') === '1') {

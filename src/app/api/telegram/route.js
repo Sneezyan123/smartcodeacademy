@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { getCollection } from '@/lib/mongodb'
 
 function escapeHtml(input) {
   const str = String(input ?? '')
@@ -64,11 +65,34 @@ export async function POST(request) {
     const tgData = await telegramResponse.json().catch(() => null)
 
     if (!telegramResponse.ok || !tgData?.ok) {
+      // Even if Telegram fails, still attempt to store submission for auditing
+      try {
+        const submissions = await getCollection('submissions')
+        await submissions.insertOne({
+          phone: normalizedPhone,
+          course: course || '',
+          message: message || '',
+          createdAt: new Date(),
+          via: 'telegram-api-failed',
+        })
+      } catch {}
       return NextResponse.json(
         { ok: false, error: 'Telegram API error', detail: tgData },
         { status: 500 }
       )
     }
+
+    // Store successful submission as well
+    try {
+      const submissions = await getCollection('submissions')
+      await submissions.insertOne({
+        phone: normalizedPhone,
+        course: course || '',
+        message: message || '',
+        createdAt: new Date(),
+        via: 'telegram',
+      })
+    } catch {}
 
     return NextResponse.json({ ok: true })
   } catch (error) {
